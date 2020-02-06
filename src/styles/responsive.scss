@@ -1,0 +1,336 @@
+
+
+.xs-hide{
+    //超大屏幕
+}
+.lg-hide{
+// 大屏幕
+}
+.md-hide{
+    // 中屏幕
+}
+.sm-hide{
+//小屏幕
+}
+.zx-hide{
+    // 比小还小
+}
+.cancelButton{
+  float: right !important;
+  margin-left: 10px;
+}
+.el-textarea__inner {
+    resize: none;
+}
+@media only screen and (min-width:1600px){ 
+    .el-table tr, .el-table th, .el-table td{
+        text-align: center;
+    }
+    .el-table .cell {
+        padding: 0 !important;
+    }
+    .el-table__header tr,
+    .el-table__header th{
+        padding: 0 !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        // background: pink;
+    }
+    .el-table__body tr,
+    .el-table__body td {
+        padding: 0 !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        // background: pink;
+    }
+    .paginationDad{
+        text-align: center !important;
+        // border: 1px solid blue;
+    } 
+    .el-pagination {
+        padding: 20px 5px !important;
+    }
+    .dashboard {
+        height: 91vh !important;
+    }
+    #sidebar .side-toggle {
+        margin-bottom: 0px !important;
+    }
+    .madevice-content{
+        height: 80% !important;
+    }
+    .unquality-content {
+        height: 77% !important;
+    }
+    .onduty-content {
+        height: 84% !important;
+    }
+    html,body{
+        font-size:16px!important;
+        // .app-breadcrumb.el-breadcrumb {
+        //     font-size: 16px;
+        // }
+        .el-form .el-form-item__label{
+            font-size: 14px;
+            height: 30px;
+        }
+        .el-input__inner {
+            height: 35px;
+        }
+        .el-table .cell {
+            font-size:14px;
+        }
+        .el-button {
+            font-size: 14px;
+            padding: 10px;
+        }
+    }
+    .el-dialog__footer .el-button {
+        width: 80px;
+        height: 34px;
+    }
+}
+@media only screen and (max-width:1600px){   //小于或等于1600px时候生效
+    .el-table__header tr,
+    .el-table__header th{
+        padding: 0 !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+        // background: pink;
+    }
+    .el-table__body tr,
+    .el-table__body td {
+        padding: 0 !important;
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        // background: pink;
+    }
+    #madevice .container, #unquality .container, #onduty .container{
+        height: 87vh !important;
+    }
+    #madevice .paginationDad, #unquality .paginationDad, #onduty .paginationDad{//三个页面底部高度不一样
+        text-align: center;
+        margin-top: 2rem !important;
+        .el-pagination {
+            padding: 0px 5px;
+        }
+    }
+    #sidebar .side-toggle {
+        margin-bottom: 0px !important;
+        height: 4rem !important;
+        line-height: 2rem !important;
+    }
+    .madevice-content{
+        height: 70% !important;
+    }
+    .unquality-content {
+        height: 78% !important;
+    }
+    .onduty-content {
+        height: 74% !important;
+    }
+    .el-dialog .madevice-dialog{
+        width: 82% !important;
+    }
+    .el-form-item {
+        margin-bottom: 18px;
+    }
+}
+@media only screen and (max-width:1400px){   //小于或等于1400px时候生效
+    .el-dialog__title{
+        font-size: 14px !important;
+        font-weight: bold;
+    }
+    .el-table tr, .el-table th, .el-table td{
+        text-align: center;
+    }
+    .el-table .cell {
+        padding: 0;
+    }
+    .el-table__header tr,
+    .el-table__header th{
+        padding: 0 !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        // background: green;
+    }
+    .el-table__body tr,
+    .el-table__body td {
+        padding: 0 !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+        // background: green;
+    }
+    #madevice .container, #unquality .container, #onduty .container{
+        height: 89vh !important;
+    }
+    #madevice .paginationDad, #unquality .paginationDad, #onduty .paginationDad{//三个页面底部高度不一样
+        text-align: center;
+        margin-top: 1.5rem !important;
+        .el-pagination {
+            padding: 20px 5px;
+        }
+    }
+    #sidebar .side-toggle {
+        margin-bottom: 0px !important;
+        height: 3rem !important;
+        line-height: 2rem !important;
+    }
+    .madevice-content{
+        height: 78% !important;
+    }
+    .unquality-content {
+        height: 85% !important;
+    }
+    .onduty-content {
+        height: 82% !important;
+    }
+    .el-dialog .madevice-dialog{
+        width: 90% !important;
+        margin-top: 2rem !important;
+    }
+    .el-form-item {
+        margin-bottom: 2px;
+    }
+    .container {
+        height: 87vh !important;
+        // border: 1px solid red;
+    } 
+    html,body{
+        font-size:14px!important;
+        .el-form .el-form-item__label{
+            font-size: 12px;
+            height: 30px;
+        }
+        .el-input__inner {
+            height: 35px;
+        }
+        .el-table .cell {
+            font-size:12px;
+        }
+        .el-button {
+            font-size: 12px;
+            padding: 10px;
+        }
+    }
+    .el-dialog__footer .el-button {
+        width: 80px;
+        height: 34px;
+    }
+    .compress{         //修改表格宽度,这个样式在sidebar下的index.vue里面
+        width: 4rem !important;
+    }
+    .el-form--inline .el-form-item{
+        margin-right: 10px;
+    }
+    .el-textarea__inner{
+        resize:none;
+        padding: 0;
+    }
+    #madevice .demo-form-inline{
+        height:3.5rem!important;
+        .el-form-item{
+            .el-form-item__content{
+                width:66%!important;
+                .el-date-editor{
+                    width:100%;
+                    margin:.3rem 0 0 0;
+                }   
+            }
+        }
+    }
+    html #madevice .btns .el-button, body .el-button {
+        padding: 8px;
+    }
+    html #madevice .el-input__inner, body .el-input__inner{
+        height: 34px;
+    }
+    #madevice .el-date-editor .el-range__icon,
+    #madevice .el-date-editor .el-range-separator,
+    #unquality .el-date-editor .el-range__icon, 
+    #unquality .el-date-editor .el-range-separator
+    #onduty .el-date-editor .el-range__icon, 
+    #onduty .el-date-editor .el-range-separator{
+      line-height: 26px!important;
+    }
+    #madevice .el-date-range-picker__content {
+        padding: 0px!important;
+        width: 31%!important;
+    }
+    .el-date-range-picker{
+        width: 470px;
+    }
+    .el-date-range-picker__content{
+        padding: 0px;
+    }
+    .el-date-range-picker__content{
+        width: 45%;
+    }
+    .el-date-table td, .el-date-table td div {
+        height: 20px;
+    }
+    //unquality
+    .el-table .cell {
+        padding-left: 0 !important;
+    }
+
+    //onduty
+    .onduty-dialog .el-dialog__body .el-row .el-col {
+        font-size: 12px;
+    }
+    .onduty-dialog .el-date-editor.el-input {
+        width: 160px;
+    }
+}
+@media only screen and (max-width:1366px){  //小于或等于1366px时候生效
+    .el-table__header tr,
+    .el-table__header th{
+        padding: 0 !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+        // background: grey;
+    } 
+    .el-table__body tr,
+    .el-table__body td {
+        padding: 0 !important;
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        // background: grey;
+    }
+    .paginationDad{
+        text-align: center;
+        margin-top: .3rem !important;
+        // border: 1px solid black;
+    }
+    .dashboard {
+        height: 86vh;//不生效
+    }
+    #madevice .container, #unquality .container, #onduty .container{
+        height: 86vh !important;
+        // border: 1px solid red;
+    }
+    #madevice .paginationDad, #unquality .paginationDad, #onduty .paginationDad{//三个页面底部高度不一样
+        text-align: center;
+        margin-top: .5rem !important;
+        .el-pagination {
+            padding: 5px;
+        }
+    }
+    #sidebar .side-toggle {
+        // margin-bottom: 16px !important;
+        line-height: 3rem !important;
+    }
+    .madevice-content{
+        height: 72% !important;
+    }
+    .unquality-content {
+        height: 82% !important;
+    }
+    .onduty-content {
+        height: 76% !important;
+    }
+    .el-dialog__footer .el-button {
+        width: 80px;
+        height: 34px;
+    }
+}

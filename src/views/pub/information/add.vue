@@ -1,0 +1,135 @@
+<template>
+  <div id="uploadAdd">
+    <el-dialog :title="title" :visible.sync="visible" top="1.5rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
+      <el-form ref="userForm" :model="item" :rules="rules" label-width="120px">
+      <el-form-item label="真实姓名:" prop="readName">
+        <el-input v-model="item.readName" placeholder="请输入真实姓名" clearable/>
+      </el-form-item>
+      <el-form-item label="昵称:" prop="nickName">
+        <el-input v-model="item.nickName" placeholder="请输入昵称" clearable/>
+      </el-form-item>
+      <el-form-item label="性别:" prop="sex">
+        <el-select v-model="item.sex" placeholder="请输入性别" clearable>
+          <el-option label="男" value="男"></el-option>
+          <el-option label="女" value="女"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="生日:" prop="birthday">
+        <el-date-picker
+            clearable
+            v-model="item.birthday"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请输入生日"
+          />
+      </el-form-item>
+      <el-form-item label="头像图片url" prop="headImg">
+          <el-input v-model="item.headImg" placeholder="请输入头像图片url" clearable/>
+        </el-form-item>
+      <el-form-item label="手机号码:" prop="telPhone">
+        <el-input v-model="item.telPhone" placeholder="请输入手机号码" clearable/>
+      </el-form-item>
+      <el-form-item label="微信:" prop="weiXin">
+        <el-input v-model="item.weiXin" placeholder="请输入微信" clearable/>
+      </el-form-item>
+      <el-form-item label="qq:" prop="qq">
+        <el-input v-model="item.qq" placeholder="请输入qq" clearable/>
+      </el-form-item>
+      <el-form-item label="email:" prop="email">
+        <el-input v-model="item.email" placeholder="请输入email" clearable/>
+      </el-form-item>
+        <el-form-item label="个人简介" prop="introduce">
+          <el-input type="textarea"  v-model="item.introduce" :rows="4" resize="none" maxlength="200" show-word-limit palceholder="请输入个人简介"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+      <el-button type="warning" plain @click="resetForm('uploadForm')">取消</el-button>
+      <el-button type="success" plain @click="submitForm('uploadForm')">提交</el-button>
+    </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    title: String,
+    default: 'title'
+  },
+  data() {
+    return {
+      visible: false,
+      type: '',
+      uptoken: '',
+      item: {
+        // headImg: '',
+        // nickName: '',
+        // telPhone: '',
+        // email: '',
+        // qq: '',
+        // weiXin: '',
+        // sex: '',
+        // readName: '',
+        // birthday: '',
+        // introduce: ''
+      },
+      rules: {
+        headImg: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        nickName: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        telPhone: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        email: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        qq: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        weiXin: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        sex: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        readName: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        birthday: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        introduce: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
+        type: [ {required: true, message: '请选择文件类型', trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {
+    open(item) {
+      this.visible = true
+      if (item === null || item === undefined) {
+        console.log('add')
+      } else {
+        this.item = item
+      }
+    },
+    onchange() {
+
+    },
+    handleAvatarSuccess() {
+
+    },
+    beforeAvatarUpload() {
+
+    },
+    submitForm() {
+      this.$refs[uploadForm].validate(valid => {
+        if (valid) {
+          this.$confirm('确认保存吗？', '是否保存', {
+            cancelButtonText: '取消',
+            confirmButtonText: '确认',
+            lockScroll: false,
+            type: 'warning'
+          }).then( () => {
+            this.$emit('confirmData', this.item);
+            this.resetForm('uploadForm')
+          })
+        }
+      })
+    },
+    resetForm(uploadForm) {
+      this.$nextTick(() => {
+        this.$refs[uploadForm].clearValidate();
+      })
+      this.visible = false;
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+</style>
