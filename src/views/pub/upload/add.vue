@@ -3,7 +3,7 @@
     <el-dialog :title="title" :visible.sync="visible" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="uploadForm" :model="item" :rules="rules" label-width="100px">
         <el-form-item label="文件类型" prop="type">
-          <el-select v-model="type"  palceholder="请选择文件类型">
+          <el-select v-model="item.type"  palceholder="请选择文件类型" clearable>
             <el-option
               v-for="item in filesType"
               :key="item.value"
@@ -19,7 +19,7 @@
             multiple>
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖拽到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png格式的用户头像，且不超过500kb</div>
+            <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png格式的用户头像，且不超过500kb</div> -->
           </el-upload>
         </el-form-item>
         <el-form-item label="文件描述" prop="fileDescribe">
@@ -35,16 +35,17 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   props: {
     title: String,
     default: 'title'
   },
-  data() {
+  data () {
     return {
       visible: false,
-      type: '',
       item: {
+        type: '',
         fileDescribe: ''
       },
       filesType: [
@@ -62,14 +63,14 @@ export default {
         }
       ],
       rules: {
-        type: [ {required: true, message: '请选择文件类型', trigger: 'change' }],
-        multipartFiles: [{ required: true, message: '上传文件', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择文件类型', trigger: 'change' }],
+        // multipartFiles: [{ required: true, message: '请上传文件', trigger: 'blur' }],
         fileDescribe: [{ required: true, message: '请描述文件', trigger: 'blur' }]
       }
     }
   },
   methods: {
-    open(item) {
+    open (item) {
       this.visible = true
       if (item === null || item === undefined) {
         console.log('add')
@@ -77,18 +78,26 @@ export default {
         this.item = item
       }
     },
-    submitForm(uploadForm) {
-      this.$refs[uploadForm].validate(valid => {
+    submitForm (uploadForm) {
+      this.$refs.uploadForm.validate(valid => {
         if (valid) {
-          this.$confirm('确认保存吗？', '是否保存', {
-            cancelButtonText: '取消',
-            confirmButtonText: '确认',
-            lockScroll: false,
-            type: 'warning'
-          }).then( () => {
-            this.$emit('confirmData', this.item);
-            this.resetForm('uploadForm')
+          axios.post('/json/file/add?multipartFiles=' + multipartFiles + '&fileDescribe=' + this.item.fileDescribe + '&type=' + this.item.type).then((res) => {
+            if (res.data.code === 0) {
+              this.$message({
+                type: 'success',
+                message: '新增文件成功'
+              })
+            }
           })
+          // this.$confirm('确认保存吗？', '是否保存', {
+          //   cancelButtonText: '取消',
+          //   confirmButtonText: '确认',
+          //   lockScroll: false,
+          //   type: 'warning'
+          // }).then( () => {
+          //   this.$emit('confirmData', this.item);
+          //   this.resetForm('uploadForm')
+          // })
         }
       })
     },
