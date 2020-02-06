@@ -40,10 +40,10 @@ export default {
   @include scrollBar(4px);
 }
 .container{
-  margin:.6% auto;
-  width:98%;
+  // margin:.6% auto;
+  width:100%;
   height:96%;
-  max-width:98%;
+  max-width:100%;
   overflow-y: hidden;
   overflow-x: hidden;
   @include scrollBar(7px);

@@ -56,23 +56,29 @@ export default {
         {
           id: 0,
           icon: 'el-icon-menu',
+          name: '用户信息',
+          url: '/pub/user'
+        },
+        {
+          id: 1,
+          icon: 'el-icon-menu',
           name: '学籍信息',
           url: '/pub/information'
         },
         {
-          id: 1,
+          id: 2,
           icon: 'el-icon-menu',
           name: '网课学习',
           url:  '/pub/study'
         },
         {
-          id: 2,
+          id: 3,
           icon: 'el-icon-menu',
           name: '课表查询',
           url: '/pub/course'
         },
         {
-          id: 3,
+          id: 4,
           icon: 'el-icon-menu',
           name: '成绩查询',
           url: '/pub/achievement'
@@ -96,7 +102,7 @@ export default {
           url: '/pub/visualization'
         }
       ]
-    };
+    }
   },
   computed: {
     ...mapGetters(["sidebar", "themeColor"])

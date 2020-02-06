@@ -119,7 +119,7 @@ export default {
                 type: 'success',
                 message: '登录成功'
               })
-              this.$router.push({path: '/pub/information'})
+              this.$router.push({name: 'information', params: {infoList: res.data}})
             } else {
               this.$message({
                 type: 'warning',

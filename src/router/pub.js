@@ -1,5 +1,13 @@
 const pub = [
   {
+    path: '/pub/user',
+    component: () => import('@/views/pub/user/index'),
+    name: 'user',
+    meta: {
+      title: '用户信息'
+    }
+  },
+  {
     path: '/pub/information',
     component: () => import('@/views/pub/information/index'),
     name: 'information',
