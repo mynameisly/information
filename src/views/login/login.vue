@@ -123,15 +123,25 @@ export default {
                 type: 'success',
                 message: '登录成功'
               })
-              this.$router.push({name: 'information', params: {infoList: res.data}})
-              const user = res.data.data.number
-              console.log(111111)
-              console.log(user)
-              sessionStorage.setItem('username', user) // 把登录成功的用户名放入sessionStorage
+              this.$router.push({name: 'information'})
+              const userData = res.data.data
+              const user = userData.number
+              // sessionStorage.setItem('username', user) // 把登录成功的用户名放入sessionStorage
               // this.$store.dispatch('setUser', user) // 把用户名放入vuex
               // ...mapActions('user/setUser',res.data.number)
               // setUser(res.data.number)
-
+              sessionStorage.setItem('number', user)
+              sessionStorage.setItem('headImg', userData.headImg)
+              sessionStorage.setItem('nickName', userData.nickName)
+              sessionStorage.setItem('readName', userData.readName)
+              sessionStorage.setItem('sex', userData.sex)
+              sessionStorage.setItem('birthday', userData.birthday)
+              sessionStorage.setItem('telPhone', userData.telPhone)
+              sessionStorage.setItem('email', userData.email)
+              sessionStorage.setItem('weiXin', userData.weiXin)
+              sessionStorage.setItem('qq', userData.qq)
+              sessionStorage.setItem('introduce', userData.introduce)
+              sessionStorage.setItem('depict', userData.role.depict)
               this.setUser({ user })
             } else {
               this.$message({

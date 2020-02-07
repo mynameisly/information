@@ -5,7 +5,7 @@
       <!-- 点击弹出框 -->
       <div :class="istoggle.toggle[0]==true?'clickShow':''">
         <div>
-          <img :src="imageUrl" min-width="60" height="60">
+          <!-- <img :src="imageUrl" min-width="60" height="60"> -->
           <ul>
             <!-- <li>用户名：{{ username }}</li> -->
             <li>用户名：{{ username.user }}</li>
@@ -50,7 +50,8 @@ export default {
       }
       return true
     },
-    ...mapGetters(['token', 'themeColor', 'username', 'usertype', 'imageUrl'])
+    // ...mapGetters(['token', 'themeColor', 'username', 'usertype', 'imageUrl'])
+    ...mapGetters(['themeColor', 'username'])
   },
   methods: {
     // 自定义页头

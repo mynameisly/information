@@ -25,12 +25,22 @@ export default {
   name: 'Information',
   data () {
     return {
-      infoList: []
+      infoList: [{}]
     }
   },
   mounted () {
-    this.infoList[0] = this.$route.params.infoList.data
-    this.infoList[0].depict = this.$route.params.infoList.data.role.depict
+    this.infoList[0].number = sessionStorage.getItem('number')
+    this.infoList[0].headImg = sessionStorage.getItem('headImg')
+    this.infoList[0].nickName = sessionStorage.getItem('nickName')
+    this.infoList[0].readName = sessionStorage.getItem('readName')
+    this.infoList[0].sex = sessionStorage.getItem('sex')
+    this.infoList[0].birthday = sessionStorage.getItem('birthday')
+    this.infoList[0].telPhone = sessionStorage.getItem('telPhone')
+    this.infoList[0].email = sessionStorage.getItem('email')
+    this.infoList[0].weiXin = sessionStorage.getItem('weiXin')
+    this.infoList[0].qq = sessionStorage.getItem('qq')
+    this.infoList[0].introduce = sessionStorage.getItem('introduce')
+    this.infoList[0].depict = sessionStorage.getItem('depict')
   },
   methods: {
   }
