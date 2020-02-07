@@ -124,9 +124,15 @@ export default {
                 message: '登录成功'
               })
               this.$router.push({name: 'information', params: {infoList: res.data}})
-              sessionStorage.setItem('username', res.data.number) // 把登录成功的用户名放入sessionStorage
-              this.$store.dispatch('user/setUser', res.data.number) // 把用户名放入vuex
+              const user = res.data.data.number
+              console.log(111111)
+              console.log(user)
+              sessionStorage.setItem('username', user) // 把登录成功的用户名放入sessionStorage
+              // this.$store.dispatch('setUser', user) // 把用户名放入vuex
               // ...mapActions('user/setUser',res.data.number)
+              // setUser(res.data.number)
+
+              this.setUser({ user })
             } else {
               this.$message({
                 type: 'warning',
@@ -138,7 +144,8 @@ export default {
           return false
         }
       })
-    }
+    },
+    ...mapActions('user/', ['setUser'])
   }
 }
 </script>

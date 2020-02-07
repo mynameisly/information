@@ -8,7 +8,7 @@
           <img :src="imageUrl" min-width="60" height="60">
           <ul>
             <!-- <li>用户名：{{ username }}</li> -->
-            <li>用户名：{{ this.$store.state.username }}</li>
+            <li>用户名：{{ username.user }}</li>
           </ul>
         </div>
         <div :class="istoggle.toggle[0]==true?'clickShow':''" :style="{'background':`${themeColor}`}" @click.stop="logout">
