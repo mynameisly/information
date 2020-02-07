@@ -30,7 +30,7 @@
 <script>
 import axios from 'axios'
 export default {
-  data() {
+  data () {
     return {
       courseList: [],
       searchForm: {
@@ -40,11 +40,11 @@ export default {
     }
   },
   methods: {
-    getCourseList(param) {
+    getCourseList (param) {
       this.$ajax.get('/cet/find?username=' + this.searchForm.username + '&ticketNumber=' + this.searchForm.ticketNumber)
         .then(res => {
-         this.courseList = Array(res.data.data)
-      })
+          this.courseList = Array(res.data.data)
+        })
     },
     // 导出excel
     // downloadExcel(param) {

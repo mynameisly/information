@@ -101,12 +101,16 @@ export default {
         }
       })
     },
-    resetForm(uploadForm) {
+    resetForm (uploadForm) {
       this.$nextTick(() => {
         this.$refs[uploadForm].clearValidate();
       })
-      this.visible = false;
+      this.visible = false
     }
   }
 }
 </script>
+
+<style lang="scss">
+
+</style>

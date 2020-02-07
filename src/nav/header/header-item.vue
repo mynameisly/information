@@ -7,7 +7,8 @@
         <div>
           <img :src="imageUrl" min-width="60" height="60">
           <ul>
-            <li>用户名：{{ username }}</li>
+            <!-- <li>用户名：{{ username }}</li> -->
+            <li>用户名：{{ this.$store.state.username }}</li>
           </ul>
         </div>
         <div :class="istoggle.toggle[0]==true?'clickShow':''" :style="{'background':`${themeColor}`}" @click.stop="logout">
@@ -39,7 +40,7 @@ export default {
       radio2: '1',
       focusedRecord: {},
       state: false,
-      addForm: {},
+      addForm: {}
     }
   },
   computed: {
@@ -49,7 +50,7 @@ export default {
       }
       return true
     },
-    ...mapGetters(["token", "themeColor", "username", "usertype", "imageUrl"])
+    ...mapGetters(['token', 'themeColor', 'username', 'usertype', 'imageUrl'])
   },
   methods: {
     // 自定义页头
@@ -70,17 +71,18 @@ export default {
             type: 'success',
             message: '退出登录成功'
           })
-          this.setUserdata('')
+          // this.setUserdata('')
           // 退出登录时将sessionStorage里的token和store里面的角色都清零
-          removeToken()
-          this.resetToken()
+          // removeToken()
+          // this.resetToken()
+          this.$store.state.username = null
           sessionStorage.setItem('store', null)
           this.$router.push({path: '/login'})
         }
       })
     },
-    ...mapActions("app/", ["toggleColor"]),
-    ...mapActions("user/", ["setUserdata", "resetToken"])
+    ...mapActions('app/', ['toggleColor']),
+    ...mapActions('user/', ['setUserdata', 'resetToken'])
   }
 }
 </script>

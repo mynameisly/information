@@ -20,7 +20,9 @@
               <el-input
                 prefix-icon="el-icon-key"
                 v-model="loginForm.password"
-                placeholder="密码长度必须在6-16之间，且必须包含数字和字母" />
+                placeholder="密码长度必须在6-16之间，且必须包含数字和字母"
+                show-password
+               />
             </el-form-item>
           </el-col>
         </el-row>
@@ -53,6 +55,7 @@
 <script>
 import particlesConfig from '@/assets/particleConfig.json'
 import axios from 'axios'
+import { mapActions } from 'vuex'
 export default {
   data () {
     const validateNumber = (rule, value, callback) => {
@@ -105,6 +108,7 @@ export default {
       this.$router.push({path: '/register'})
     },
     login (loginForm) {
+      this.$store.dispatch('app/changeLogin')
       console.log('enter login!!')
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
@@ -120,6 +124,9 @@ export default {
                 message: '登录成功'
               })
               this.$router.push({name: 'information', params: {infoList: res.data}})
+              sessionStorage.setItem('username', res.data.number) // 把登录成功的用户名放入sessionStorage
+              this.$store.dispatch('user/setUser', res.data.number) // 把用户名放入vuex
+              // ...mapActions('user/setUser',res.data.number)
             } else {
               this.$message({
                 type: 'warning',

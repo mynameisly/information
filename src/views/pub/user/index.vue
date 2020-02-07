@@ -86,14 +86,15 @@
         </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增文件" @confirmData="(item) => add(item)" />
-    <update-dialog ref="updateDialog" title="修改文件" @confirmData="(item) => update(item)" />
+    <add-dialog ref="addDialog" title="新增用户" @confirmData="(item) => add(item)" />
+    <update-dialog ref="updateDialog" title="修改用户" @confirmData="(item) => update(item)" />
   </div>
 </template>
 
 <script>
 import AddDialog from './add'
 import UpdateDialog from './add'
+import axios from 'axios'
 // import { getUserList, getSearchUserList, getUserListById,setUserRoleById, updateUser, deleteUser} from '@/api/information'
 export default {
   components: {
@@ -113,6 +114,7 @@ export default {
           endBirthday: '',
         }
       ],
+      userData: {},
       userList: []
     }
   },
@@ -120,6 +122,33 @@ export default {
     this.userList[0] = this.$route.params.userList
   },
   methods: {
+    mouseEnter (data) {
+      this.userData = Object.assign({}, data)
+    },
+    del () { // 根据ID删除
+      const userId = this.userData.id;
+      this.$confirm('此操作将永久删除该文件，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then((res) => {
+        // 点击确定后发送请求
+        axios.delete('/json/user/delete?userId=' + userId).then((res) => {
+          if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '删除用户成功'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    }
   }
 }
 </script>

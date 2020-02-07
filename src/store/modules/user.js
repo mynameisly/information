@@ -2,7 +2,6 @@ import { setToken, getToken, removeToken } from '../../utils/token'
 const state = {
   token: getToken(),
   username: '',
-  usertype: '',
   imageUrl: '',
   roles: [],
   data: {}
@@ -11,32 +10,44 @@ const state = {
 const mutations = {
   USER_MUTATION: (state, userdata) => {
     setToken(userdata.token)
-    state.token = userdata.token;
+    state.token = userdata.token
     state.data = userdata
+  },
+  userStatus: (state, user) => { // 我写的
+    if (user) {
+      state.username = user
+    } 
+    // else if (user == null) {
+    //   sessionStorage.setItem('username', null)
+    //   state.username = null
+    // }
   }
 }
 
 const actions = {
-  setUserdata({ commit }, userdata) {
-    commit('USER_MUTATION', userdata);
+  setUserdata ({ commit }, userdata) {
+    commit('USER_MUTATION', userdata)
   },
 
-  getInfo({ commit, state }) {
-    const data = state.data;
-    state.username = data.uname;
-    state.usertype = data.utype;
-    state.imageUrl = data.imageUrl;
-    state.roles = data.roles;
+  getInfo ({ commit, state }) {
+    const data = state.data
+    state.username = data.uname
+    state.imageUrl = data.imageUrl
+    state.roles = data.roles
   },
   // remove Token
-  resetToken({ commit, state }) {
+  resetToken ({ commit, state }) {
     return new Promise(resolve => {
       commit('USER_MUTATION', '')
       state.roles = []
       removeToken()
       resolve()
     })
+  },
+  setUser ({ commit, user }) { // 我写的
+    commit('userStatus', user)
   }
+
 }
 
 export default {

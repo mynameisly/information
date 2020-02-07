@@ -1,7 +1,7 @@
 <template>
   <div id="information">
     <!-- el-table中的height用于固定表头 -->
-    <el-table border stripe :data="infoList" height="250" @cell-mouse-enter="mouseEnter">
+    <el-table border stripe :data="infoList" height="250">
       <el-table-column label="序号" type="index" width="55"/>
       <el-table-column label="用户名" prop="number"/>
       <el-table-column label="头像" prop="headImg"/>

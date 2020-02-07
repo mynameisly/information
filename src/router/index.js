@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from "../store/index.js"
+import store from '../store/index.js'
 import {
   isEmpty
 } from "../utils/prototype"
@@ -68,16 +68,15 @@ export function resetRouter() {
 }
 
 // 未登陆的用户会被自动导航到login
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/login' || to.path === '/loginon') {
-//     next()
-//     return
-//   }
-//   var token = store.getters.token || JSON.parse(sessionStorage.getItem('store')).user.token;
-//   if (isEmpty(token)) {
-//     router.push('/login')
-//     return
-//   }
-//   next()
-// })
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.path === '/register') {
+    next()
+    return
+  }
+  if (store.state.app.isLogin === 1) {
+    next()
+    return
+  }
+  next()
+})
 export default router
