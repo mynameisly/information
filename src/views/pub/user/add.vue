@@ -2,6 +2,9 @@
   <div id="uploadAdd">
     <el-dialog :title="title" :visible.sync="visible" top="1.5rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="userForm" :model="item" :rules="rules" label-width="120px">
+      <el-form-item label="用户名:" prop="number">
+        <el-input v-model="item.number" placeholder="请输入用户名" clearable/>
+      </el-form-item>
       <el-form-item label="真实姓名:" prop="readName">
         <el-input v-model="item.readName" placeholder="请输入真实姓名" clearable/>
       </el-form-item>
@@ -43,89 +46,90 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-      <el-button type="warning" plain @click="resetForm('uploadForm')">取消</el-button>
-      <el-button type="success" plain @click="submitForm('uploadForm')">提交</el-button>
+      <el-button type="warning" plain @click="resetForm('userForm')">取消</el-button>
+      <el-button type="success" plain @click="submitForm('userForm')">提交</el-button>
     </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   props: {
     title: String,
     default: 'title'
   },
-  data() {
+  data () {
     return {
       visible: false,
       type: '',
       uptoken: '',
-      item: {
-        // headImg: '',
-        // nickName: '',
-        // telPhone: '',
-        // email: '',
-        // qq: '',
-        // weiXin: '',
-        // sex: '',
-        // readName: '',
-        // birthday: '',
-        // introduce: ''
-      },
+      userId: '', // 保存从index传过来的userId
+      item: {},
       rules: {
-        headImg: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        nickName: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        telPhone: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        email: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        qq: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        weiXin: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        sex: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        readName: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        birthday: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        introduce: [ {required: true, message: '请选择文件类型', trigger: 'blur' }],
-        type: [ {required: true, message: '请选择文件类型', trigger: 'blur' }]
+        headImg: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        nickName: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        telPhone: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        email: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        qq: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        weiXin: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        sex: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        readName: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        birthday: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        introduce: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
+        type: [{required: true, message: '请选择文件类型', trigger: 'blur'}]
       }
     }
   },
   methods: {
-    open(item) {
+    open (item) {
+      console.log(item)
       this.visible = true
       if (item === null || item === undefined) {
-        console.log('add')
+        this.item = {}
       } else {
-        this.item = item
+        this.userId = item.userId
+        this.update()
       }
     },
-    onchange() {
+    update () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
+      axios.get('/json/user/getUserById?userId=' + this.userId).then((res) => {
+        console.log('enter add update')
+        console.log(res.data)
+        console.log(res.data.data)
+        this.item = res.data.data
+      })
+    },
+    onchange () {
 
     },
-    handleAvatarSuccess() {
+    handleAvatarSuccess () {
 
     },
-    beforeAvatarUpload() {
+    beforeAvatarUpload () {
 
     },
-    submitForm() {
-      this.$refs[uploadForm].validate(valid => {
+    submitForm (item) {
+      this.$refs.userForm.validate((valid) => {
         if (valid) {
           this.$confirm('确认保存吗？', '是否保存', {
             cancelButtonText: '取消',
             confirmButtonText: '确认',
             lockScroll: false,
             type: 'warning'
-          }).then( () => {
-            this.$emit('confirmData', this.item);
-            this.resetForm('uploadForm')
+          }).then(() => {
+            this.$emit('confirmData', this.item)
+            this.resetForm('userForm')
           })
         }
       })
     },
-    resetForm(uploadForm) {
+    resetForm (userForm) {
       this.$nextTick(() => {
-        this.$refs[uploadForm].clearValidate();
+        this.$refs.userForm.clearValidate()
       })
-      this.visible = false;
+      this.visible = false
     }
   }
 }

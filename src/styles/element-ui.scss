@@ -42,3 +42,7 @@
     display: block
   }
 }
+// 全局修改el-table的内容全部居中
+.el-table .cell {
+  text-align: center;
+}

@@ -44,6 +44,5 @@ export default {
 }
 .tipsBox {
   text-align: center;
-
 }
 </style>

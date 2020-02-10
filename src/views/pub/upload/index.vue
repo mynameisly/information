@@ -2,17 +2,17 @@
   <div id="upload">
     <el-form v-model="searchForm" :inline="true">
       <el-row>
-        <el-col :span="6" :offset="1">
+        <el-col :span="7" :offset="1">
           <el-form-item label="文件id：">
             <el-input v-model="searchForm.fileId" placeholder="请输入文件id" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="用户id：">
             <el-input v-model="searchForm.userId" placeholder="请输入用户id" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="文件后缀名：">
             <el-input v-model="searchForm.fileSuffix" placeholder="请输入文件后缀名" clearable/>
           </el-form-item>
@@ -20,17 +20,17 @@
       </el-row>
 
       <el-row>
-        <el-col :span="6" :offset="1">
+        <el-col :span="7" :offset="1">
           <el-form-item label="第几页：">
             <el-input v-model="searchForm.page" placeholder="请输入第几页" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="每页条数：">
             <el-input v-model="searchForm.limit" placeholder="请输入每页条数" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="排序规则：">
             <el-input v-model="searchForm.orderByClause" placeholder="请输入排序规则（默认按创建时间降序）" clearable/>
           </el-form-item>
@@ -38,12 +38,12 @@
       </el-row>
 
       <el-row>
-        <el-col :span="6" :offset="1">
-          <el-form-item label="文件上传时真实名：">
+        <el-col :span="7" :offset="1">
+          <el-form-item label="文件真实名：">
             <el-input v-model="searchForm.fileRealName" placeholder="请输入文件上传时真实名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="文件类型：">
             <el-select v-model="searchForm.state" placeholder="请输入文件类型" clearable>
               <el-option label="头像图片" value="头像图片"></el-option>
@@ -52,7 +52,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="文件状态：">
             <el-select v-model="searchForm.state" placeholder="请输入文件状态" clearable>
               <el-option label="审核不通过" value="审核不通过"></el-option>
