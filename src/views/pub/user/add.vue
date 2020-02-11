@@ -27,7 +27,8 @@
           />
       </el-form-item>
       <el-form-item label="头像图片url" prop="headImg">
-          <el-input v-model="item.headImg" placeholder="请输入头像图片url" clearable/>
+          <!-- 图片的url和数据库里面的varchar是一样的 -->
+          <el-input type="textarea"  v-model="item.headImg" :rows="4" resize="none" maxlength="255" show-word-limit palceholder="请输入头像图片url"></el-input>
         </el-form-item>
       <el-form-item label="手机号码:" prop="telPhone">
         <el-input v-model="item.telPhone" placeholder="请输入手机号码" clearable/>

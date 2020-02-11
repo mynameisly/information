@@ -1,5 +1,20 @@
 <template>
   <div id="information">
+    <el-form v-model="searchUserForm" :inline="true">
+      <el-row>
+        <el-col :span="7" :offset="1">
+          <el-form-item label="用户名/昵称:">
+            <el-input v-model="searchUserForm.searchStr" placeholder="请输入用户名或昵称" clearable/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="2">
+          <el-form-item>
+            <el-button type="success" size="medium" icon="el-icon-search" @click="searchUser(searchUserForm)">模糊搜索</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+
     <el-form v-model="searchForm" :inline="true">
       <el-row>
         <el-col :span="7" :offset="1">
@@ -7,12 +22,12 @@
             <el-input v-model="searchForm.number" placeholder="请输入用户名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="7">
           <el-form-item label="昵称:">
             <el-input v-model="searchForm.nickName" placeholder="请输入昵称" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="7">
           <el-form-item label="性别:">
             <el-select v-model="searchForm.sex" placeholder="请输入性别" clearable>
               <el-option label="男" value="男"></el-option>
@@ -20,6 +35,7 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="2"></el-col>
       </el-row>
       <el-row>
         <el-col  :span="7" :offset="1">
@@ -27,7 +43,7 @@
             <el-input v-model="searchForm.readName" placeholder="请输入真实姓名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col  :span="8">
+        <el-col  :span="7">
           <el-form-item label="起始-生日:">
             <el-date-picker
                 clearable
@@ -38,7 +54,7 @@
               />
           </el-form-item>
         </el-col>
-        <el-col  :span="8">
+        <el-col  :span="7">
           <el-form-item label="结束-生日:">
             <el-date-picker
                 clearable
@@ -49,19 +65,20 @@
               />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-form-item>
-          <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">查询成绩</el-button>
-        </el-form-item>
+        <el-col :span="2">
+          <el-form-item>
+            <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">精确搜索</el-button>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
+
     <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
     <!-- el-table中的height用于固定表头 -->
     <el-table border stripe :data="userList" height="65%" @cell-mouse-enter="mouseEnter">
       <el-table-column label="序号" type="index" width="55"/>
       <el-table-column label="用户名" prop="number"/>
-      <el-table-column label="头像" prop="headImg"/>
+      <el-table-column label="头像" prop="headImg" width="160"/>
       <el-table-column label="昵称" prop="nickName"/>
       <el-table-column label="真实姓名" prop="readName"/>
       <el-table-column label="性别" prop="sex"/>
@@ -71,7 +88,6 @@
       <el-table-column label="微信" prop="weiXin"/>
       <el-table-column label="QQ" prop="qq"/>
       <el-table-column label="简介" prop="introduce"/>
-      <el-table-column label="隶属角色" prop="depict"/> <!-- 是否需要重新写一个dialog -->
       <el-table-column label="操作" prop="operation" width="240">
         <el-button
           type="primary"
@@ -86,9 +102,8 @@
           删除
         </el-button>
         <el-button
-            type="primary"
-            plain
-            @click="$refs.rolesEditDialog.open(focusedUser)"
+            type="warning"
+            @click="$refs.roleDialog.open(userData)"
           >设置角色</el-button>
       </el-table-column>
     </el-table>
@@ -115,7 +130,12 @@ export default {
   },
   data () {
     return {
-      searchForm: [
+      searchUserForm: [ // 模糊搜索
+        {
+          searchStr: '' // 账号或昵称
+        }
+      ],
+      searchForm: [ // 精确搜索
         {
           number: '',
           nickName: '',
@@ -125,7 +145,7 @@ export default {
           endBirthday: '',
         }
       ],
-      userData: {},
+      userData: {}, // 保存鼠标悬停的当前行的数据
       userList: [],
       page: {
         currentPage: 0, // 当前页，对应接口中的page
@@ -144,6 +164,11 @@ export default {
       // console.log('enter mouseEnter')
       console.log(this.userData.userId)
     },
+    searchUser () { // 可输入账号、昵称模糊搜索
+      axios.get('/json/user/search?searchStr=' + this.searchUserForm.searchStr).then((res) => {
+        this.userList = res.data.data
+      })
+    },
     getUserList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       axios.get(('/json/user/list'), {
         params: {
@@ -159,16 +184,14 @@ export default {
       })
     },
     update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改
-      console.log('修改用户信息')
-      console.log(item)
-      const params = item
-      axios.get(('/json/user/update'), {
-        params: params
-      }).then((res) => {
-        console.log('successsuccess')
-        console.log(res.data)
-        console.log(res.data.data)
-        this.userList = res.data.data
+      axios.put('/json/user/update?userId=' + item.userId + '&nickName=' + item.nickName + '&telPhone=' + item.telPhone + '&email=' + item.email + '&qq=' + item.qq + '&weiXin=' + item.weiXin + '&sex=' + item.sex + '&readName=' + item.readName + '&headImg=' + item.headImg + '&birthday=' + item.birthday + '&introduce=' + item.introduce).then((res) => {
+        if (res.data.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+        }
+        this.getUserList()
       })
     },
     del () { // 根据ID删除
@@ -208,5 +231,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.el-form {
+  // border-bottom: 2px solid gainsboro;
+}
 </style>
