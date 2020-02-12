@@ -92,17 +92,20 @@
         <el-button
           type="primary"
           size="mini"
+          icon="el-icon-edit"
           @click="$refs.updateDialog.open(userData)">
           修改
         </el-button>
         <el-button
           type="danger"
           size="mini"
+          icon="el-icon-delete"
           @click="del">
           删除
         </el-button>
         <el-button
             type="warning"
+            icon="el-icon-setting"
             @click="$refs.roleDialog.open(userData)"
           >设置角色</el-button>
       </el-table-column>
@@ -162,7 +165,7 @@ export default {
     mouseEnter (data) {
       this.userData = Object.assign({}, data)
       // console.log('enter mouseEnter')
-      console.log(this.userData.userId)
+      // console.log(this.userData.userId)
     },
     searchUser () { // 可输入账号、昵称模糊搜索
       axios.get('/json/user/search?searchStr=' + this.searchUserForm.searchStr).then((res) => {
@@ -232,7 +235,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-form {
-  // border-bottom: 2px solid gainsboro;
-}
+
 </style>

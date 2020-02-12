@@ -6,7 +6,7 @@
     :visible.sync="visable"
     :close-on-click-modal="false"
     :lock-scroll="false"
-    :show-close="false"
+    :show-close="true"
     @close="cancel"
   >
     <div class="role-list">
@@ -19,32 +19,18 @@
         size="mini"
       >
         <el-table-column prop="userId" label="用户ID" />
-        <!-- <el-table-column prop="roleId" label="角色ID" /> -->
-        <template v-for="(item, index) in roleList">
-          <!-- <el-table-column
-              v-if="!isEdit"
-              :key="index"
-              prop="roleId"
-              label="角色ID"/> -->
-              <el-button
-               v-if="!isEdit"
-                :key="index">
-              {{item.roleId}}
-              </el-button>
-            <el-input
-            v-else-if="isEdit"
-             :key="index"
-             v-model="item.roleId"
-             style="width:300px;margin-right:5px;margin-bottom:5px;">
-             </el-input>
+        <el-table-column prop="roleId" label="角色ID">
+          <template slot-scope="scope">
+            <el-input v-show="scope.row.edit" size="small" v-model="scope.row.roleId"></el-input>
+            <span v-show="!scope.row.edit">{{ scope.row.roleId }}</span>
           </template>
+        </el-table-column>
         <el-table-column prop="depict" label="隶属角色" />
         <el-table-column prop="level" label="权重" />
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="200">
           <template slot-scope="scope">
-            <!-- <el-button type="danger" plain @click="updateRole(scope.$index)">修改</el-button> -->
-            <el-button type="danger" icon="el-icon-edit" @click.stop="updateRole">修改</el-button>
-          <el-button type="primary" icon="el-icon-setting" @click.stop="handleSave">保存</el-button>
+            <el-button  type='danger' icon="el-icon-edit" @click='scope.row.edit=!scope.row.edit'>修改</el-button>
+            <el-button  type='primary' icon="el-icon-s-tools" @click='scope.row.edit=!scope.row.edit' @click.stop="handleSave(scope.row.roleId)">保存</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,6 +56,7 @@ export default {
       isEdit: false, // 编辑或保存
       roleList: [ // 角色数据 ,这里可能有问题，要不要{ }
         {
+          edit: false,
           userId: '',
           roleId: '',
           depict: '',
@@ -97,8 +84,9 @@ export default {
         this.roleList[0].level = returnData.level
       })
     },
-    handleSave () { // 通过userId和roleId设置用户角色
-      axios.get('/json/user/setRole?userId=' + userId + '&roleId=' + roleId).then((res) => {
+    handleSave (roleId) { // 通过userId和roleId设置用户角色
+      axios.get('/json/user/setRole?userId=' + this.item.userId + '&roleId=' + roleId).then((res) => {
+        console.log('enter 保存')
         console.log(res.data)
         if (res.data.code === 0) {
           this.$message({

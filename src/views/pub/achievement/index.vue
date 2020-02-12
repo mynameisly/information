@@ -10,6 +10,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getCourseList(searchForm)">查询成绩</el-button>
+          <el-button type="warning" icon="el-icon-download" @click="handleDownload">导出EXCEL</el-button>
         </el-form-item>
       </el-form>
       <el-table
@@ -41,45 +42,46 @@ export default {
   },
   methods: {
     getCourseList (param) {
-      this.$ajax.get('/cet/find?username=' + this.searchForm.username + '&ticketNumber=' + this.searchForm.ticketNumber)
-        .then(res => {
-          this.courseList = Array(res.data.data)
-        })
+      axios.get('/json/cet/find?username=' + this.searchForm.username + '&ticketNumber=' + this.searchForm.ticketNumber).then(res => {
+        this.courseList = Array(res.data.data)
+      })
     },
     // 导出excel
-    // downloadExcel(param) {
-    //   return downloadExcel(param).then(res => {
-    //     const filename = "XXX";
-    //     const exceldata = res.data;
-    //     const tHeader = [
-    //     "姓名",
-    //     "学校",
-    //     "准考证号",
-    //     "听力",
-    //     "阅读",
-    //     "写作和翻译",
-    //     "总分"
-    //     ];
-    //     const filterVal = [
-    //       "name",
-    //       "schoolName",
-    //       "ticketNumber",
-    //       "listenScore",
-    //       "readScore",
-    //       "writeScore",
-    //       "score"
-    //     ];
-    //     download(filename, tHeader, filterVal, exceldata);
-    //     return res;
-    //   }).then((res) => {
-    //     if (res.code == 200) {
-    //       this.$message({
-    //         message: '导出成功！',
-    //         type: 'success'
-    //       })
-    //     }
-    //   })
-    // }
+    handleDownload () {
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = [
+          '姓名',
+          '学校',
+          '准考证号',
+          '听力',
+          '阅读',
+          '写作和翻译',
+          '总分'
+        ]
+        const filterVal = ['name', 'schoolName', 'ticketNumber', 'listenScore', 'readScore', 'writeScore', 'score']
+        const list = this.courseList
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: '四六级成绩表',
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'enddate' || j === 'stadate') {
+            return this.timestampToTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
+    }
   }
 }
 </script>
