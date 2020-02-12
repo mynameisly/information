@@ -12,6 +12,3 @@ Vue.prototype.$isEmpty = function(obj) {
   }
   return false
 }
-
-
-

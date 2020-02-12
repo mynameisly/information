@@ -19,7 +19,7 @@
         </el-col>
       </el-row>
 
-      <el-row>
+      <!-- <el-row>
         <el-col :span="7" :offset="1">
           <el-form-item label="第几页：">
             <el-input v-model="searchForm.page" placeholder="请输入第几页" clearable/>
@@ -35,7 +35,7 @@
             <el-input v-model="searchForm.orderByClause" placeholder="请输入排序规则（默认按创建时间降序）" clearable/>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
 
       <el-row>
         <el-col :span="7" :offset="1">
@@ -66,7 +66,7 @@
       <el-row>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getUploadList(searchForm)">查询文件</el-button>
-          <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增文件</el-button>
+          <el-button type="warning" size="mini" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增文件</el-button>
         </el-form-item>
       </el-row>
     </el-form>
@@ -74,17 +74,20 @@
     <el-table
       border
       :data="uploadList"
-      height="80%"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+       height="75%"
       :cell-style="addBgColorByState"
       @cell-mouse-enter="mouseEnter"
         >
       <el-table-column label="序号" type="index" width="55">
-      <!-- <template scope="scope"> -->
-            <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 -->
-            <!-- <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span> -->
-          <!-- </template> -->
+        <template slot-scope="scope">
+          <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 -->
+          <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="文件名" prop="fileRealName"/>
+      <!-- <el-table-column label="文件后缀名" prop="fileSuffix" width="70"/> -->
       <el-table-column label="文件后缀名" prop="fileSuffix"/>
       <el-table-column label="文件类型" prop="type"/>
       <el-table-column label="状态" prop="state"/>
@@ -92,18 +95,21 @@
         <el-button
           type="success"
           size="mini"
+          icon="el-icon-download"
           @click="download">
           下载
         </el-button>
         <el-button
           type="primary"
           size="mini"
+          icon="el-icon-edit"
           @click="$refs.updateDialog.open(uploadData)">
           修改
         </el-button>
         <el-button
           type="danger"
           size="mini"
+          icon="el-icon-delete"
           @click="del">
           删除
         </el-button>
@@ -111,6 +117,7 @@
     </el-table>
     <add-dialog ref="addDialog" title="新增文件" @confirmData="(item) => add(item)" />
     <update-dialog ref="updateDialog" title="修改文件" @confirmData="(item) => update(item)" />
+    <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
@@ -118,13 +125,16 @@
 import AddDialog from './add'
 import UpdateDialog from './add'
 import axios from 'axios'
+import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
+    PageComponent,
     AddDialog,
     UpdateDialog
   },
   data () {
     return {
+      loading: false,
       searchForm: {
         fileId: '',
         userId: '',
@@ -156,7 +166,13 @@ export default {
           state: '通过审核'
         }
       ],
-      uploadData: {}
+      uploadData: {},
+      page: {
+        currentPage: 0, // 当前页，对应接口中的page
+        pageSize: 0, // 每页条数，对应接口中的limit
+        totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
+        totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
+      }
     }
   },
   mounted () {
@@ -177,7 +193,12 @@ export default {
       '&fileRealName=' + fileRealName + '&fileSuffix=' + fileSuffix + '&type=' + type + '&state=' + state)
         .then((res) => {
           console.log(res.data)
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
           this.uploadList = res.data
+          this.loading = false
         })
     },
     mouseEnter (data) {
@@ -201,7 +222,7 @@ export default {
 
     },
     download () { // 资料下载
-      const fileId = this.uploadData.id;
+      const fileId = this.uploadData.id
       axios.get('/json/file/download?fileId=' + fileId).then((res) => {
         console.log(res.data)
         this.uploadList = res.data
@@ -230,13 +251,27 @@ export default {
           })
         }
       })
+    },
+    handlePageChange (item) { // 分页查询
+      console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
+      axios.get('/json/user/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+        console.log(22222222)
+        console.log(res.data)
+        if (res.data.code === 0) {
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.uploadList = res.data.data
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .el-table td, .el-table th {
-    text-align: center;
-  }
+  // .el-table td, .el-table th {
+  //   text-align: center;
+  // }
 </style>

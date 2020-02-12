@@ -90,8 +90,14 @@ export default {
         console.log(res.data)
         if (res.data.code === 0) {
           this.$message({
-            type: 'success',
+            type: 'sucess',
             message: '修改成功'
+          })
+        }
+        if (res.data.code === 4) {
+          this.$message({
+            type: 'danger',
+            message: res.data.msg
           })
         }
         this.getUserList(this.item.userId)

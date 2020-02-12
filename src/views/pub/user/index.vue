@@ -42,7 +42,7 @@
           <el-form-item label="真实姓名:">
             <el-input v-model="searchForm.readName" placeholder="请输入真实姓名" clearable/>
           </el-form-item>
-        </el-col>
+        </template>
         <el-col  :span="7">
           <el-form-item label="起始-生日:">
             <el-date-picker
@@ -75,8 +75,13 @@
 
     <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
     <!-- el-table中的height用于固定表头 -->
-    <el-table border stripe :data="userList" height="65%" @cell-mouse-enter="mouseEnter">
-      <el-table-column label="序号" type="index" width="55"/>
+    <el-table border stripe :data="userList" height="75%" v-loading="loading" element-loading-text="拼命加载中" @cell-mouse-enter="mouseEnter">
+      <el-table-column label="序号" type="index" width="55">
+        <template slot-scope="scope">
+          <!-- （当前页 - 1）* 这页显示条数 + 序号 + 1-->
+          <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }} </span>
+        </template>
+      </el-table-column>
       <el-table-column label="用户名" prop="number"/>
       <el-table-column label="头像" prop="headImg" width="160"/>
       <el-table-column label="昵称" prop="nickName"/>
@@ -133,6 +138,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       searchUserForm: [ // 模糊搜索
         {
           searchStr: '' // 账号或昵称
@@ -153,7 +159,7 @@ export default {
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
-        totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
+        totalSize: 0, // 总条数，对应接口中的res.data.page.totalRows
         totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
       }
     }
@@ -183,7 +189,12 @@ export default {
           endBirthday: this.searchForm.endBirthday
         }
       }).then((res) => {
+        this.page.currentPage = res.data.page.page
+        this.page.pageSize = res.data.page.limit
+        this.page.totalPage = res.data.page.totalPages
+        this.page.totalSize = res.data.page.totalRows
         this.userList = res.data.data
+        this.loading = false
       })
     },
     update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改
@@ -198,7 +209,7 @@ export default {
       })
     },
     del () { // 根据ID删除
-      this.$confirm('此操作将永久删除该文件，是否继续？', '提示', {
+      this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -226,8 +237,13 @@ export default {
       axios.get('/json/user/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
         console.log(22222222)
         console.log(res.data)
-        
-        this.userList = res.data.data
+        if (res.data.code === 0) {
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.userList = res.data.data
+        }
       })
     }
   }

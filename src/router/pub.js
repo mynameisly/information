@@ -41,7 +41,7 @@ const pub = [
   },
   {
     path: '/pub/upload',
-    component: () => import('@/views/pub/upload/index'),
+    component: () => import('@/views/pub/upload/addfile1'),
     name: 'upload',
     meta: {
       title: '资料上传'
