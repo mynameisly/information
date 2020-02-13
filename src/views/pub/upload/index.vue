@@ -45,19 +45,25 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="文件类型：">
-            <el-select v-model="searchForm.state" placeholder="请输入文件类型" clearable>
-              <el-option label="头像图片" value="头像图片"></el-option>
-              <el-option label="学习资料" value="学习资料"></el-option>
-              <el-option label="网课视频" value="网课视频"></el-option>
+            <el-select v-model="searchForm.type"  palceholder="请选择文件类型" clearable>
+              <el-option
+                v-for="item in filesType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="文件状态：">
-            <el-select v-model="searchForm.state" placeholder="请输入文件状态" clearable>
-              <el-option label="审核不通过" value="审核不通过"></el-option>
-              <el-option label="未审核" value="未审核"></el-option>
-              <el-option label="通过审核" value="通过审核"></el-option>
+            <el-select v-model="searchForm.state"  palceholder="请选择文件状态" clearable>
+              <el-option
+                v-for="item in states"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -66,7 +72,8 @@
       <el-row>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getUploadList(searchForm)">查询文件</el-button>
-          <el-button type="warning" size="mini" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增文件</el-button>
+          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增文件</el-button>
+          <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
         </el-form-item>
       </el-row>
     </el-form>
@@ -79,19 +86,22 @@
        height="75%"
       :cell-style="addBgColorByState"
       @cell-mouse-enter="mouseEnter"
+      @selection-change="handleSelectionChange"
         >
-      <el-table-column label="序号" type="index" width="55">
+      <el-table-column type="selection" align="center" />
+       <!--<el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
-          <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 -->
+          (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="文件名" prop="fileRealName"/>
       <!-- <el-table-column label="文件后缀名" prop="fileSuffix" width="70"/> -->
       <el-table-column label="文件后缀名" prop="fileSuffix"/>
       <el-table-column label="文件类型" prop="type"/>
+      <el-table-column label="文件简介" prop="introduce"/>
       <el-table-column label="状态" prop="state"/>
-      <el-table-column label="操作" prop="operation">
+      <el-table-column label="操作" prop="operation" width="180">
         <el-button
           type="success"
           size="mini"
@@ -106,16 +116,9 @@
           @click="$refs.updateDialog.open(uploadData)">
           修改
         </el-button>
-        <el-button
-          type="danger"
-          size="mini"
-          icon="el-icon-delete"
-          @click="del">
-          删除
-        </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增文件" @confirmData="(item) => add(item)" />
+    <add-dialog ref="addDialog" title="新增文件"/>
     <update-dialog ref="updateDialog" title="修改文件" @confirmData="(item) => update(item)" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
@@ -123,7 +126,7 @@
 
 <script>
 import AddDialog from './add'
-import UpdateDialog from './add'
+import UpdateDialog from './modify'
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
@@ -144,29 +147,22 @@ export default {
         fileRealName: '',
         fileSuffix: '',
         type: '',
+        introduce: '',
         state: ''
       },
-      uploadList: [
-        {
-          fileRealName: 'aaa',
-          fileSuffix: '.png',
-          type: '图像',
-          state: '审核不通过'
-        },
-        {
-          fileRealName: 'bbb',
-          fileSuffix: '.txt',
-          type: '文本文件',
-          state: '未审核'
-        },
-        {
-          fileRealName: 'ccc',
-          fileSuffix: '.js',
-          type: '脚本文件',
-          state: '通过审核'
-        }
-      ],
+      uploadList: [],
       uploadData: {},
+      multipleSelection: [], // 批量删除
+      filesType: [
+        {label: '头像图片', value: 'headImg'},
+        {label: '学习资料文件', value: 'learningResource'},
+        {label: '网课视频', value: 'onlineCourseVideo'}
+      ],
+      states: [
+        {label: '未审核', value: 0},
+        {label: '通过审核', value: 1},
+        {label: '审核不通过', value: 10}
+      ],
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
@@ -179,33 +175,54 @@ export default {
     this.getUploadList()
   },
   methods: {
-    getUploadList () {
-      const fileId = this.searchForm.fileId
-      const userId = this.searchForm.userId
-      const page = this.searchForm.page
-      const limit = this.searchForm.limit
-      const orderByClause = this.searchForm.orderByClause
-      const fileRealName = this.searchForm.fileRealName
-      const fileSuffix = this.searchForm.fileSuffix
-      const type = this.searchForm.type
-      const state = this.searchForm.state
-      axios.get('/json/file/list?page=' + page + '&limit=' + limit + '&orderByClause=' + orderByClause + '&fileId=' + fileId + '&userId=' + userId +
-      '&fileRealName=' + fileRealName + '&fileSuffix=' + fileSuffix + '&type=' + type + '&state=' + state)
-        .then((res) => {
-          console.log(res.data)
-          this.page.currentPage = res.data.page.page
-          this.page.pageSize = res.data.page.limit
-          this.page.totalPage = res.data.page.totalPages
-          this.page.totalSize = res.data.page.totalRows
-          this.uploadList = res.data
-          this.loading = false
-        })
+    getUploadList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      axios.get(('/json/file/list'), {
+        params: {
+          fileId: this.searchForm.fileId,
+          userId: this.searchForm.userId,
+          fileRealName: this.searchForm.fileRealName,
+          fileSuffix: this.searchForm.fileSuffix,
+          type: this.searchForm.type,
+          state: this.searchForm.state
+        }
+      }).then((res) => {
+        this.page.currentPage = res.data.page.page
+        this.page.pageSize = res.data.page.limit
+        this.page.totalPage = res.data.page.totalPages
+        this.page.totalSize = res.data.page.totalRows
+        this.uploadList = this.handleState(res.data.data)
+        this.loading = false
+      })
+    },
+    handleState (data) { // 处理文件状态 0:未审核，1：通过审核，10：审核不通过 参数data就是res.data.data
+      const uploadArr = data
+      let upload
+      for (var k in uploadArr) {
+        upload = uploadArr[k]
+        if (upload.state === 0) {
+          this.$set(upload, 'state', '未审核')
+        } else if (upload.state === 1) {
+          this.$set(upload, 'state', '通过审核')
+        } else if (upload.state === 10) {
+          this.$set(upload, 'state', '审核不通过')
+        }
+
+        if (upload.type === 'headImg') {
+          this.$set(upload, 'type', '头像图片')
+        } else if (upload.type === 'learningResource') {
+          this.$set(upload, 'type', '学习资料文件')
+        } else if (upload.type === 'onlineCourseVideo') {
+          this.$set(upload, 'type', '网课视频')
+        }
+      }
+      return uploadArr
     },
     mouseEnter (data) {
       this.uploadData = Object.assign({}, data)
+      // console.log(this.uploadData)
     },
     addBgColorByState ({row, columnIndex}) {
-      if (columnIndex === 4) {
+      if (columnIndex === 5) {
         if (row.state === '审核不通过') {
           return 'color: #e5323e'
         } else if (row.state === '通过审核') {
@@ -215,15 +232,30 @@ export default {
         }
       }
     },
-    add () { // 增加
-
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
-    update () { // 修改
-
+    add (item, returnData) { // 增加
+      // console.log(item) // fileDescribe: "两个PPT" type: "学习资料文件"
+      // console.log(returnData) // fileDescribe: "两个PPT" type: "学习资料文件"
     },
-    download () { // 资料下载
-      const fileId = this.uploadData.id
-      axios.get('/json/file/download?fileId=' + fileId).then((res) => {
+    update (item) { // 修改
+      axios.put('/json/file/update?fileId=' + item.fileId + '&type=' + item.type + '&state=' + item.state + '&remark=' + item.remark)
+        .then((res) => {
+          console.log(res)
+          console.log(res.data)
+          if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            })
+          }
+          this.getUploadList()
+        })
+    },
+    download () { // 资料下载：下载图片/文档/视频格式转换
+      const fileId = this.uploadData.fileId
+      axios.get('/json/file/download?fileId=' + fileId, {responseType: 'blob'}).then((res) => {
         console.log(res.data)
         this.uploadList = res.data
         if (res.data.code === 0) {
@@ -239,18 +271,40 @@ export default {
         }
       })
     },
-    del () { // 根据分类id，删除文件，可批量删除，多个id逗号分隔，非管理员只能删除自己上传的文件
-      const fileId = this.uploadData.id
-      axios.get('/json/file/delete?fileIds=' + fileId).then((res) => {
-        console.log(res.data)
-        this.uploadList = res.data
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
+    delSelect () {
+      if (this.multipleSelection.length) {
+        let fileIds = [] // 保存选中的数据的id
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          fileIds.push(this.multipleSelection[i].fileId)
         }
-      })
+        this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then((res) => {
+        // 点击确定后发送请求
+          axios.delete('/json/file/delete?fileIds=' + fileIds).then((res) => {
+            if (res.data.code === 0) {
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+              this.getUploadList()
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '至少选择一项'
+        })
+      }
     },
     handlePageChange (item) { // 分页查询
       console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0

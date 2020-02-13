@@ -14,25 +14,29 @@
         </el-form-item>
         <el-form-item label="文件" prop="multipartFiles">
           <el-upload
-            ref="headImgFile"
-            :show-file-list="false"
-            :auto-upload="false"
-            drag
+            ref="upload"
             action="none"
-            :on-change="checkType"
-            :http-request="uploadFile"
-            accept="image/jpeg, image/png, image/jpg"
+            drag
+            multiple
+            :auto-upload="false"
+            :limit="9"
+            :on-preview="handlePictureCardPreview"
+            :before-upload="beforeupload"
+            :on-exceed="exceedHandle"
             >
             <i class="el-icon-upload"></i>
-            <!-- <div>
-              <el-avatar icon="el-icon-user-solid" shape="circle" :size="100" fit="cover" :src="headImgUrl"></el-avatar>
-            </div> -->
-            <!-- <div class="el-upload__text">将文件拖拽到此处，或<em>点击上传</em></div> -->
-            <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png格式的用户头像，且不超过500kb</div> -->
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
+          <!--展示选中图片的区域-->
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%"
+              :src="dialogImageUrl"
+              alt=""
+              >
+          </el-dialog>
         </el-form-item>
         <el-form-item label="文件描述" prop="fileDescribe">
-          <el-input type="textarea" :rows="4" resize="none" maxlength="200" show-word-limit v-model="item.fileDescribe" palceholder="请输入文件描述"></el-input>
+          <el-input type="textarea" :rows="4" v-model="item.fileDescribe" resize="none" maxlength="200" show-word-limit palceholder="请输入文件描述"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -53,14 +57,15 @@ export default {
   data () {
     return {
       visible: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
       item: {
         type: '',
         fileDescribe: ''
       },
-      currentFile: null, // 代表当前文件，每次用户选择文件，就调用 on-change钩子
-      headImgFile: null, // 用户头像文件，每次用户选择头像此属性就会改变，提交时就使用此属性
-      headImgUrl: '', 
-      formDate: '',
+      param: '', // 表单要提交的参数
+      src: '', // 展示图片的地址
+      fileList: [], // 保存图片的数组
       filesType: [
         {
           label: '头像图片',
@@ -77,7 +82,7 @@ export default {
       ],
       rules: {
         type: [{ required: true, message: '请选择文件类型', trigger: 'change' }],
-        // multipartFiles: [{ required: true, message: '请上传文件', trigger: 'blur' }],
+        // multipartFiles: [{ required: true, message: '请上传文件', trigger: 'change' }], // 用blur或change都不行，都要拦截掉
         fileDescribe: [{ required: true, message: '请描述文件', trigger: 'blur' }]
       }
     }
@@ -91,65 +96,57 @@ export default {
         this.item = item
       }
     },
-    uploadFile (file) {
-      console.log(file.file)
-      console.log("uploadFile")
-      this.formDate.append('org_files', file.file)
+    // 点击文件列表中已上传的文件时的钩子
+    handlePictureCardPreview (file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
-    checkType (file, fileList) {
-      // 截取文件类型
-      let fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
-      fileList = []
-      if (fileType !== 'jpeg' && fileType !== 'jpg' && fileType !== 'png') {
-        this.message({
-          message: '头像格式不正确'
-        })
-        return false
-      }
-      if (file.size / 1024 / 1024 > 1.5) {
-        this.message({
-          message: '头像大小不能超过1.5M'
-        })
-        return false
-      }
-      this.headImgFile = file
-      this.headImgUrl = URL.createObjectURL(this.headImgFile.raw)
-      console.log('进入checkType')
-    }, 
+    // 上传前事件
+    beforeupload (file) {
+      // 重新写一个表单上传的方法
+      this.param = new FormData()
+      this.fileList.push(file) // 把单个文件变成数组
+      let images = [...this.fileList] // 把数组存储为一个参数，便于后期操作
+      // 遍历数组
+      images.forEach((img, index) => {
+        this.param.append('multipartFiles', img) // 把单个图片重命名，存储起来（给后台）
+      })
+      return false
+    },
+    // 设置超过9张图给与提示
+    exceedHandle () {
+      alert('您现在选择已超过9张图，请重新选择')
+    },
     submitForm (uploadForm) {
       this.$refs.uploadForm.validate(valid => {
         if (valid) {
-          console.log("submitUpload")
-          this.formDate = new FormData()
-          this.$refs.upload.submit(); // 执行此步骤 相当于执行 http-request 的自定义实现方法
-          // this.formDate.append('其他参数名称', "*****")
+          let _this = this
+          this.$refs.upload.submit()
+          // 下面append的东西就会到form表单数据的this.param中；
+          this.param.append('type', _this.item.type)
+          this.param.append('fileDescribe', _this.item.fileDescribe)
+          // 赋予提交请求头，格式为：'multipart/form-data'（必须！！）
           let config = {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           }
-          let formData = new FormData()
-          console.log(this.headImgFile)
-          formData.append('headImgFile', this.headImgFile.raw)
-          axios.post('/json/file/add?multipartFiles=' + this.formDate + '&fileDescribe=头像头像头像&type=headImg', config).then((res) => {
-            console.log('点击了提交')
-            console.log(res.data)
+          // 然后通过下面的方式把内容通过axios来传到后台
+          axios({
+            method: 'post',
+            url: '/json/file/add',
+            headers: config,
+            data: this.param
+          }).then((res) => {
             if (res.data.code === 0) {
               this.$message({
                 type: 'success',
                 message: '新增文件成功'
               })
+              // this.$emit('confirmData', (this.item, res.data.data))
+              this.resetForm('uploadForm')
             }
           })
-          // this.$confirm('确认保存吗？', '是否保存', {
-          //   cancelButtonText: '取消',
-          //   confirmButtonText: '确认',
-          //   lockScroll: false,
-          //   type: 'warning'
-          // }).then( () => {
-          //   this.$emit('confirmData', this.item);
-          //   this.resetForm('uploadForm')
-          // })
         }
       })
     },

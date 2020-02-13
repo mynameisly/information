@@ -42,7 +42,7 @@
           <el-form-item label="真实姓名:">
             <el-input v-model="searchForm.readName" placeholder="请输入真实姓名" clearable/>
           </el-form-item>
-        </template>
+        </el-col>
         <el-col  :span="7">
           <el-form-item label="起始-生日:">
             <el-date-picker
@@ -64,7 +64,7 @@
                 placeholder="请输入结束-生日"
               />
           </el-form-item>
-        </el-col>
+         </el-col>
         <el-col :span="2">
           <el-form-item>
             <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">精确搜索</el-button>
