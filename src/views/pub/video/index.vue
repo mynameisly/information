@@ -1,60 +1,52 @@
 <template>
-  <div id="upload">
+  <div id="video">
     <el-form v-model="searchForm" :inline="true">
       <el-row>
         <el-col :span="7" :offset="1">
-          <el-form-item label="文件id：">
-            <el-input v-model="searchForm.fileId" placeholder="请输入文件id" clearable/>
+          <el-form-item label="起始-时间：">
+            <el-date-picker
+                clearable
+                v-model="searchForm.startCreateTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请输入起始-时间"
+              />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="用户id：">
-            <el-input v-model="searchForm.userId" placeholder="请输入用户id" clearable/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="文件后缀名：">
-            <el-input v-model="searchForm.fileSuffix" placeholder="请输入文件后缀名" clearable/>
+          <el-form-item label="结束-时间：">
+            <el-date-picker
+                clearable
+                v-model="searchForm.endCreateTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请输入结束-时间"
+              />
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="7" :offset="1">
-          <el-form-item label="文件真实名：">
-            <el-input v-model="searchForm.fileRealName" placeholder="请输入文件上传时真实名" clearable/>
+          <el-form-item label="网课名称：">
+            <el-input v-model="searchForm.courseName" placeholder="请输入网课名称" clearable/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="文件类型：">
-            <el-select v-model="searchForm.type"  palceholder="请选择文件类型" clearable>
-              <el-option
-                v-for="item in filesType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+          <el-form-item label="网课简介：">
+            <el-input v-model="searchForm.courseIntroduction" placeholder="请输入网课简介" clearable/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="文件状态：">
-            <el-select v-model="searchForm.state"  palceholder="请选择文件状态" clearable>
-              <el-option
-                v-for="item in states"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+          <el-form-item label="教师名称：">
+            <el-input v-model="searchForm.teacherName" placeholder="请输入教师名称" clearable/>
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-row>
         <el-form-item>
-          <el-button type="success" size="medium" icon="el-icon-search" @click="getUploadList(searchForm)">查询文件</el-button>
-          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增文件</el-button>
+          <el-button type="success" size="medium" icon="el-icon-search" @click="getVideoList(searchForm)">查询网课</el-button>
+          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增网课</el-button>
           <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
         </el-form-item>
       </el-row>
@@ -62,7 +54,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      :data="uploadList"
+      :data="videoList"
       v-loading="loading"
       element-loading-text="拼命加载中"
        height="75%"
@@ -95,7 +87,7 @@
           type="primary"
           size="mini"
           icon="el-icon-edit"
-          @click="$refs.updateDialog.open(uploadData)">
+          @click="$refs.updateDialog.open(videoData)">
           修改
         </el-button>
       </el-table-column>
@@ -121,30 +113,15 @@ export default {
     return {
       loading: false,
       searchForm: {
-        fileId: '',
-        userId: '',
-        page: '',
-        limit: '',
-        orderByClause: '',
-        fileRealName: '',
-        fileSuffix: '',
-        type: '',
-        introduce: '',
-        state: ''
+        startCreateTime: '',
+        endCreateTime: '',
+        courseName: '',
+        courseIntroduction: '',
+        teacherName: ''
       },
-      uploadList: [],
-      uploadData: {},
+      videoList: [],
+      videoData: {},
       multipleSelection: [], // 批量删除
-      filesType: [
-        {label: '头像图片', value: 'headImg'},
-        {label: '学习资料文件', value: 'learningResource'},
-        {label: '网课视频', value: 'onlineCourseVideo'}
-      ],
-      states: [
-        {label: '未审核', value: 0},
-        {label: '通过审核', value: 1},
-        {label: '审核不通过', value: 10}
-      ],
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
@@ -154,71 +131,38 @@ export default {
     }
   },
   mounted () {
-    this.getUploadList()
+    this.getVideoList()
   },
   methods: {
-    getUploadList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+    getVideoList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       axios.get(('/json/file/list'), {
         params: {
-          fileId: this.searchForm.fileId,
-          userId: this.searchForm.userId,
-          fileRealName: this.searchForm.fileRealName,
-          fileSuffix: this.searchForm.fileSuffix,
-          type: this.searchForm.type,
-          state: this.searchForm.state
+          startCreateTime: this.searchForm.startCreateTime,
+          endCreateTime: this.searchForm.endCreateTime,
+          courseName: this.searchForm.courseName,
+          courseIntroduction: this.searchForm.courseIntroduction,
+          teacherName: this.searchForm.teacherName
         }
       }).then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
-        this.uploadList = this.handleState(res.data.data)
+        this.videoList = res.data.data
         this.loading = false
       })
     },
-    handleState (data) { // 处理文件状态 0:未审核，1：通过审核，10：审核不通过 参数data就是res.data.data
-      const uploadArr = data
-      let upload
-      for (var k in uploadArr) {
-        upload = uploadArr[k]
-        if (upload.state === 0) {
-          this.$set(upload, 'state', '未审核')
-        } else if (upload.state === 1) {
-          this.$set(upload, 'state', '通过审核')
-        } else if (upload.state === 10) {
-          this.$set(upload, 'state', '审核不通过')
-        }
-
-        if (upload.type === 'headImg') {
-          this.$set(upload, 'type', '头像图片')
-        } else if (upload.type === 'learningResource') {
-          this.$set(upload, 'type', '学习资料文件')
-        } else if (upload.type === 'onlineCourseVideo') {
-          this.$set(upload, 'type', '网课视频')
-        }
-      }
-      return uploadArr
-    },
     mouseEnter (data) {
-      this.uploadData = Object.assign({}, data)
-      // console.log(this.uploadData)
-    },
-    addBgColorByState ({row, columnIndex}) {
-      if (columnIndex === 5) {
-        if (row.state === '审核不通过') {
-          return 'color: #e5323e'
-        } else if (row.state === '通过审核') {
-          return 'color: #22c32e'
-        } else if (row.state === '未审核') {
-          return 'color: #4cabce'
-        }
-      }
+      this.videoData = Object.assign({}, data)
+      // console.log(this.videoData)
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
     update (item) { // 修改
-      axios.put('/json/file/update?fileId=' + item.fileId + '&type=' + item.type + '&state=' + item.state + '&remark=' + item.remark)
+      axios.put('/json/onlineCourse/update?courseId=' + item.courseId + '&courseName=' + item.courseName + '&courseIntroduction=' + item.courseIntroduction +
+      '&teacherName=' + item.teacherName + '&teacherIntroduction=' + item.teacherIntroduction + '&teachingMethods=' + item.teachingMethods + '&lectureContent=' + item.lectureContent +
+      '&instructionalObjective=' + item.instructionalObjective + '&teachingMaterial=' + item.teachingMaterial + '&mainVideoUrl=' + item.mainVideoUrl)
         .then((res) => {
           console.log(res)
           console.log(res.data)
@@ -228,17 +172,14 @@ export default {
               message: '修改成功'
             })
           }
-          this.getUploadList()
+          this.getVideoList()
         })
-    },
-    download () {
-      window.location.href = 'http://120.24.186.190:12346/json/file/download?fileId=' + this.uploadData.fileId
     },
     delSelect () {
       if (this.multipleSelection.length) {
-        let fileIds = [] // 保存选中的数据的id
+        let videoIds = [] // 保存选中的数据的id
         for (let i = 0; i < this.multipleSelection.length; i++) {
-          fileIds.push(this.multipleSelection[i].fileId)
+          videoIds.push(this.multipleSelection[i].fileId)
         }
         this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
           confirmButtonText: '确定',
@@ -247,13 +188,13 @@ export default {
           center: true
         }).then((res) => {
         // 点击确定后发送请求
-          axios.delete('/json/file/delete?fileIds=' + fileIds).then((res) => {
+          axios.delete('/json/onlineCourse/delete?ids=' + videoIds).then((res) => {
             if (res.data.code === 0) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
               })
-              this.getUploadList()
+              this.getVideoList()
             }
           })
         }).catch(() => {
@@ -279,7 +220,7 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.uploadList = res.data.data
+          this.videoList = res.data.data
         }
       })
     }
@@ -288,7 +229,5 @@ export default {
 </script>
 
 <style lang="scss">
-  // .el-table td, .el-table th {
-  //   text-align: center;
-  // }
+
 </style>
