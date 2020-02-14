@@ -130,7 +130,7 @@ export default {
   },
   methods: {
     getVideoList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      axios.get(('/json/onlineCourse/list'), {
+      axios.get(('/json/comment/listDetails'), {
         params: {
           startCreateTime: this.searchForm.startCreateTime,
           endCreateTime: this.searchForm.endCreateTime,

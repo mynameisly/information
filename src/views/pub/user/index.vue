@@ -75,7 +75,7 @@
 
     <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
     <!-- el-table中的height用于固定表头 -->
-    <el-table border stripe :data="userList" height="75%" v-loading="loading" element-loading-text="拼命加载中" @cell-mouse-enter="mouseEnter">
+    <el-table border stripe :data="userList" height="65%" v-loading="loading" element-loading-text="拼命加载中" @cell-mouse-enter="mouseEnter">
       <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
           <!-- （当前页 - 1）* 这页显示条数 + 序号 + 1-->

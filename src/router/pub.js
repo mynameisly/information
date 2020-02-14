@@ -40,6 +40,14 @@ const pub = [
     }
   },
   {
+    path: '/pub/video',
+    component: () => import('@/views/pub/video/index'),
+    name: 'video',
+    meta: {
+      title: '视频教程'
+    }
+  },
+  {
     path: '/pub/upload',
     component: () => import('@/views/pub/upload/index'),
     name: 'upload',
@@ -61,6 +69,14 @@ const pub = [
     name: 'notice',
     meta: {
       title: '教务通知'
+    }
+  },
+  {
+    path: '/pub/comment',
+    component: () => import('@/views/pub/comment/index'),
+    name: 'notice',
+    meta: {
+      title: '评论回复'
     }
   }
 ]

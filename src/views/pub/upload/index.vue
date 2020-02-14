@@ -65,7 +65,7 @@
       :data="uploadList"
       v-loading="loading"
       element-loading-text="拼命加载中"
-       height="75%"
+       height="65%"
       :cell-style="addBgColorByState"
       @cell-mouse-enter="mouseEnter"
       @selection-change="handleSelectionChange"
