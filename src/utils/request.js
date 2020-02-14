@@ -40,14 +40,14 @@ service.interceptors.response.use(
   res => {
     // res.data.status = Number(res.data.status)
     if (res.data.code === 200) {
-      return res.data;
+      return res.data.data
     } else if (res.data.code === 404) {
       this.$router.push("/404")
     } else if (res.data.code === 401) {
       this.$router.push("/401")
     } else {
-      Message.error({ message: res.data.msg||res.data.entity.msg });
-      return Promise.reject(res);
+      // Message.error({ message: res.data.data.msg || res.data.data.entity.msg })
+      // return Promise.reject(res)
     }
   },
   error => {
