@@ -78,6 +78,14 @@ const pub = [
     meta: {
       title: '评论回复'
     }
+  },
+  {
+    path: '/pub/watch',
+    component: () => import('@/views/pub/watch/index'),
+    name: 'watch',
+    meta: {
+      title: '观看记录'
+    }
   }
 ]
 export default pub

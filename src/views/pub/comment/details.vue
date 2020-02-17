@@ -1,5 +1,5 @@
 <template>
-  <div id="comment">
+  <div id="comment_details">
     <el-form v-model="searchForm" :inline="true">
       <el-row>
         <el-col :span="7" :offset="1">
@@ -44,7 +44,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="类型：">
-            <el-select v-model="item.type"  palceholder="请选择类型" clearable>
+            <el-select v-model="item.type"  palceholder="请选择类型" clearable disabled="flag">
               <el-option
                 v-for="item in commentsType"
                 :key="item.value"
@@ -75,11 +75,7 @@
       </el-row>
       <el-row>
         <el-form-item>
-          <el-button type="success" size="medium" icon="el-icon-search" @click="getCommentList(searchForm)">查询评论</el-button>
-          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null, falg)">新增评论</el-button>
-          <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
-          <el-button type="primary" size="medium" icon="el-icon-view" @click="$refs.detailsDialog.open()">查看评论详情</el-button>
-          <el-button type="info" size="medium" icon="el-icon-view" @click="$refs.statNumber.open()">查看评论统计</el-button>
+          <el-button type="success" size="medium" icon="el-icon-search" @click="getCommentListDetails(searchForm)">查询评论</el-button>
         </el-form-item>
       </el-row>
     </el-form>
@@ -87,61 +83,92 @@
     <el-table
       border
       height="65%"
-      :data="commentList"
+      stripe
+      :data="commentListDetails"
       v-loading="loading"
       element-loading-text="拼命加载中"
-      @cell-mouse-enter="mouseEnter"
-      @selection-change="handleSelectionChange"
+      row-key="commentId"
+      :expand-row-keys="expands"
         >
-      <el-table-column type="selection" align="center" />
        <!--<el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
           (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>-->
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table
+            :data="props.row.children"
+            :show-header="false"
+          >
+            <el-table-column
+              label="用户ID"
+              prop="userId"
+              :show-overflow-tooltip="true"
+              >
+              <template slot-scope="oscope">{{ oscope.row.userId}}</template>
+            </el-table-column>
+            <el-table-column
+              label="目标ID"
+              prop="targetId"
+              :show-overflow-tooltip="true"
+              >
+              <template slot-scope="oscope">{{ oscope.row.targetId}}</template>
+            </el-table-column>
+            <el-table-column
+              label="评分"
+              prop="score"
+              :show-overflow-tooltip="true"
+              >
+              <template slot-scope="oscope">{{ oscope.row.score}}</template>
+            </el-table-column>
+            <el-table-column
+              label="内容"
+              prop="context"
+              :show-overflow-tooltip="true"
+              >
+              <template slot-scope="oscope">{{ oscope.row.context}}</template>
+            </el-table-column>
+            <el-table-column
+              label="评论人"
+              prop="number"
+              :show-overflow-tooltip="true"
+              >
+              <template slot-scope="oscope">{{ oscope.row.user.number}}</template>
+            </el-table-column>
+            <el-table-column
+              label="评论人昵称"
+              prop="nickName"
+              :show-overflow-tooltip="true"
+              >
+              <template slot-scope="oscope">{{ oscope.row.user.nickName}}</template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
       <el-table-column label="类型" prop="type"/>
       <el-table-column label="用户ID" prop="userId"/>
       <el-table-column label="目标ID" prop="targetId"/>
       <el-table-column label="评分" prop="score"/>
       <el-table-column label="内容" prop="context"/>
-      <el-table-column label="操作" prop="operation" width="100">
-        <el-button
-          type="primary"
-          size="mini"
-          icon="el-icon-edit"
-          @click="$refs.updateDialog.open(commentData, flag)">
-          修改
-        </el-button>
-      </el-table-column>
+      <el-table-column label="评论人" prop="number"/>
+      <el-table-column label="评论人昵称" prop="nickName"/>
     </el-table>
-    <add-dialog ref="addDialog" title="新增文件"  @confirmData="(item) => addComment(item)"/>
-    <update-dialog ref="updateDialog" title="修改文件" @confirmData="(item) => updateComment(item)" />
-    <details-dialog ref="detailsDialog" title="查看评论详情" />
-    <details-dialog ref="statNumber" title="查看评论统计" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
-import AddDialog from './add'
-import UpdateDialog from './add'
-import detailsDialog from './details'
-import statNumber from './stat'
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
-    PageComponent,
-    AddDialog,
-    UpdateDialog,
-    detailsDialog,
-    statNumber
+    PageComponent
   },
   data () {
     return {
       loading: false,
-      flag: false, // 默认可以编辑
       searchForm: {
         commentId: '',
         userId: '',
@@ -153,9 +180,25 @@ export default {
         endScore: '',
         context: ''
       },
-      commentList: [],
-      commentData: {},
-      multipleSelection: [], // 批量删除
+      commentsType: [
+        {
+          label: '动态',
+          value: '动态'
+        },
+        {
+          label: '评论回复',
+          value: '评论回复'
+        },
+        {
+          label: '评论视频',
+          value: '评论视频'
+        },
+        {
+          label: '弹幕',
+          value: '弹幕'
+        }
+      ],
+      commentListDetails: [],
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
@@ -165,11 +208,11 @@ export default {
     }
   },
   mounted () {
-    this.getCommentList()
+    this.getCommentListDetails()
   },
   methods: {
-    getCommentList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      axios.get(('/json/comment/list'), {
+    getCommentListDetails () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      axios.get(('/json/comment/listDetails'), {
         params: {
           commentId: this.searchForm.commentId,
           userId: this.searchForm.userId,
@@ -182,92 +225,25 @@ export default {
           context: this.searchForm.context
         }
       }).then((res) => {
+        console.log(res)
+        console.log(res.data)
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
-        this.commentList = res.data.data
+        this.commentListDetails = res.data.data
         this.loading = false
       })
     },
-    mouseEnter (data) {
-      this.commentData = Object.assign({}, data)
-    },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
-    },
-    addComment(item) { // 新增评论
-      axios.post('/json/comment/add?targetId=' + item.targetId + '&type=' + item.type + '&score=' + item.score + '&context=' + item.context)
-      .then((res) => {
-        console.log('进入新增评论请求')
-        console.log(res.data)
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '新增评论成功'
-          })
-          this.getCommentList()
-        }
-      })
-    },
-    updateComment (item) { // 修改评论
-      axios.put('/json/comment/update?commentId=' + commentId + '&context=' + context)
-      .then((res) => {
-        console.log('进入修改评论请求')
-        console.log(res.data)
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '修改评论成功'
-          })
-        }
-        this.getCommentList()
-      })
-    },
-    delSelect () {
-      if (this.multipleSelection.length) {
-        let commentIds = [] // 保存选中的数据的id
-        for (let i = 0; i < this.multipleSelection.length; i++) {
-          commentIds.push(this.multipleSelection[i].commentId)
-        }
-        this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then((res) => {
-        // 点击确定后发送请求
-          axios.delete('/json/comment/delete?ids=' + commentIds).then((res) => {
-            if (res.data.code === 0) {
-              this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              this.getCommentList()
-            }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      } else {
-        this.$message({
-          type: 'warning',
-          message: '至少选择一项'
-        })
-      }
-    },
     handlePageChange (item) { // 分页查询
       console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/comment/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+      axios.get('/json/onlineCourse/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.commentList = res.data.data
+          this.commentListDetails = res.data.data
         }
       })
     }

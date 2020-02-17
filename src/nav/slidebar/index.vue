@@ -112,6 +112,12 @@ export default {
           icon: 'el-icon-menu',
           name: '评论回复',
           url: '/pub/comment'
+        },
+        {
+          id: 10,
+          icon: 'el-icon-menu',
+          name: '观看记录',
+          url: '/pub/watch'
         }
       ]
     }
