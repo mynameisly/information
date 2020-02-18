@@ -7,7 +7,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
-import axios from 'axios'
+// import axios from 'axios'
 // import echarts from 'echarts'
 import particlesJS from 'particles.js'
 import '@/utils/prototype'

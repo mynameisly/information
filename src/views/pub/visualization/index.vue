@@ -15,7 +15,7 @@ export default {
   methods: {
     drawVideoChart() {
       // 基于准备好的dom，初始化echarts实例
-      let myVideoChart = this.$echarts.init(document.getElementById("video"));
+      let app = this.$echarts.init(document.getElementById("video"));
 
       app.config = {
         rotate: 90,

@@ -25,7 +25,7 @@ const pub = [
   },
   {
     path: '/pub/visualization',
-    component: () => import('@/views/pub/visualization/index'),
+    component: () => import('@/views/pub/visualization/index2'),
     name: 'visualization',
     meta: {
       title: '数据统计'
@@ -73,8 +73,8 @@ const pub = [
   },
   {
     path: '/pub/comment',
-    component: () => import('@/views/pub/comment/index'),
-    name: 'notice',
+    component: () => import('@/views/pub/comment/stat'),
+    name: 'comment',
     meta: {
       title: '评论回复'
     }
