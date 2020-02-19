@@ -69,29 +69,17 @@
       <el-table-column label="目标视频ID" prop="targetId"/>
       <el-table-column label="目标视频名称" prop="targetName"/>
       <el-table-column label="观看时间" prop="watchTime"/>
-      <el-table-column label="操作" prop="operation" width="100">
-        <el-button
-          type="primary"
-          size="mini"
-          icon="el-icon-edit"
-          @click="$refs.updateDialog.open(uploadData)">
-          修改
-        </el-button>
-      </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增文件"  @confirmData="(item) => addWatch(item)"/>
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
-import AddDialog from './add'
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
-    PageComponent,
-    AddDialog
+    PageComponent
   },
   data () {
     return {
@@ -140,17 +128,17 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    addWatch(item) { // 新增观看记录
-      axios.post('/json/onlineCourse/add?courseName=' +ainwatchUrl)
-      .then((res) => {
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '新增文件成功'
-          })
-          this.getWatchList()
-        }
-      })
+    addWatch (item) { // 新增观看记录
+      axios.post('/json/watch/add?targetId=' + item.targetId)
+        .then((res) => {
+          if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '新增文件成功'
+            })
+            this.getWatchList()
+          }
+        })
     },
     delSelect () {
       if (this.multipleSelection.length) {

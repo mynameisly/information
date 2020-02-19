@@ -98,23 +98,17 @@ export default {
         {
           id: 7,
           icon: 'el-icon-menu',
-          name: '数据统计',
-          url: '/pub/visualization'
-        },
-        {
-          id: 8,
-          icon: 'el-icon-menu',
           name: '视频教程',
           url: '/pub/video'
         },
         {
-          id: 9,
+          id: 8,
           icon: 'el-icon-menu',
           name: '评论回复',
           url: '/pub/comment'
         },
         {
-          id: 10,
+          id: 9,
           icon: 'el-icon-menu',
           name: '观看记录',
           url: '/pub/watch'

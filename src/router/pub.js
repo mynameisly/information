@@ -24,14 +24,6 @@ const pub = [
     }
   },
   {
-    path: '/pub/visualization',
-    component: () => import('@/views/pub/visualization/index2'),
-    name: 'visualization',
-    meta: {
-      title: '数据统计'
-    }
-  },
-  {
     path: '/pub/study',
     component: () => import('@/views/pub/study/index'),
     name: 'study',
@@ -73,7 +65,7 @@ const pub = [
   },
   {
     path: '/pub/comment',
-    component: () => import('@/views/pub/comment/stat'),
+    component: () => import('@/views/pub/comment/index'),
     name: 'comment',
     meta: {
       title: '评论回复'

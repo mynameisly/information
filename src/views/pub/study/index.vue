@@ -38,13 +38,13 @@ export default {
       this.barrageList = []
     },
     addToList () {
-        this.barrageList.push({
-          id: ++this.currentId,
-          avatar: '@/assets/avatar.jpg',
-          msg: this.msg,
-          time: 15,
-          type: MESSAGE_TYPE.NORMAL
-        })
+      this.barrageList.push({
+        id: ++this.currentId,
+        avatar: '@/assets/avatar.jpg',
+        msg: this.msg,
+        time: 15,
+        type: MESSAGE_TYPE.NORMAL
+      })
     }
   }
 }

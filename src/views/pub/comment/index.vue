@@ -106,7 +106,7 @@
           <el-table-column label="用户ID" prop="userId"/>
           <el-table-column label="目标ID" prop="targetId"/>
           <el-table-column label="评分" prop="score"/>
-          <el-table-column label="内容" prop="context"/>
+          <el-table-column label="内容" prop="context" width="400"/>
           <el-table-column label="操作" prop="operation" width="100">
             <el-button
               type="primary"
@@ -288,10 +288,52 @@
         </el-tab-pane>
       <el-tab-pane label="评论统计">
         <!-- 评论统计模块 -->
-
+        <el-form v-model="searchFormStat" :inline="true">
+          <el-row>
+            <el-col :span="7" :offset="1">
+              <el-form-item label="起始-时间：">
+                <el-date-picker
+                    clearable
+                    v-model="searchFormStat.startTime"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="请输入起始-时间"
+                  />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="结束-时间：">
+                <el-date-picker
+                    clearable
+                    v-model="searchFormStat.endTime"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="请输入结束-时间"
+                  />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <el-button type="success" size="medium" icon="el-icon-search" @click="getstatList(searchForm)">查询评论</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div class="panel" style="height: 90%">
+          <el-tabs tab-position="left" style="height: 540px;">
+            <el-tab-pane label="按月统计">
+              <div ref="echartMonth" class="byMonth"></div>
+            </el-tab-pane>
+            <el-tab-pane label="按时统计">
+              <div ref="echartHour" class="byHour"></div>
+            </el-tab-pane>
+            <el-tab-pane label="按天统计">
+              <div ref="echartDate" class="byDate"></div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
         </el-tab-pane>
     </el-tabs>
-    
   </div>
 </template>
 
@@ -301,12 +343,13 @@ import UpdateDialog from './add'
 // import detailsDialog from './details'
 // import statNumber from './stat'
 import axios from 'axios'
+import echarts from 'echarts'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     PageComponent,
     AddDialog,
-    UpdateDialog,
+    UpdateDialog
     // detailsDialog,
     // statNumber
   },
@@ -365,11 +408,143 @@ export default {
         context: ''
       },
       commentListDetails: [],
+      // 下面的数据是评论统计的
+      searchFormStat: {
+        startTime: '',
+        endTime: ''
+      },
+      chart: null,
+      optionDate: { // 按日统计的配置项
+        title: {
+          // text: '按天统计'
+        },
+        grid: {
+          x: '2%', // 相当于距离左边效果:padding-left
+          y: '5%',  // 相当于距离上边效果:padding-top
+          bottom: '3%',
+          containLabel: true
+        },
+        tooltip: {},
+        xAxis: {
+          type: 'category',
+          data: []
+        },
+        yAxis: {},
+        series: [{
+          name: '今日数量',
+          type: 'bar',
+          data: [],
+          // barWidth: 50, // 设置柱子的宽度，如果数量太少，柱子不美观
+          itemStyle: { // 设置柱子的样式
+            normal: {
+              label: {
+                show: true, // 开启显示
+                position: 'top', // 在上方显示
+                textStyle: { // 数值样式
+                  color: '#0679e3',
+                  fontSize: 16
+                }
+              },
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: '#5DB6F3'
+              }, {
+                offset: 1,
+                color: '#5A91E1'
+              }]),
+              barBorderRadius: 4 // 柱状角成椭圆形
+            }
+          }
+        }]
+      },
+      optionMonth: { // 按月统计的配置项
+        title: {
+          // text: '按月统计'
+        },
+        grid: {
+          x: '2%', // 相当于距离左边效果:padding-left
+          y: '5%',  // 相当于距离上边效果:padding-top
+          bottom: '3%',
+          containLabel: true
+        },
+        tooltip: {},
+        xAxis: {
+          data: []
+        },
+        yAxis: {},
+        series: [{
+          name: '今日数量',
+          type: 'bar',
+          data: [],
+          itemStyle: {
+            normal: {
+              label: {
+                show: true, // 开启显示
+                position: 'top', // 在上方显示
+                textStyle: { // 数值样式
+                  color: '#0679e3',
+                  fontSize: 16
+                }
+              },
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: '#5DB6F3'
+              }, {
+                offset: 1,
+                color: '#5A91E1'
+              }]),
+              barBorderRadius: 4 // 柱状角成椭圆形
+            }
+          }
+        }]
+      },
+      optionHour: { // 按时统计的配置项
+        title: {
+          // text: '按时统计'
+        },
+        grid: {
+          x: '2%', // 相当于距离左边效果:padding-left
+          y: '5%',  // 相当于距离上边效果:padding-top
+          bottom: '3%',
+          containLabel: true
+        },
+        tooltip: {},
+        xAxis: {
+          data: []
+        },
+        yAxis: {},
+        series: [{
+          name: '今日数量',
+          type: 'bar',
+          data: [],
+          itemStyle: {
+            normal: {
+              label: {
+                show: true, // 开启显示
+                position: 'top', // 在上方显示
+                textStyle: { // 数值样式
+                  color: '#0679e3',
+                  fontSize: 16
+                }
+              },
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: '#5DB6F3'
+              }, {
+                offset: 1,
+                color: '#5A91E1'
+              }]),
+              barBorderRadius: 4 // 柱状角成椭圆形
+            }
+          }
+        }]
+      }
     }
   },
   mounted () {
     this.getCommentList() // 查询评论
     this.getCommentListDetails() // 查询评论详情
+    this.getstatList() // 查询评论统计
   },
   methods: {
     getCommentList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
@@ -405,33 +580,33 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    addComment(item) { // 新增评论
+    addComment (item) { // 新增评论
       axios.post('/json/comment/add?targetId=' + item.targetId + '&type=' + item.type + '&score=' + item.score + '&context=' + item.context)
-      .then((res) => {
-        console.log('进入新增评论请求')
-        console.log(res.data)
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '新增评论成功'
-          })
-          this.getCommentList()
-        }
-      })
+        .then((res) => {
+          console.log('进入新增评论请求')
+          console.log(res.data)
+          if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '新增评论成功'
+            })
+            this.getCommentList()
+          }
+        })
     },
     updateComment (item) { // 修改评论
-      axios.put('/json/comment/update?commentId=' + commentId + '&context=' + context)
-      .then((res) => {
-        console.log('进入修改评论请求')
-        console.log(res.data)
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '修改评论成功'
-          })
-        }
-        this.getCommentList()
-      })
+      axios.put('/json/comment/update?commentId=' + item.commentId + '&context=' + item.context)
+        .then((res) => {
+          console.log('进入修改评论请求')
+          console.log(res.data)
+          if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '修改评论成功'
+            })
+          }
+          this.getCommentList()
+        })
     },
     delSelect () {
       if (this.multipleSelection.length) {
@@ -530,11 +705,74 @@ export default {
         }
       }
       return data
+    },
+    // 下面的代码为评论统计的
+    drawMonth () {
+      this.chart = echarts.init(this.$refs.echartMonth)
+      // 使用刚指定的配置项和数据显示图表。
+      this.chart.setOption(this.optionMonth)
+    },
+    drawDate () {
+      this.chart = echarts.init(this.$refs.echartDate)
+      this.chart.setOption(this.optionDate)
+    },
+    drawHour () {
+      this.chart = echarts.init(this.$refs.echartHour)
+      this.chart.setOption(this.optionHour)
+    },
+    getstatList () { // 接口中提供的搜索参数有startTime, endTime, userId, targetId, type, threadType, 但实际可以使用的就只有两个时间，其他的先不写
+      axios.get('/json/comment/statNumber?startTime=' + this.searchFormStat.startTime + '&endTime=' + this.searchFormStat.endTime).then((res) => {
+        if (res.data.code === 0) {
+          // console.log('进入到所有的统计数据')
+          // console.log(res.data.data)
+          const returnData = res.data.data
+          this.optionHour.xAxis.data = this.handleXAxisData(returnData.hourThread)
+          this.optionHour.series[0].data = this.handleSeriesData(returnData.hourThread)
+          this.optionMonth.xAxis.data = this.handleXAxisData(returnData.monthThread)
+          this.optionMonth.series[0].data = this.handleSeriesData(returnData.monthThread)
+          this.optionDate.xAxis.data = this.handleDateXAxisData(returnData.dateThread)
+          this.optionDate.series[0].data = this.handleSeriesData(returnData.dateThread)
+          this.drawMonth()
+          this.drawDate()
+          this.drawHour()
+        }
+      })
+    },
+    handleXAxisData (data) {
+      const temp = data
+      const xAxisData = []
+      for (let i = 0; i < temp.length; i++) {
+        xAxisData.push(temp[i].name)
+      }
+      return xAxisData
+    },
+    handleSeriesData (data) {
+      const temp = data
+      let seriesData = []
+      for (let i = 0; i < temp.length; i++) {
+        seriesData.push(temp[i].value)
+      }
+      return seriesData
+    },
+    handleDateXAxisData (data) { // 处理按天统计的xAxis格式为：月-日
+      const temp = data
+      const xAxisData = []
+      for (let i = 0; i < temp.length; i++) {
+        let dateStr = temp[i].name
+        xAxisData.push(dateStr.substring(dateStr.length - 5))
+      }
+      console.log(xAxisData)
+      return xAxisData
     }
   }
 }
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
+.byMonth, .byDate, .byHour {
+  width: 1400px;
+  height:540px;
+  // border: 1px solid red;
+  margin: 0 auto;
+}
 </style>
