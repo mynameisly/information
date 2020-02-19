@@ -73,7 +73,7 @@ const pub = [
   },
   {
     path: '/pub/watch',
-    component: () => import('@/views/pub/watch/index'),
+    component: () => import('@/views/pub/watch/statSex'),
     name: 'watch',
     meta: {
       title: '观看记录'
