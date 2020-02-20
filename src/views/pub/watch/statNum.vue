@@ -31,8 +31,8 @@
         </el-col>
       </el-row>
     </el-form>
-    <div class="panel" style="height: 90%">
-      <el-tabs tab-position="left" style="height: 540px;">
+    <div class="panel">
+      <el-tabs tab-position="left" style="height: 530px;">
         <el-tab-pane label="按月统计">
           <div ref="echartMonth" class="byMonth"></div>
         </el-tab-pane>

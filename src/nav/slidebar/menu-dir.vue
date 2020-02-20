@@ -63,7 +63,7 @@ $bg2:rgb(228, 147, 26);
 $bg3:rgb(76, 103, 136);
 .menu-dir {
   .menu-dir-h {
-    padding:0 0 0 1rem;
+    padding:0 0 0 1.5rem;
     height:41px;
     line-height: 41px;
     border-bottom:1px solid #f3f3f3;

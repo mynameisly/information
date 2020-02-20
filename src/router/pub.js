@@ -24,14 +24,6 @@ const pub = [
     }
   },
   {
-    path: '/pub/study',
-    component: () => import('@/views/pub/study/index'),
-    name: 'study',
-    meta: {
-      title: '网课学习'
-    }
-  },
-  {
     path: '/pub/video',
     component: () => import('@/views/pub/video/index'),
     name: 'video',

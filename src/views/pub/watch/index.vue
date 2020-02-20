@@ -19,13 +19,11 @@ import axios from 'axios'
 import watchList from './watchList'
 import statNum from './statNum'
 import statSex from './statSex'
-import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     childWatch: watchList,
     childNum: statNum,
-    childSex: statSex,
-    PageComponent
+    childSex: statSex
   },
   data () {
     return {
@@ -43,12 +41,6 @@ export default {
       watchList: [],
       watchData: {},
       multipleSelection: [], // 批量删除
-      page: {
-        currentPage: 0, // 当前页，对应接口中的page
-        pageSize: 0, // 每页条数，对应接口中的limit
-        totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
-        totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
-      }
     }
   },
   mounted () {
@@ -139,23 +131,13 @@ export default {
           message: '至少选择一项'
         })
       }
-    },
-    handlePageChange (item) { // 分页查询
-      console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/watch/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-        if (res.data.code === 0) {
-          this.page.currentPage = res.data.page.page
-          this.page.pageSize = res.data.page.limit
-          this.page.totalPage = res.data.page.totalPages
-          this.page.totalSize = res.data.page.totalRows
-          this.watchList = res.data.data
-        }
-      })
     }
   }
 }
 </script>
 
 <style lang="scss">
-
+#watch .el-table__body-wrapper {
+  height: 285px;
+}
 </style>

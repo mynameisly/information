@@ -12,8 +12,6 @@ import store from './store'
 import particlesJS from 'particles.js'
 import '@/utils/prototype'
 // import locale from 'element-ui/lib/locale/lang/zh-CN';
-import { vueBaberrage } from './views/lib/index'
-Vue.use(vueBaberrage)
 // import i18n from './i18n';
 
 Vue.use(ElementUI)

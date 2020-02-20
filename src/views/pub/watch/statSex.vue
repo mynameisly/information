@@ -31,8 +31,8 @@
         </el-col>
       </el-row>
     </el-form>
-    <div class="panel" style="height: 90%">
-      <el-tabs tab-position="left" style="height: 540px;">
+    <div class="panel">
+      <el-tabs tab-position="left" style="height: 530px;">
         <el-tab-pane label="总览">
           <div ref="echartOverview" class="overview"></div>
         </el-tab-pane>
@@ -150,7 +150,7 @@ export default {
             name: '性别分布',
             type: 'pie',
             radius: '70%',
-            center: ['50%', '50%'],
+            center: ['40%', '50%'],
             data: [
               {value: 0, name: '男性用户'},
               {value: 0, name: '女性用户'},

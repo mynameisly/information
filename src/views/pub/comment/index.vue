@@ -319,8 +319,8 @@
             </el-col>
           </el-row>
         </el-form>
-        <div class="panel" style="height: 90%">
-          <el-tabs tab-position="left" style="height: 540px;">
+        <div class="panel">
+          <el-tabs tab-position="left" style="height: 450px;">
             <el-tab-pane label="按月统计">
               <div ref="echartMonth" class="byMonth"></div>
             </el-tab-pane>
@@ -770,9 +770,15 @@ export default {
 
 <style lang="scss" scoped>
 .byMonth, .byDate, .byHour {
-  width: 1400px;
-  height:540px;
+  width: 1200px;
+  height:450px;
   // border: 1px solid red;
   margin: 0 auto;
+}
+</style>
+
+<style lang="scss">
+#comment .el-table__body-wrapper {
+  height: 245px;
 }
 </style>

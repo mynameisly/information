@@ -65,11 +65,11 @@
       :data="uploadList"
       v-loading="loading"
       element-loading-text="拼命加载中"
-       height="65%"
+      height="65%"
       :cell-style="addBgColorByState"
       @cell-mouse-enter="mouseEnter"
       @selection-change="handleSelectionChange"
-        >
+      >
       <el-table-column type="selection" align="center" />
        <!--<el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
@@ -271,9 +271,9 @@ export default {
     },
     handlePageChange (item) { // 分页查询
       console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/user/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-        console.log(22222222)
-        console.log(res.data)
+      axios.get('/json/file/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+        // console.log(22222222)
+        // console.log(res.data)
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit

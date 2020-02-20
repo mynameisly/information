@@ -68,47 +68,41 @@ export default {
         {
           id: 2,
           icon: 'el-icon-menu',
-          name: '网课学习',
-          url:  '/pub/study'
-        },
-        {
-          id: 3,
-          icon: 'el-icon-menu',
           name: '课表查询',
           url: '/pub/course'
         },
         {
-          id: 4,
+          id: 3,
           icon: 'el-icon-menu',
           name: '成绩查询',
           url: '/pub/achievement'
         },
         {
-          id: 5,
+          id: 4,
           icon: 'el-icon-menu',
           name: '资料上传',
           url: '/pub/upload'
         },
         {
-          id: 6,
+          id: 5,
           icon: 'el-icon-menu',
           name: '教务通知',
           url: '/pub/notice'
         },
         {
-          id: 7,
+          id: 6,
           icon: 'el-icon-menu',
           name: '视频教程',
           url: '/pub/video'
         },
         {
-          id: 8,
+          id: 7,
           icon: 'el-icon-menu',
           name: '评论回复',
           url: '/pub/comment'
         },
         {
-          id: 9,
+          id: 8,
           icon: 'el-icon-menu',
           name: '观看记录',
           url: '/pub/watch'
@@ -161,7 +155,7 @@ $hei: 41px;
   .search {
     width: 100%;
     height: 41px;
-    padding: 0 0 0 1rem;
+    padding: 0 0 0 1.5rem;
     line-height: 41px;
     border-bottom: 1px solid #f3f3f3;
     cursor: pointer;
@@ -260,7 +254,7 @@ $hei: 41px;
 }
 //展开
 .stretch {
-  width: 13.5rem;
+  width: 10rem;
   transition: width 0.3s;
 }
 

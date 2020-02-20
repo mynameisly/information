@@ -1,7 +1,7 @@
 <template>
   <div id="header" :style="{'background-color':`${themeColor}`,'box-shadow':`0 1px 2px ${themeColor}`}">
     <a>
-      <img src="@/assets/brand.png" height="100%">
+      <img src="@/assets/logo.png" height="100%">
       <span>CET4-6信息管理系统</span>
     </a>
     <header-item />
