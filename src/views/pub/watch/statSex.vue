@@ -33,14 +33,17 @@
     </el-form>
     <div class="panel" style="height: 90%">
       <el-tabs tab-position="left" style="height: 540px;">
+        <el-tab-pane label="总览">
+          <div ref="echartOverview" class="overview"></div>
+        </el-tab-pane>
         <el-tab-pane label="按月统计">
           <div ref="echartMonth" class="byMonth"></div>
         </el-tab-pane>
-        <el-tab-pane label="按时统计">
-          <div ref="echartHour" class="byHour"></div>
-        </el-tab-pane>
         <el-tab-pane label="按天统计">
           <div ref="echartDate" class="byDate"></div>
+        </el-tab-pane>
+        <el-tab-pane label="按时统计">
+          <div ref="echartHour" class="byHour"></div>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -51,6 +54,7 @@
 import axios from 'axios'
 import echarts from 'echarts'
 export default {
+  name: 'childSex',
   data () {
     let manNumBgColor = { // 设置manNum的背景渐变颜色
       normal: {
@@ -119,15 +123,77 @@ export default {
         endTime: ''
       },
       chart: null,
-      optionDate: { // 按日统计的配置项
+      optionOverview: { // 性别总览的配置项
+        // backgroundColor: '#ccc',
+        title: {
+          text: '男女观看总览',
+          left: 'center',
+          top: 20,
+          textStyle: {
+            color: '#000'
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        visualMap: {
+          show: false,
+          min: 0,
+          max: 100, // 最大值，默认为10，后台绑定
+          inRange: {
+            colorLightness: [0, 1]
+          }
+        },
+        series: [
+          {
+            name: '性别分布',
+            type: 'pie',
+            radius: '70%',
+            center: ['50%', '50%'],
+            data: [
+              {value: 0, name: '男性用户'},
+              {value: 0, name: '女性用户'},
+              {value: 0, name: '游客（性别未知）'}
+            ].sort(function (a, b) { return a.value - b.value }),
+            roseType: 'radius',
+            label: {
+              color: '#000'
+            },
+            labelLine: {
+              lineStyle: {
+                color: '#000'
+              },
+              smooth: 0.1,
+              length: 60,
+              length2: 40
+            },
+            itemStyle: {
+              // color: '#c23531,
+              // shadowBlur: 200,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            },
+            animationType: 'scale',
+            animationEasing: 'elasticOut',
+            animationDelay: function (idx) {
+              return Math.random() * 200
+            }
+          }
+        ]
+      },
+      optionDate: { // 按天统计的配置项
         legend: {},
         tooltip: {},
         dataset: {
           source: [
-            ['product', '2012', '2013', '2014', '2015'],
-            ['AA', 40, 30, 35, 50],
-            ['BB', 42, 37, 35, 52],
-            ['CC', 44, 37, 30, 53]
+            // ['天', '2012', '2013', '2014', '2015'],
+            // ['男性用户', 40, 30, 35, 50],
+            // ['女性用户', 42, 37, 35, 52],
+            // ['游客（未知用户）', 44, 37, 30, 53]
+            ['按天统计数据'],
+            ['男性用户'],
+            ['女性用户'],
+            ['游客（未知用户）']
           ]
         },
         xAxis: [
@@ -137,6 +203,7 @@ export default {
           {gridIndex: 0}
         ],
         grid: [
+          {left: '3%'},
           {bottom: '4%'},
           {top: '55%'}
         ],
@@ -151,10 +218,10 @@ export default {
         tooltip: {},
         dataset: {
           source: [
-            ['product', '2019-02'],
-            ['AA', 40],
-            ['BB', 42],
-            ['CC', 44]
+            ['按月统计数据'],
+            ['男性用户'],
+            ['女性用户'],
+            ['游客（未知用户）']
           ]
         },
         xAxis: [
@@ -164,6 +231,7 @@ export default {
           {gridIndex: 0}
         ],
         grid: [
+          {left: '3%'},
           {bottom: '4%'},
           {top: '55%'}
         ],
@@ -178,10 +246,10 @@ export default {
         tooltip: {},
         dataset: {
           source: [
-            ['product', '00', '01'],
-            ['AA', 40, 43],
-            ['BB', 42, 33],
-            ['CC', 44, 44]
+            ['按时统计数据'],
+            ['男性用户'],
+            ['女性用户'],
+            ['游客（性别未知）']
           ]
         },
         xAxis: [
@@ -191,6 +259,7 @@ export default {
           {gridIndex: 0}
         ],
         grid: [
+          {left: '3%'},
           {bottom: '4%'},
           {top: '55%'}
         ],
@@ -204,11 +273,12 @@ export default {
   },
   mounted () {
     this.getstatList()
-    this.drawMonth()
-    this.drawDate()
-    this.drawHour()
   },
   methods: {
+    drawOverview () {
+      this.chart = echarts.init(this.$refs.echartOverview)
+      this.chart.setOption(this.optionOverview)
+    },
     drawMonth () {
       this.chart = echarts.init(this.$refs.echartMonth)
       // 使用刚指定的配置项和数据显示图表。
@@ -223,46 +293,74 @@ export default {
       this.chart.setOption(this.optionHour)
     },
     getstatList () { // 接口中提供的搜索参数有startTime, endTime, userId, targetId, type, threadType, 但实际可以使用的就只有两个时间，其他的先不写
-      axios.get('/json/watch/statNumber?startTime=' + this.searchForm.startTime + '&endTime=' + this.searchForm.endTime).then((res) => {
+      axios.get('/json/watch/statSex?startTime=' + this.searchForm.startTime + '&endTime=' + this.searchForm.endTime).then((res) => {
         if (res.data.code === 0) {
-          // console.log('进入到所有的统计数据')
+          // console.log('进入到所有男女性别的统计数据')
           // console.log(res.data)
           // console.log(res.data.data)
           const returnData = res.data.data
-          this.optionHour.xAxis.data = this.handleXAxisData(returnData.hourThread)
-          this.optionHour.series[0].data = this.handleSeriesData(returnData.hourThread)
-          this.optionMonth.xAxis.data = this.handleXAxisData(returnData.monthThread)
-          this.optionMonth.series[0].data = this.handleSeriesData(returnData.monthThread)
-          this.optionDate.xAxis.data = this.handleXAxisData(returnData.dateThread)
-          this.optionDate.series[0].data = this.handleSeriesData(returnData.dateThread)
+          this.optionOverview.series[0].data[0].value = returnData.count.manNum
+          this.optionOverview.series[0].data[1].value = returnData.count.womanNum
+          this.optionOverview.series[0].data[2].value = returnData.count.unknownNum
+          this.optionOverview.visualMap.max = returnData.count.manNum + returnData.count.womanNum + returnData.count.unknownNum
+
+          this.optionDate.dataset.source[0] = this.handleDateData(returnData.dateThread).source[0]
+          this.optionDate.dataset.source[1] = this.handleDateData(returnData.dateThread).source[1]
+          this.optionDate.dataset.source[2] = this.handleDateData(returnData.dateThread).source[2]
+          this.optionDate.dataset.source[3] = this.handleDateData(returnData.dateThread).source[3]
+
+          this.optionHour.dataset.source[0] = this.handleHourData(returnData.hourThread).source[0]
+          this.optionHour.dataset.source[1] = this.handleHourData(returnData.hourThread).source[1]
+          this.optionHour.dataset.source[2] = this.handleHourData(returnData.hourThread).source[2]
+          this.optionHour.dataset.source[3] = this.handleHourData(returnData.hourThread).source[3]
+
+          this.optionMonth.dataset.source[0] = this.handleMonthData(returnData.monthThread).source[0]
+          this.optionMonth.dataset.source[1] = this.handleMonthData(returnData.monthThread).source[1]
+          this.optionMonth.dataset.source[2] = this.handleMonthData(returnData.monthThread).source[2]
+          this.optionMonth.dataset.source[3] = this.handleMonthData(returnData.monthThread).source[3]
+          this.drawOverview()
           this.drawMonth()
           this.drawDate()
           this.drawHour()
         }
       })
     },
-    handleXAxisData (data) {
+    handleDateData (data) { // data是returnData.dateThread
       const temp = data
-      const xAxisData = []
       for (let i = 0; i < temp.length; i++) {
-        xAxisData.push(temp[i].name)
+        this.optionDate.dataset.source[0].push(temp[i].date)
+        this.optionDate.dataset.source[1].push(temp[i].manNum)
+        this.optionDate.dataset.source[2].push(temp[i].womanNum)
+        this.optionDate.dataset.source[3].push(temp[i].unknownNum)
       }
-      return xAxisData
+      return this.optionDate.dataset
     },
-    handleSeriesData (data) {
+    handleHourData (data) { // data是returnData.hourThread
       const temp = data
-      let seriesData = []
       for (let i = 0; i < temp.length; i++) {
-        seriesData.push(temp[i].value)
+        this.optionHour.dataset.source[0].push(temp[i].date)
+        this.optionHour.dataset.source[1].push(temp[i].manNum)
+        this.optionHour.dataset.source[2].push(temp[i].womanNum)
+        this.optionHour.dataset.source[3].push(temp[i].unknownNum)
       }
-      return seriesData
+      return this.optionHour.dataset
+    },
+    handleMonthData (data) { // data是returnData.monthThread
+      const temp = data
+      for (let i = 0; i < temp.length; i++) {
+        this.optionMonth.dataset.source[0].push(temp[i].date)
+        this.optionMonth.dataset.source[1].push(temp[i].manNum)
+        this.optionMonth.dataset.source[2].push(temp[i].womanNum)
+        this.optionMonth.dataset.source[3].push(temp[i].unknownNum)
+      }
+      return this.optionMonth.dataset
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.byMonth, .byDate, .byHour {
+.overview, .byMonth, .byDate, .byHour {
   width: 1200px;
   height:540px;
   // margin: 0 auto;

@@ -1,39 +1,93 @@
 <template>
   <div id="watch">
-    <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="观看管理" name="allWatch">
-        <childWatch v-if="isChildWatch" />
-      </el-tab-pane>
-      <el-tab-pane label="数量分布" name="statNum">
-        <childNum v-if="isChildNum" />
-      </el-tab-pane>
-      <el-tab-pane label="性别分布" name="statSex">
-        <childSex v-if="isChildSex" />
-      </el-tab-pane>
-  </el-tabs>
+    <el-form v-model="searchForm" :inline="true">
+      <el-row>
+        <el-col :span="7" :offset="1">
+          <el-form-item label="用户ID：">
+            <el-input v-model="searchForm.userId" placeholder="请输入用户ID" clearable/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="目标视频ID：">
+            <el-input v-model="searchForm.targetId" placeholder="请输入目标视频ID" clearable/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="7" :offset="1">
+          <el-form-item label="起始-观看时间：">
+            <el-date-picker
+                clearable
+                v-model="searchForm.startWatchTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请输入起始-观看时间"
+              />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="结束-观看时间：">
+            <el-date-picker
+                clearable
+                v-model="searchForm.endWatchTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请输入结束-观看时间"
+              />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-form-item>
+          <el-button type="success" size="medium" icon="el-icon-search" @click="getWatchList(searchForm)">查询观看记录</el-button>
+          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增观看记录</el-button>
+          <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
+        </el-form-item>
+      </el-row>
+    </el-form>
+    <!-- el-table中的height用于固定表头 -->
+    <el-table
+      border
+      height="65%"
+      :data="watchList"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      @cell-mouse-enter="mouseEnter"
+      @selection-change="handleSelectionChange"
+        >
+      <el-table-column type="selection" align="center" />
+      <!--<el-table-column label="序号" type="index" width="55">
+        <template slot-scope="scope">
+          (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
+          <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>-->
+      <el-table-column label="用户ID" prop="userId"/>
+      <el-table-column label="用户名名称" prop="userName"/>
+      <el-table-column label="目标视频ID" prop="targetId"/>
+      <el-table-column label="目标视频名称" prop="targetName"/>
+      <el-table-column label="观看时间" prop="watchTime"/>
+    </el-table>
+    <add-dialog ref="addDialog" title="新增观看记录"  @confirmData="(item) => addWatch(item)"/>
+    <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import watchList from './watchList'
-import statNum from './statNum'
-import statSex from './statSex'
+import AddDialog from './add'
 import PageComponent from '@/components/Pagenation/index'
 export default {
+  name: 'childWarch',
   components: {
-    childWatch: watchList,
-    childNum: statNum,
-    childSex: statSex,
+    AddDialog,
     PageComponent
   },
   data () {
     return {
       loading: false,
-      activeName: 'allWatch',
-      isChildWatch: true,
-      isChildNum: false,
-      isChildSex: false,
       searchForm: {
         userId: '',
         targetId: '',
@@ -55,21 +109,6 @@ export default {
     this.getWatchList()
   },
   methods: {
-    handleClick (tab) {
-      if (tab.name === 'allWatch') {
-        this.isChildWatch = true
-        this.isChildNum = false
-        this.isChildSex = false
-      } else if (tab.name === 'statNum') {
-        this.isChildWatch = false
-        this.isChildNum = true
-        this.isChildSex = false
-      } else if (tab.name === 'statSex') {
-        this.isChildWatch = false
-        this.isChildNum = false
-        this.isChildSex = true
-      }
-    },
     getWatchList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       axios.get(('/json/watch/list'), {
         params: {
@@ -94,12 +133,14 @@ export default {
       this.multipleSelection = val
     },
     addWatch (item) { // 新增观看记录
+      console.log('进入新增观看记录')
+      console.log(item)
       axios.post('/json/watch/add?targetId=' + item.targetId)
         .then((res) => {
           if (res.data.code === 0) {
             this.$message({
               type: 'success',
-              message: '新增文件成功'
+              message: '新增观看记录成功'
             })
             this.getWatchList()
           }

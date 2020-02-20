@@ -1,19 +1,9 @@
 <template>
-  <div id="videoAdd">
-    <el-dialog :title="title" :visible.sync="visible" top="0.5rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
-      <el-form ref="videoForm" :model="item" :rules="rules" label-width="100px">
-        <el-form-item label="网课名称:" prop="courseName">
-          <el-input v-model="item.courseName"  palceholder="请输入网课名称" clearable/>
-        </el-form-item>
-        <el-form-item label="网课简介:" prop="courseIntroduction">
-          <el-input type="textarea" :rows="2" v-model="item.courseIntroduction" resize="none" maxlength="200" show-word-limit palceholder="请输入网课简介"></el-input>
-        </el-form-item>
-
-        <el-form-item label="教师名称:" prop="teacherName">
-          <el-input v-model="item.teacherName"  palceholder="请输入教师名称" clearable/>
-        </el-form-item>
-        <el-form-item label="教师简介:" prop="teacherIntroduction">
-          <el-input type="textarea" :rows="2" v-model="item.teacherIntroduction" resize="none" maxlength="200" show-word-limit palceholder="请输入教师简介"></el-input>
+  <div id="watchAdd">
+    <el-dialog :title="title" :visible.sync="visible" top="10rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
+      <el-form ref="watchForm" :model="item" :rules="rules" label-width="100px">
+        <el-form-item label="视频目标ID：" prop="targetId">
+          <el-input v-model="item.targetId"  palceholder="请输入视频目标ID" clearable/>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -25,7 +15,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   props: {
     title: String,
@@ -35,20 +24,10 @@ export default {
     return {
       visible: false,
       item: {
-        courseName: '',
-        courseIntroduction: '',
-        teacherName: '',
-        teacherIntroduction: '',
-        teachingMaterial: '',
-        mainVideoUrl: '',
+        targetId: ''
       },
       rules: {
-        courseName: [{ required: true, message: '请输入网课名称', trigger: 'blur' }],
-        courseIntroduction: [{ required: true, message: '请输入网课简介', trigger: 'blur' }],
-        teacherName: [{ required: true, message: '请输入教师名称', trigger: 'blur' }],
-        teacherIntroduction: [{ required: true, message: '请输入教师简介', trigger: 'blur' }],
-        teachingMaterial: [{ required: true, message: '请输入参考教材', trigger: 'blur' }],
-        mainVideoUrl: [{ required: true, message: '请输入课程主视频url', trigger: 'blur' }],
+        targetId: [{ required: true, message: '请输入视频目标ID', trigger: 'blur' }]
       }
     }
   },
@@ -59,18 +38,10 @@ export default {
         // this.item = null
       } else {
         this.item = item
-        this.watchId = item.watchId
-        this.update()
       }
     },
-    update() { //根据id查询 网课视频 详情信息
-      axios.get('/json/watch/findById?id=' + this.watchId)
-      .then((res) => {
-        this.item = res.data.data
-      })
-    },
     submitForm (videoForm) {
-      this.$refs.videoForm.validate(valid => {
+      this.$refs.watchForm.validate(valid => {
         if (valid) {
           this.$confirm('确认保存吗？', '是否保存', {
             cancelButtonText: '取消',
@@ -79,14 +50,14 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
-            this.resetForm('videoForm')
+            this.resetForm('watchForm')
           })
         }
       })
     },
-    resetForm (videoForm) {
+    resetForm (watchForm) {
       this.$nextTick(() => {
-        this.$refs.videoForm.clearValidate()
+        this.$refs.watchForm.clearValidate()
       })
       this.visible = false
     }
