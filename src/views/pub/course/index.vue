@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  data(){
+  data () {
     return {
       msg: '课表查询'
     }
@@ -15,5 +15,5 @@ export default {
 </script>
 
 <style lang="scss">
-  
+
 </style>

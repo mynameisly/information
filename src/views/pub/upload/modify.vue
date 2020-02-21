@@ -87,7 +87,7 @@ export default {
     open (item) {
       this.visible = true
       if (item === null || item === undefined) {
-        console.log('add')
+        // console.log('add')
       } else {
         this.item = item
       }

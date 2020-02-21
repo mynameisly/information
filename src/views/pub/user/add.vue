@@ -12,7 +12,7 @@
         <el-input v-model="item.nickName" placeholder="请输入昵称" clearable/>
       </el-form-item>
       <el-form-item label="性别:" prop="sex">
-        <el-select v-model="item.sex" placeholder="请输入性别" clearable>
+        <el-select v-model="item.sex" placeholder="请选择性别" clearable>
           <el-option label="男" value="男"></el-option>
           <el-option label="女" value="女"></el-option>
         </el-select>
@@ -62,6 +62,30 @@ export default {
     default: 'title'
   },
   data () {
+    const validateTelPhone = (rule, value, callback) => { // 验证手机号码
+      if (value === '') {
+        callback(new Error('请输入手机号码'))
+      } else {
+        if (value !== '') {
+          var regTelPhone = /^1[3456789]\d{9}$/
+          if (!regTelPhone.test(value)) {
+            callback(new Error('请输入有效的手机号码'))
+          }
+        }
+      }
+    }
+    const validateEmail = (rule, value, callback) => { // 验证邮箱
+      if (value === '') {
+        callback(new Error('请输入邮箱'))
+      } else {
+        if (value !== '') {
+          var regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+          if (!regEmail.test(value)) {
+            callback(new Error('请输入有效的邮箱'))
+          }
+        }
+      }
+    }
     return {
       visible: false,
       type: '',
@@ -69,23 +93,21 @@ export default {
       userId: '', // 保存从index传过来的userId
       item: {},
       rules: {
-        headImg: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        nickName: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        telPhone: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        email: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        qq: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        weiXin: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        sex: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        readName: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        birthday: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        introduce: [{required: true, message: '请选择文件类型', trigger: 'blur'}],
-        type: [{required: true, message: '请选择文件类型', trigger: 'blur'}]
+        // headImg: [{required: true, message: '请上传头像', trigger: 'blur'}],
+        // nickName: [{required: true, message: '请输入昵称', trigger: 'blur'}],
+        // qq: [{required: true, message: '请输入QQ号', trigger: 'blur'}],
+        // weiXin: [{required: true, message: '请输入微信号', trigger: 'blur'}],
+        // birthday: [{required: true, message: '请输入出生日期', trigger: 'blur'}],
+        // introduce: [{required: true, message: '请输入个人简介', trigger: 'blur'}],
+        telPhone: [{required: true, validator: validateTelPhone, trigger: 'blur'}],
+        email: [{required: true, validator: validateEmail, trigger: 'blur'}],
+        sex: [{required: true, message: '请选择性别', trigger: 'blur'}],
+        readName: [{required: true, message: '请输入真实姓名', trigger: 'blur'}]
       }
     }
   },
   methods: {
     open (item) {
-      console.log(item)
       this.visible = true
       if (item === null || item === undefined) {
         this.item = {}
@@ -96,9 +118,9 @@ export default {
     },
     update () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
       axios.get('/json/user/getUserById?userId=' + this.userId).then((res) => {
-        console.log('enter add update')
-        console.log(res.data)
-        console.log(res.data.data)
+        // console.log('enter add update')
+        // console.log(res.data)
+        // console.log(res.data.data)
         this.item = res.data.data
       })
     },

@@ -86,11 +86,11 @@ export default {
         this.update()
       }
     },
-    update() { //根据id查询 网课视频 详情信息
+    update () { // 根据id查询 网课视频 详情信息
       axios.get('/json/onlineCourse/findById?id=' + this.courseId)
-      .then((res) => {
-        this.item = res.data.data
-      })
+        .then((res) => {
+          this.item = res.data.data
+        })
     },
     submitForm (videoForm) {
       this.$refs.videoForm.validate(valid => {

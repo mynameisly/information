@@ -153,35 +153,37 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    addVideo(item) { // 新增视频
+    addVideo (item) { // 新增视频
       axios.post('/json/onlineCourse/add?courseName=' + item.courseName + '&courseIntroduction=' + item.courseIntroduction +
       '&teacherName=' + item.teacherName + '&teacherIntroduction=' + item.teacherIntroduction + '&teachingMethods=' + item.teachingMethods + '&lectureContent=' + item.lectureContent +
       '&instructionalObjective=' + item.instructionalObjective + '&teachingMaterial=' + item.teachingMaterial + '&mainVideoUrl=' + item.mainVideoUrl)
-      .then((res) => {
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '新增文件成功'
-          })
-          this.getVideoList()
-        }
-      })
+        .then((res) => {
+          if (res.data.msg === '无权限') {
+            this.$router.push({path: '/401'})
+          } else if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '新增文件成功'
+            })
+            this.getVideoList()
+          }
+        })
     },
     updateVideo (item) { // 修改视频
       axios.put('/json/onlineCourse/update?courseId=' + item.courseId + '&courseName=' + item.courseName + '&courseIntroduction=' + item.courseIntroduction +
       '&teacherName=' + item.teacherName + '&teacherIntroduction=' + item.teacherIntroduction + '&teachingMethods=' + item.teachingMethods + '&lectureContent=' + item.lectureContent +
       '&instructionalObjective=' + item.instructionalObjective + '&teachingMaterial=' + item.teachingMaterial + '&mainVideoUrl=' + item.mainVideoUrl)
-      .then((res) => {
-        console.log(222222)
-        console.log(res.data)
-        if (res.data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '修改成功'
-          })
-        }
-        this.getVideoList()
-      })
+        .then((res) => {
+          if (res.data.msg === '无权限') {
+            this.$router.push({path: '/401'})
+          } else if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            })
+          }
+          this.getVideoList()
+        })
     },
     delSelect () {
       if (this.multipleSelection.length) {
@@ -197,7 +199,9 @@ export default {
         }).then((res) => {
         // 点击确定后发送请求
           axios.delete('/json/onlineCourse/delete?ids=' + videoIds).then((res) => {
-            if (res.data.code === 0) {
+            if (res.data.msg === '无权限') {
+              this.$router.push({path: '/401'})
+            } else if (res.data.code === 0) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
@@ -219,7 +223,7 @@ export default {
       }
     },
     handlePageChange (item) { // 分页查询
-      console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
+      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
       axios.get('/json/onlineCourse/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page

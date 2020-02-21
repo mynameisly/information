@@ -91,7 +91,7 @@ export default {
     open (item) {
       this.visible = true
       if (item === null || item === undefined) {
-        console.log('add')
+        // console.log('add')
       } else {
         this.item = item
       }
@@ -138,7 +138,13 @@ export default {
             headers: config,
             data: this.param
           }).then((res) => {
-            if (res.data.code === 0) {
+            if (res.data.msg === '未登录') {
+              this.$message({
+                type: 'danger',
+                message: '请登录'
+              })
+              this.$router.push({path: '/login'})
+            } else if (res.data.code === 0) {
               this.$message({
                 type: 'success',
                 message: '新增文件成功'

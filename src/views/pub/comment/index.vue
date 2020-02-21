@@ -561,16 +561,16 @@ export default {
           context: this.searchForm.context
         }
       }).then((res) => {
-        console.log('进入评论管理的查询所有')
-        console.log(res)
-        console.log(res.data)
+        // console.log('进入评论管理的查询所有')
+        // console.log(res)
+        // console.log(res.data)
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
         this.commentList = this.handleType(res.data.data)
-        console.log('打印评论管理的查询所有')
-        console.log(this.commentList)
+        // console.log('打印评论管理的查询所有')
+        // console.log(this.commentList)
         this.loading = false
       })
     },
@@ -583,9 +583,15 @@ export default {
     addComment (item) { // 新增评论
       axios.post('/json/comment/add?targetId=' + item.targetId + '&type=' + item.type + '&score=' + item.score + '&context=' + item.context)
         .then((res) => {
-          console.log('进入新增评论请求')
-          console.log(res.data)
-          if (res.data.code === 0) {
+          // console.log('进入新增评论请求')
+          // console.log(res.data)
+          if (res.data.msg === '未登录') {
+            this.$message({
+              type: 'dangert',
+              message: '请登录'
+            })
+            this.$router.push({jpath: '/login'})
+          } else if (res.data.code === 0) {
             this.$message({
               type: 'success',
               message: '新增评论成功'
@@ -597,9 +603,15 @@ export default {
     updateComment (item) { // 修改评论
       axios.put('/json/comment/update?commentId=' + item.commentId + '&context=' + item.context)
         .then((res) => {
-          console.log('进入修改评论请求')
-          console.log(res.data)
-          if (res.data.code === 0) {
+          // console.log('进入修改评论请求')
+          // console.log(res.data)
+          if (res.data.msg === '未登录') {
+            this.$message({
+              type: 'dangert',
+              message: '请登录'
+            })
+            this.$router.push({jpath: '/login'})
+          } else if (res.data.code === 0) {
             this.$message({
               type: 'success',
               message: '修改评论成功'
@@ -644,7 +656,7 @@ export default {
       }
     },
     handlePageChangeIndex (item) { // 分页查询
-      console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
+      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
       axios.get('/json/comment/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
@@ -670,8 +682,6 @@ export default {
           context: this.searchForm.context
         }
       }).then((res) => {
-        console.log(res)
-        console.log(res.data)
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
@@ -681,7 +691,7 @@ export default {
       })
     },
     handlePageChangeDetails (item) { // 分页查询
-      console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
+      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
       axios.get('/json/comment/listDetails?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
@@ -761,7 +771,6 @@ export default {
         let dateStr = temp[i].name
         xAxisData.push(dateStr.substring(dateStr.length - 5))
       }
-      console.log(xAxisData)
       return xAxisData
     }
   }

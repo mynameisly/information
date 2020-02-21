@@ -86,8 +86,8 @@ export default {
     },
     handleSave (roleId) { // 通过userId和roleId设置用户角色
       axios.get('/json/user/setRole?userId=' + this.item.userId + '&roleId=' + roleId).then((res) => {
-        console.log('enter 保存')
-        console.log(res.data)
+        // console.log('enter 保存')
+        // console.log(res.data)
         if (res.data.code === 0) {
           this.$message({
             type: 'sucess',

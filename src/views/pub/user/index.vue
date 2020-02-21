@@ -76,12 +76,12 @@
     <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
     <!-- el-table中的height用于固定表头 -->
     <el-table
-      border 
-      stripe 
-      :data="userList" 
-      height="65%" 
-      v-loading="loading" 
-      element-loading-text="拼命加载中" 
+      border
+      stripe
+      :data="userList"
+      height="65%"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
       >
       <el-table-column label="序号" type="index" width="55">
@@ -178,8 +178,6 @@ export default {
   methods: {
     mouseEnter (data) {
       this.userData = Object.assign({}, data)
-      // console.log('enter mouseEnter')
-      // console.log(this.userData.userId)
     },
     searchUser () { // 可输入账号、昵称模糊搜索
       axios.get('/json/user/search?searchStr=' + this.searchUserForm.searchStr).then((res) => {
@@ -197,6 +195,9 @@ export default {
           endBirthday: this.searchForm.endBirthday
         }
       }).then((res) => {
+        if (res.data.msg === '无权限') {
+          this.$router.push({path: '/401'})
+        }
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
@@ -241,10 +242,9 @@ export default {
       })
     },
     handlePageChange (item) { // 分页查询
-      console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
+      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
       axios.get('/json/user/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-        console.log(22222222)
-        console.log(res.data)
+        // console.log(res.data)
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
