@@ -2,7 +2,7 @@
   <div id="header" :style="{'background-color':`${themeColor}`,'box-shadow':`0 1px 2px ${themeColor}`}">
     <a>
       <img src="@/assets/logo.png" height="100%">
-      <span>CET4-6信息管理系统</span>
+      <span>科成学生助手系统</span>
     </a>
     <header-item />
   </div>
@@ -53,6 +53,7 @@ $bg3:rgb(76, 103, 136);
       padding: 0.2rem 0;
       vertical-align: middle;
       font-weight: bold;
+      font-size: 20px;
       color: white;
     }
   }
