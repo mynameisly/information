@@ -1,5 +1,13 @@
 const pub = [
   {
+    path: '/home',
+    component: () => import('@/views/pub/home/index'),
+    name: 'home',
+    meta: {
+      title: '首页'
+    }
+  },
+  {
     path: '/pub/user',
     component: () => import('@/views/pub/user/index'),
     name: 'user',
