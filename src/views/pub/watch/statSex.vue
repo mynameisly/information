@@ -32,7 +32,7 @@
       </el-row>
     </el-form>
     <div class="panel">
-      <el-tabs tab-position="left" style="height: 530px;">
+      <el-tabs tab-position="left" style="height: 580px;">
         <el-tab-pane label="总览">
           <div ref="echartOverview" class="overview"></div>
         </el-tab-pane>

@@ -162,7 +162,6 @@ $hei: 41px;
   }
   .search input {
     width: 70%;
-    // height: 100%;
     border: 0;
     outline: 0;
   }
@@ -202,7 +201,7 @@ $hei: 41px;
   }
   &:hover {
     .hover-left {
-      background: rgb(219, 68, 13);
+      background: #09C;
     }
     i,
     span {
@@ -254,7 +253,7 @@ $hei: 41px;
 }
 //展开
 .stretch {
-  width: 10rem;
+  width: 12rem;
   transition: width 0.3s;
 }
 

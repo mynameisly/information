@@ -215,8 +215,6 @@ export default {
       return temp
     },
     update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改/json/user/update?userId=11
-    // console.log('进入到修改用户信息')
-    // console.log(item)
       axios.put('/json/user/update?userId=' + item.userId + '&nickName=' + item.nickName + '&telPhone=' + item.telPhone + '&email=' + item.email + '&qq=' + item.qq + '&weiXin=' + item.weiXin + '&sex=' + item.sex + '&readName=' + item.readName + '&headImg=' + item.headImg + '&birthday=' + item.birthday + '&introduce=' + item.introduce).then((res) => {
         if (res.data.code === 0) {
           this.$message({
@@ -260,7 +258,7 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.userList = res.data.data
+          this.userList = this.handleHeadImg(res.data.data)
         }
       })
     }

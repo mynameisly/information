@@ -10,7 +10,7 @@
     <!-- self -->
     <div class="menu-dir-h" @click="dirClick(item.id)">
       <!-- 一级菜单hover时左边框 -->
-      <div class="hover-left" />
+      <div class="hover-left"/>
       <span class="single-line">
         <i class="el-icon-menu" />
         <span v-show="sidebar.opened">{{ item.name }}</span>
@@ -72,7 +72,8 @@ $bg3:rgb(76, 103, 136);
       background: rgb(245, 245, 245);
       color: black!important;
       .hover-left{
-        background:rgb(219, 68, 13)
+        // background:rgb(219, 68, 13) 
+        background: #09C
       }
     }
     span{

@@ -32,7 +32,7 @@
       </el-row>
     </el-form>
     <div class="panel">
-      <el-tabs tab-position="left" style="height: 530px;">
+      <el-tabs tab-position="left" style="height: 580px;">
         <el-tab-pane label="按月统计">
           <div ref="echartMonth" class="byMonth"></div>
         </el-tab-pane>
@@ -63,7 +63,13 @@ export default {
       chart: null,
       optionDate: { // 按日统计的配置项
         title: {
-          text: '按天统计'
+          // text: '按天统计'
+        },
+        grid: {
+          x: '2%', // 相当于距离左边效果:padding-left
+          y: '5%',  // 相当于距离上边效果:padding-top
+          bottom: '3%',
+          containLabel: true
         },
         tooltip: {},
         xAxis: {
@@ -100,7 +106,13 @@ export default {
       },
       optionMonth: { // 按月统计的配置项
         title: {
-          text: '按月统计'
+          // text: '按月统计'
+        },
+        grid: {
+          x: '2%', // 相当于距离左边效果:padding-left
+          y: '5%',  // 相当于距离上边效果:padding-top
+          bottom: '3%',
+          containLabel: true
         },
         tooltip: {},
         xAxis: {
@@ -135,7 +147,13 @@ export default {
       },
       optionHour: { // 按时统计的配置项
         title: {
-          text: '按时统计'
+          // text: '按时统计'
+        },
+        grid: {
+          x: '2%', // 相当于距离左边效果:padding-left
+          y: '5%',  // 相当于距离上边效果:padding-top
+          bottom: '3%',
+          containLabel: true
         },
         tooltip: {},
         xAxis: {

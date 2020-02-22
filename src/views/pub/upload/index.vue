@@ -214,10 +214,7 @@ export default {
         upload.uploadUser = upload.uploadUser.number // 上传者为用户账户，因为昵称不是必填项
       }
       for (let i = 0; i < noRepeatUserArr.length; i++) {
-        console.log(11111111)
         this.userIds.push({label: noRepeatUserArr[i],value: noRepeatUserArr[i]})
-        // this.userIds.push({label: userIdArr[i], value: userIdArr[i]})
-        console.log(this.userIds)
       }
       return uploadArr
     },
@@ -299,7 +296,7 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.uploadList = res.data.data
+          this.uploadList = this.handleState(res.data.data)
         }
       })
     }
