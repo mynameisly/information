@@ -9,7 +9,15 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="用户id：">
-            <el-input v-model="searchForm.userId" placeholder="请输入用户id" clearable/>
+            <el-select v-model="searchForm.userId" placeholder="请选择用户id" clearable>
+              <el-option
+                v-for="item in userIds"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- <el-input v-model="searchForm.userId" placeholder="请输入用户id" clearable/> -->
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -81,6 +89,7 @@
       <!-- <el-table-column label="文件后缀名" prop="fileSuffix" width="70"/> -->
       <el-table-column label="文件后缀名" prop="fileSuffix"/>
       <el-table-column label="文件类型" prop="type"/>
+      <el-table-column label="上传者" prop="uploadUser"/>
       <el-table-column label="文件简介" prop="introduce"/>
       <el-table-column label="状态" prop="state"/>
       <el-table-column label="操作" prop="operation" width="180">
@@ -132,6 +141,7 @@ export default {
         introduce: '',
         state: ''
       },
+      userIds: [],
       uploadList: [],
       uploadData: {},
       multipleSelection: [], // 批量删除
@@ -179,6 +189,8 @@ export default {
     handleState (data) { // 处理文件状态 0:未审核，1：通过审核，10：审核不通过 参数data就是res.data.data
       const uploadArr = data
       let upload
+      const userIdArr = []
+      let noRepeatUserArr = []
       for (var k in uploadArr) {
         upload = uploadArr[k]
         if (upload.state === 0) {
@@ -196,6 +208,16 @@ export default {
         } else if (upload.type === 'onlineCourseVideo') {
           this.$set(upload, 'type', '网课视频')
         }
+        upload = uploadArr[k]
+        userIdArr.push(upload.userId)
+        noRepeatUserArr= Array.from(new Set(userIdArr)) // 用户ID去重后的数组
+        upload.uploadUser = upload.uploadUser.number // 上传者为用户账户，因为昵称不是必填项
+      }
+      for (let i = 0; i < noRepeatUserArr.length; i++) {
+        console.log(11111111)
+        this.userIds.push({label: noRepeatUserArr[i],value: noRepeatUserArr[i]})
+        // this.userIds.push({label: userIdArr[i], value: userIdArr[i]})
+        console.log(this.userIds)
       }
       return uploadArr
     },
@@ -204,7 +226,7 @@ export default {
       // console.log(this.uploadData)
     },
     addBgColorByState ({row, columnIndex}) {
-      if (columnIndex === 5) {
+      if (columnIndex === 6) {
         if (row.state === '审核不通过') {
           return 'color: #e5323e'
         } else if (row.state === '通过审核') {
@@ -286,7 +308,5 @@ export default {
 </script>
 
 <style lang="scss">
-  // .el-table td, .el-table th {
-  //   text-align: center;
-  // }
+
 </style>

@@ -23,10 +23,12 @@
             :on-preview="handlePictureCardPreview"
             :before-upload="beforeupload"
             :on-exceed="exceedHandle"
+            :on-change="handleChange"
             >
             <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>最多可上传9个文件</div>
           </el-upload>
+          <el-progress v-show="showProcess" :percentage="processLength" :stroke-width="3"></el-progress>
           <!--展示选中图片的区域-->
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%"
@@ -59,6 +61,8 @@ export default {
       visible: false,
       dialogImageUrl: '',
       dialogVisible: false,
+      processLength: 0,
+      showProcess: false,
       item: {
         type: '',
         fileDescribe: ''
@@ -69,15 +73,15 @@ export default {
       filesType: [
         {
           label: '头像图片',
-          value: '头像图片'
+          value: 'headImg'
         },
         {
           label: '学习资料文件',
-          value: '学习资料文件'
+          value: 'learningResource'
         },
         {
           label: '网课视频',
-          value: '网课视频'
+          value: 'onlineCourseVideo'
         }
       ],
       rules: {
@@ -149,12 +153,29 @@ export default {
                 type: 'success',
                 message: '新增文件成功'
               })
-              // this.$emit('confirmData', (this.item, res.data.data))
+              this.$emit('confirmData', (this.item, res.data.data))
               this.resetForm('uploadForm')
             }
           })
         }
       })
+    },
+    handleChange (file, fileList) {
+      if (file.status === 'ready') {
+        this.processLength = 0
+        this.showProcess = true
+        const interval = setInterval(() => {
+          if (this.processLength >= 100) {
+            clearInterval(interval)
+            return
+          }
+          this.processLength += 1
+        },20)
+      }
+      if (file.status === 'success') {
+        this.processLength = 100
+        this.showProcess = false
+      }
     },
     resetForm (uploadForm) {
       this.$nextTick(() => {

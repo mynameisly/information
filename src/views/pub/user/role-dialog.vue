@@ -21,8 +21,17 @@
         <el-table-column prop="userId" label="用户ID" />
         <el-table-column prop="roleId" label="角色ID">
           <template slot-scope="scope">
-            <el-input v-show="scope.row.edit" size="small" v-model="scope.row.roleId"></el-input>
             <span v-show="!scope.row.edit">{{ scope.row.roleId }}</span>
+            <el-select v-show="scope.row.edit" size="small" v-model="scope.row.roleId" placeholder="请选择角色">
+              <el-option
+                v-for="item in roleIds"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <!-- <el-input v-show="scope.row.edit" size="small" v-model="scope.row.roleId"></el-input>-->
+            <!-- <span v-show="!scope.row.edit">{{ scope.row.roleId }}</span>  -->
           </template>
         </el-table-column>
         <el-table-column prop="depict" label="隶属角色" />
@@ -54,6 +63,10 @@ export default {
       item: {},
       visable: false,
       isEdit: false, // 编辑或保存
+      roleIds: [
+        {label: '1是学生', value: '1'},
+        {label: '2是管理员', value: '2'}
+      ],
       roleList: [ // 角色数据 ,这里可能有问题，要不要{ }
         {
           edit: false,
@@ -79,7 +92,7 @@ export default {
       axios.get('/json/user/getUserById?userId=' + this.item.userId).then((res) => {
         const returnData = res.data.data.role
         this.roleList[0].userId = res.data.data.userId
-        this.roleList[0].roleId = returnData.roleId
+        this.roleList[0].roleId = res.data.data.roleId
         this.roleList[0].depict = returnData.depict
         this.roleList[0].level = returnData.level
       })

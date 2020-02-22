@@ -47,8 +47,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-      <el-button type="warning" plain @click="resetForm('userForm')">取消</el-button>
       <el-button type="success" plain @click="submitForm('userForm')">提交</el-button>
+      <el-button type="warning" plain @click="resetForm('userForm')">取消</el-button>
     </span>
     </el-dialog>
   </div>
@@ -113,29 +113,18 @@ export default {
         this.item = {}
       } else {
         this.userId = item.userId
-        this.update()
+        this.updateById()
       }
     },
-    update () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
+    updateById () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
       axios.get('/json/user/getUserById?userId=' + this.userId).then((res) => {
-        // console.log('enter add update')
-        // console.log(res.data)
-        // console.log(res.data.data)
         this.item = res.data.data
       })
     },
-    onchange () {
-
-    },
-    handleAvatarSuccess () {
-
-    },
-    beforeAvatarUpload () {
-
-    },
     submitForm (item) {
-      this.$refs.userForm.validate((valid) => {
-        if (valid) {
+      // this.$refs.userForm.validate((valid) => {
+        // if (valid) {
+          console.log('if')
           this.$confirm('确认保存吗？', '是否保存', {
             cancelButtonText: '取消',
             confirmButtonText: '确认',
@@ -143,10 +132,11 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
+            console.log('进入到submit方法')
             this.resetForm('userForm')
           })
-        }
-      })
+        // }
+      // })
     },
     resetForm (userForm) {
       this.$nextTick(() => {

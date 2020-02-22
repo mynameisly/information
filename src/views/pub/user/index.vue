@@ -1,6 +1,6 @@
 <template>
   <div id="information">
-    <el-form v-model="searchUserForm" :inline="true">
+    <!-- <el-form v-model="searchUserForm" :inline="true">
       <el-row>
         <el-col :span="7" :offset="1">
           <el-form-item label="用户名/昵称:">
@@ -13,7 +13,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-    </el-form>
+    </el-form> -->
 
     <el-form v-model="searchForm" :inline="true">
       <el-row>
@@ -43,28 +43,17 @@
             <el-input v-model="searchForm.readName" placeholder="请输入真实姓名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col  :span="7">
-          <el-form-item label="起始-生日:">
+        <el-col  :span="11">
+          <el-form-item label="生日范围:">
             <el-date-picker
-                clearable
-                v-model="searchForm.startBirthday"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请输入起始-生日"
-              />
+              v-model="searchForm.birthdayRange"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col  :span="7">
-          <el-form-item label="结束-生日:">
-            <el-date-picker
-                clearable
-                v-model="searchForm.endBirthday"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请输入结束-生日"
-              />
-          </el-form-item>
-         </el-col>
         <el-col :span="2">
           <el-form-item>
             <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">精确搜索</el-button>
@@ -73,13 +62,12 @@
       </el-row>
     </el-form>
 
-    <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
       stripe
       :data="userList"
-      height="65%"
+      height="72%"
       v-loading="loading"
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
@@ -91,7 +79,11 @@
         </template>
       </el-table-column>
       <el-table-column label="用户名" prop="number"/>
-      <el-table-column label="头像" prop="headImg" width="160"/>
+      <el-table-column label="头像" prop="headImg">
+        <template slot-scope="scope">
+          <img :src="scope.row.headImg" alt="用户头像" width="30" height="30">
+        </template>
+      </el-table-column>
       <el-table-column label="昵称" prop="nickName"/>
       <el-table-column label="真实姓名" prop="readName"/>
       <el-table-column label="性别" prop="sex"/>
@@ -123,16 +115,14 @@
           >设置角色</el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增用户" @confirmData="(item) => add(item)" />
+    <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
     <update-dialog ref="updateDialog" title="修改用户" @confirmData="(item) => update(item)" />
     <RoleDialog ref="roleDialog" />
-    <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
-import AddDialog from './add'
-import UpdateDialog from './add'
+import UpdateDialog from './modify'
 import axios from 'axios'
 import RoleDialog from './role-dialog'
 import PageComponent from '@/components/Pagenation/index'
@@ -140,24 +130,25 @@ import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     PageComponent,
-    AddDialog,
     UpdateDialog,
     RoleDialog
   },
   data () {
     return {
       loading: false,
-      searchUserForm: [ // 模糊搜索
-        {
-          searchStr: '' // 账号或昵称
-        }
-      ],
+      headUrl: [], // 保存头像
+      // searchUserForm: [ // 模糊搜索
+      //   {
+      //     searchStr: '' // 账号或昵称
+      //   }
+      // ],
       searchForm: [ // 精确搜索
         {
           number: '',
           nickName: '',
           sex: '',
           readName: '',
+          birthdayRange: '',
           startBirthday: '',
           endBirthday: '',
         }
@@ -179,34 +170,53 @@ export default {
     mouseEnter (data) {
       this.userData = Object.assign({}, data)
     },
-    searchUser () { // 可输入账号、昵称模糊搜索
-      axios.get('/json/user/search?searchStr=' + this.searchUserForm.searchStr).then((res) => {
-        this.userList = res.data.data
-      })
-    },
+    // searchUser () { // 可输入账号、昵称模糊搜索
+    //   axios.get('/json/user/search?searchStr=' + this.searchUserForm.searchStr).then((res) => {
+    //     this.userList = res.data.data
+    //   })
+    // },
     getUserList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      if (this.searchForm.birthdayRange != undefined) {
+        this.startBirthday = this.formatDateTime(this.searchForm.birthdayRange[0])
+        this.endBirthday = this.formatDateTime(this.searchForm.birthdayRange[1])
+      }
       axios.get(('/json/user/list'), {
         params: {
           number: this.searchForm.number,
           nickName: this.searchForm.nickName,
           sex: this.searchForm.sex,
           readName: this.searchForm.readName,
-          startBirthday: this.searchForm.startBirthday,
-          endBirthday: this.searchForm.endBirthday
+          startBirthday: this.startBirthday,
+          endBirthday: this.endBirthday
         }
       }).then((res) => {
         if (res.data.msg === '无权限') {
           this.$router.push({path: '/401'})
         }
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
-        this.userList = res.data.data
+        this.userList = this.handleHeadImg(res.data.data)
         this.loading = false
       })
     },
-    update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改
+    formatDateTime (date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? ('0' + m) : m;
+      var d = date.getDate();
+      d = d < 10 ? ('0' + d) : d;
+      return y + '-' + m + '-' + d;
+    },
+    handleHeadImg (data) {
+      const temp = data
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i].headImg === null || temp[i].headImg === "null") {
+          temp[i].headImg = "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+        }
+      }
+      return temp
+    },
+    update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改/json/user/update?userId=11
+    // console.log('进入到修改用户信息')
+    // console.log(item)
       axios.put('/json/user/update?userId=' + item.userId + '&nickName=' + item.nickName + '&telPhone=' + item.telPhone + '&email=' + item.email + '&qq=' + item.qq + '&weiXin=' + item.weiXin + '&sex=' + item.sex + '&readName=' + item.readName + '&headImg=' + item.headImg + '&birthday=' + item.birthday + '&introduce=' + item.introduce).then((res) => {
         if (res.data.code === 0) {
           this.$message({
