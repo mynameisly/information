@@ -7,38 +7,23 @@
             <el-input v-model="searchForm.userId" placeholder="请输入用户ID" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="7">
           <el-form-item label="目标视频ID：">
             <el-input v-model="searchForm.targetId" placeholder="请输入目标视频ID" clearable/>
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="7" :offset="1">
-          <el-form-item label="起始-观看时间：">
+        <el-col :span="9">
+          <el-form-item label="观看时间：">
             <el-date-picker
-                clearable
-                v-model="searchForm.startWatchTime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请输入起始-观看时间"
-              />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="结束-观看时间：">
-            <el-date-picker
-                clearable
-                v-model="searchForm.endWatchTime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请输入结束-观看时间"
-              />
+              v-model="searchForm.watchTimeRange"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="起始-观看时间"
+              end-placeholder="结束-观看时间">
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-row>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getWatchList(searchForm)">查询观看记录</el-button>
@@ -50,7 +35,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="65%"
+      height="75%"
       :data="watchList"
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -70,19 +55,19 @@
       <el-table-column label="目标视频名称" prop="targetName"/>
       <el-table-column label="观看时间" prop="watchTime"/>
     </el-table>
-    <add-dialog ref="addDialog" title="新增观看记录"  @confirmData="(item) => addWatch(item)"/>
+    <!-- <add-dialog ref="addDialog" title="新增观看记录"  @confirmData="(item) => addWatch(item)"/> -->
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import AddDialog from './add'
+// import AddDialog from './add'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   name: 'childWarch',
   components: {
-    AddDialog,
+    // AddDialog,
     PageComponent
   },
   data () {
@@ -91,9 +76,10 @@ export default {
       searchForm: {
         userId: '',
         targetId: '',
-        startWatchTime: '',
-        endWatchTime: ''
+        watchTimeRange: ''
       },
+      startWatchTime: '',
+      endWatchTime: '',
       watchList: [],
       watchData: {},
       multipleSelection: [], // 批量删除
@@ -110,14 +96,14 @@ export default {
   },
   methods: {
     getWatchList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      axios.get(('/json/watch/list'), {
-        params: {
-          userId: this.searchForm.userId,
-          targetId: this.searchForm.targetId,
-          startWatchTime: this.searchForm.startWatchTime,
-          endWatchTime: this.searchForm.endWatchTime
-        }
-      }).then((res) => {
+      if (this.searchForm.watchTimeRange == null || this.searchForm.watchTimeRange == '') {
+        this.startWatchTime = ''
+        this.endWatchTime = ''
+      } else {
+        this.startWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[0])
+        this.endWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[1])
+      }
+      axios.get('/json/watch/list?userId=' + this.searchForm.userId + '&targetId=' + this.searchForm.targetId + '&startWatchTime=' + this.startWatchTime +'&endWatchTime=' + this.endWatchTime).then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
@@ -126,26 +112,32 @@ export default {
         this.loading = false
       })
     },
+    formatDateTime (date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? ('0' + m) : m;
+      var d = date.getDate();
+      d = d < 10 ? ('0' + d) : d;
+      return y + '-' + m + '-' + d;
+    },
     mouseEnter (data) {
       this.watchData = Object.assign({}, data)
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    addWatch (item) { // 新增观看记录
-      // console.log('进入新增观看记录')
-      // console.log(item)
-      axios.post('/json/watch/add?targetId=' + item.targetId)
-        .then((res) => {
-          if (res.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: '新增观看记录成功'
-            })
-            this.getWatchList()
-          }
-        })
-    },
+    // addWatch (item) { // 新增观看记录
+    //   axios.post('/json/watch/add?targetId=' + item.targetId)
+    //     .then((res) => {
+    //       if (res.data.code === 0) {
+    //         this.$message({
+    //           type: 'success',
+    //           message: '新增观看记录成功'
+    //         })
+    //         this.getWatchList()
+    //       }
+    //     })
+    // },
     delSelect () {
       if (this.multipleSelection.length) {
         let watchIds = [] // 保存选中的数据的id
@@ -198,5 +190,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+#watch .el-table__body-wrapper {
+  height: 330px;
+}
 </style>

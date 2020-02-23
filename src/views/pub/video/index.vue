@@ -2,37 +2,26 @@
   <div id="video">
     <el-form v-model="searchForm" :inline="true">
       <el-row>
-        <el-col :span="7" :offset="1">
-          <el-form-item label="起始-时间：">
+        <el-col :span="10" :offset="1">
+          <el-form-item label="上传时间：">
             <el-date-picker
-                clearable
-                v-model="searchForm.startCreateTime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请输入起始-时间"
-              />
+              v-model="searchForm.createTimeRange"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="上传时间"
+              end-placeholder="上传时间">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="结束-时间：">
-            <el-date-picker
-                clearable
-                v-model="searchForm.endCreateTime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="请输入结束-时间"
-              />
+          <el-form-item label="网课名称：">
+            <el-input v-model="searchForm.courseName" placeholder="请输入网课名称" clearable/>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
-        <el-col :span="7" :offset="1">
-          <el-form-item label="网课名称：">
-            <el-input v-model="searchForm.courseName" placeholder="请输入网课名称" clearable/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="10" :offset="1">
           <el-form-item label="网课简介：">
             <el-input v-model="searchForm.courseIntroduction" placeholder="请输入网课简介" clearable/>
           </el-form-item>
@@ -73,7 +62,7 @@
       <el-table-column label="教师名称" prop="teacherName"/>
       <el-table-column label="教师简介" prop="teacherIntroduction"/>
       <el-table-column label="参考教材" prop="teachingMaterial"/>
-      <el-table-column label="课程主视频url" prop="mainVideoUrl"/>
+      <!-- <el-table-column label="课程主视频url" prop="mainVideoUrl"/> -->
       <el-table-column label="教学方式简介" prop="teachingMethods"/>
       <el-table-column label="主讲内容简介" prop="lectureContent"/>
       <el-table-column label="教学目的简介" prop="instructionalObjective"/>
@@ -87,8 +76,8 @@
         </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增文件"  @confirmData="(item) => addVideo(item)"/>
-    <update-dialog ref="updateDialog" title="修改文件" @confirmData="(item) => updateVideo(item)" />
+    <add-dialog ref="addDialog" title="新增网课视频"  @confirmData="(item) => addVideo(item)"/>
+    <update-dialog ref="updateDialog" title="修改网课视频" @confirmData="(item) => updateVideo(item)" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
@@ -108,6 +97,7 @@ export default {
     return {
       loading: false,
       searchForm: {
+        createTimeRange: '',
         startCreateTime: '',
         endCreateTime: '',
         courseName: '',
@@ -130,6 +120,13 @@ export default {
   },
   methods: {
     getVideoList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      if (this.searchForm.createTimeRange == null || this.searchForm.createTimeRange == '') {
+        this.startCreateTime = ''
+        this.endCreateTime = ''
+      } else {
+        this.startCreateTime = this.formatDateTime(this.searchForm.createTimeRange[0])
+        this.endCreateTime = this.formatDateTime(this.searchForm.createTimeRange[1])
+      }
       axios.get(('/json/onlineCourse/list'), {
         params: {
           startCreateTime: this.searchForm.startCreateTime,
@@ -146,6 +143,14 @@ export default {
         this.videoList = res.data.data
         this.loading = false
       })
+    },
+    formatDateTime (date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? ('0' + m) : m;
+      var d = date.getDate();
+      d = d < 10 ? ('0' + d) : d;
+      return y + '-' + m + '-' + d;
     },
     mouseEnter (data) {
       this.videoData = Object.assign({}, data)

@@ -29,8 +29,8 @@
 
       <el-row>
         <el-col :span="7" :offset="1">
-          <el-form-item label="文件真实名：">
-            <el-input v-model="searchForm.fileRealName" placeholder="请输入文件上传时真实名" clearable/>
+          <el-form-item label="文件名：">
+            <el-input v-model="searchForm.fileRealName" placeholder="请输入文件名" clearable/>
           </el-form-item>
         </el-col>
         <el-col :span="8">

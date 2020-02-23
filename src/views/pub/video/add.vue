@@ -20,7 +20,22 @@
           <el-input v-model="item.teachingMaterial"  palceholder="请输入参考教材" clearable/>
         </el-form-item>
         <el-form-item label="课程主视频url:" prop="mainVideoUrl">
-          <el-input v-model="item.mainVideoUrl"  palceholder="请输入课程主视频url" clearable/>
+          <el-upload
+            ref="upload"
+            action="none"
+            drag
+            multiple
+            :auto-upload="false"
+            :limit="9"
+            :on-preview="handlePictureCardPreview"
+            :before-upload="beforeupload"
+            :on-exceed="exceedHandle"
+            :on-change="fileSaveToUrl"
+            >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+          <!-- <el-input v-model="item.mainVideoUrl"  palceholder="请输入课程主视频url" clearable/> -->
         </el-form-item>
 
         <el-form-item label="教学方式简介:" prop="teachingMethods">
@@ -51,6 +66,7 @@ export default {
   data () {
     return {
       visible: false,
+      localFile: {},
       item: {
         courseName: '',
         courseIntroduction: '',
@@ -64,14 +80,14 @@ export default {
       },
       rules: {
         courseName: [{ required: true, message: '请输入网课名称', trigger: 'blur' }],
-        courseIntroduction: [{ required: true, message: '请输入网课简介', trigger: 'blur' }],
+        // courseIntroduction: [{ required: true, message: '请输入网课简介', trigger: 'blur' }],
         teacherName: [{ required: true, message: '请输入教师名称', trigger: 'blur' }],
-        teacherIntroduction: [{ required: true, message: '请输入教师简介', trigger: 'blur' }],
-        teachingMaterial: [{ required: true, message: '请输入参考教材', trigger: 'blur' }],
+        // teacherIntroduction: [{ required: true, message: '请输入教师简介', trigger: 'blur' }],
+        // teachingMaterial: [{ required: true, message: '请输入参考教材', trigger: 'blur' }],
         mainVideoUrl: [{ required: true, message: '请输入课程主视频url', trigger: 'blur' }],
-        teachingMethods: [{ required: true, message: '请输入教学方式简介', trigger: 'blur' }],
-        lectureContent: [{ required: true, message: '请输入主讲内容简介', trigger: 'blur' }],
-        instructionalObjective: [{ required: true, message: '请输入教学目的简介', trigger: 'blur' }]
+        // teachingMethods: [{ required: true, message: '请输入教学方式简介', trigger: 'blur' }],
+        // lectureContent: [{ required: true, message: '请输入主讲内容简介', trigger: 'blur' }],
+        // instructionalObjective: [{ required: true, message: '请输入教学目的简介', trigger: 'blur' }]
       }
     }
   },
@@ -91,6 +107,27 @@ export default {
         .then((res) => {
           this.item = res.data.data
         })
+    },
+    handlePictureCardPreview() {
+
+    },
+    beforeupload () {
+
+    },
+    exceedHandle () {
+
+    },
+    fileSaveToUrl (file) {
+      this.localFile = file.raw
+      let render = new FileReader() // 转换操作，可以不放在这里面，多次触发
+      render.readAsDataURL(this.localFile)
+      render.onload = () => {
+        console.log('进入到file转换为URL')
+        console.log(render.result)
+      }
+      /* 另外一种本地预览方法 */
+      let URL = window.URL || window.webkitURL;
+      console.log(URL.createObjectURL(file.raw)); 
     },
     submitForm (videoForm) {
       this.$refs.videoForm.validate(valid => {

@@ -22,26 +22,15 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="7" :offset="1">
-              <el-form-item label="起始-时间：">
+            <el-col :span="10" :offset="1">
+              <el-form-item label="发布时间：">
                 <el-date-picker
-                    clearable
-                    v-model="searchForm.startCreateTime"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    placeholder="请输入起始-时间"
-                  />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="结束-时间：">
-                <el-date-picker
-                    clearable
-                    v-model="searchForm.endCreateTime"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    placeholder="请输入结束-时间"
-                  />
+                  v-model="searchForm.createTimeRange"
+                  type="daterange"
+                  range-separator="-"
+                  start-placeholder="起始发布时间"
+                  end-placeholder="结束发布时间">
+                </el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -59,14 +48,12 @@
           </el-row>
 
           <el-row>
-            <el-col :span="7" :offset="1">
-              <el-form-item label="起始-分数：">
-                <el-input v-model="searchForm.startScore" placeholder="请输入起始-分数" clearable/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="结束-分数：">
-                <el-input v-model="searchForm.endScore" placeholder="请输入结束-分数" clearable/>
+            <el-col :span="10" :offset="1">
+              <el-form-item label="评分：">
+                <div style="display:flex">
+                <el-input type="number" v-model.number="searchForm.startScore" min="0"  @keyup.native="proving($event)" placeholder="请输入最小评分数" clearable/>
+                -<el-input type="number" v-model.number="searchForm.endScore" min="0"  @keyup.native="proving($event)" placeholder="请输入最大评分数" clearable/>
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -145,26 +132,15 @@
           </el-row>
 
           <el-row>
-            <el-col :span="7" :offset="1">
-              <el-form-item label="起始-时间：">
+            <el-col :span="10" :offset="1">
+              <el-form-item label="发布时间：">
                 <el-date-picker
-                    clearable
-                    v-model="searchFormDetails.startCreateTime"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    placeholder="请输入起始-时间"
-                  />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="结束-时间：">
-                <el-date-picker
-                    clearable
-                    v-model="searchFormDetails.endCreateTime"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    placeholder="请输入结束-时间"
-                  />
+                  v-model="searchFormDetails.createTimeRange"
+                  type="daterange"
+                  range-separator="-"
+                  start-placeholder="起始发布时间"
+                  end-placeholder="结束发布时间">
+                </el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -182,14 +158,12 @@
           </el-row>
 
           <el-row>
-            <el-col :span="7" :offset="1">
-              <el-form-item label="起始-分数：">
-                <el-input v-model="searchFormDetails.startScore" placeholder="请输入起始-分数" clearable/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="结束-分数：">
-                <el-input v-model="searchFormDetails.endScore" placeholder="请输入结束-分数" clearable/>
+            <el-col :span="10" :offset="1">
+              <el-form-item label="评分：">
+                <div style="display:flex">
+                <el-input v-model.number="searchFormDetails.startScore" min="0"  @keyup.native="proving($event)" placeholder="请输入最小评分数" clearable/>
+                -<el-input v-model.number="searchFormDetails.endScore" min="0"  @keyup.native="proving($event)" placeholder="请输入最大评分数" clearable/>
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -361,6 +335,7 @@ export default {
         commentId: '',
         userId: '',
         targetId: '',
+        createTimeRange: '',
         startCreateTime: '',
         endCreateTime: '',
         type: '',
@@ -400,6 +375,7 @@ export default {
         commentId: '',
         userId: '',
         targetId: '',
+        createTimeRange: '',
         startCreateTime: '',
         endCreateTime: '',
         type: '',
@@ -548,6 +524,13 @@ export default {
   },
   methods: {
     getCommentList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      if (this.searchForm.createTimeRange == null || this.searchForm.createTimeRange == '') {
+        this.searchForm.startCreateTime = ''
+        this.searchForm.endCreateTime = ''
+      } else {
+        this.searchForm.startCreateTime = this.formatDateTime(this.searchForm.createTimeRange[0])
+        this.searchForm.endCreateTime = this.formatDateTime(this.searchForm.createTimeRange[1])
+      }
       axios.get(('/json/comment/list'), {
         params: {
           commentId: this.searchForm.commentId,
@@ -573,6 +556,21 @@ export default {
         // console.log(this.commentList)
         this.loading = false
       })
+    },
+    formatDateTime (date) { // 把标准格式转换为年月日
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? ('0' + m) : m;
+      var d = date.getDate();
+      d = d < 10 ? ('0' + d) : d;
+      return y + '-' + m + '-' + d;
+    },
+    proving(e) {
+      var keyNum = window.event ? e.keyCode : e.which; // 获取键盘码
+      var keyChar = String.fromCharCode(keyNum); // 获取键盘码对应的字符
+      if (keyNum==189 || keyNum==190 || keyNum==110 || keyNum==109) {
+        e.target.value = ''
+      }
     },
     mouseEnter (data) {
       this.commentData = Object.assign({}, data)
@@ -669,17 +667,24 @@ export default {
     },
     //  下面的代码为details的
     getCommentListDetails () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      if (this.searchFormDetails.createTimeRange == null || this.searchFormDetails.createTimeRange == '') {
+        this.searchFormDetails.startCreateTime = ''
+        this.searchFormDetails.endCreateTime = ''
+      } else {
+        this.searchFormDetails.startCreateTime = this.formatDateTime(this.searchFormDetails.createTimeRange[0])
+        this.searchFormDetails.endCreateTime = this.formatDateTime(this.searchFormDetails.createTimeRange[1])
+      }
       axios.get(('/json/comment/listDetails'), {
         params: {
-          commentId: this.searchForm.commentId,
-          userId: this.searchForm.userId,
-          targetId: this.searchForm.targetId,
-          startCreateTime: this.searchForm.startCreateTime,
-          endCreateTime: this.searchForm.endCreateTime,
-          type: this.searchForm.type,
-          startScore: this.searchForm.startScore,
-          endScore: this.searchForm.endScore,
-          context: this.searchForm.context
+          commentId: this.searchFormDetails.commentId,
+          userId: this.searchFormDetails.userId,
+          targetId: this.searchFormDetails.targetId,
+          startCreateTime: this.searchFormDetails.startCreateTime,
+          endCreateTime: this.searchFormDetails.endCreateTime,
+          type: this.searchFormDetails.type,
+          startScore: this.searchFormDetails.startScore,
+          endScore: this.searchFormDetails.endScore,
+          context: this.searchFormDetails.context
         }
       }).then((res) => {
         this.page.currentPage = res.data.page.page

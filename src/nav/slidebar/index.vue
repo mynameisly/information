@@ -104,7 +104,7 @@ export default {
         {
           id: 8,
           icon: 'el-icon-menu',
-          name: '观看记录',
+          name: '观看统计',
           url: '/pub/watch'
         }
       ]

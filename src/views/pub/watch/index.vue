@@ -85,18 +85,6 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    addWatch (item) { // 新增观看记录
-      axios.post('/json/watch/add?targetId=' + item.targetId)
-        .then((res) => {
-          if (res.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: '新增文件成功'
-            })
-            this.getWatchList()
-          }
-        })
-    },
     delSelect () {
       if (this.multipleSelection.length) {
         let watchIds = [] // 保存选中的数据的id
@@ -137,7 +125,5 @@ export default {
 </script>
 
 <style lang="scss">
-#watch .el-table__body-wrapper {
-  height: 285px;
-}
+
 </style>

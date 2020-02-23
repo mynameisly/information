@@ -76,7 +76,7 @@ const pub = [
     component: () => import('@/views/pub/watch/index'),
     name: 'watch',
     meta: {
-      title: '观看记录'
+      title: '观看统计'
     }
   }
 ]

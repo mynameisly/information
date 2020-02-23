@@ -148,11 +148,11 @@ export default {
           nickName: '',
           sex: '',
           readName: '',
-          birthdayRange: '',
-          startBirthday: '',
-          endBirthday: '',
+          birthdayRange: ''
         }
       ],
+      startBirthday: '',
+      endBirthday: '',
       userData: {}, // 保存鼠标悬停的当前行的数据
       userList: [],
       page: {
@@ -176,7 +176,10 @@ export default {
     //   })
     // },
     getUserList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      if (this.searchForm.birthdayRange != undefined) {
+      if (this.searchForm.birthdayRange == null || this.searchForm.birthdayRange == '') {
+        this.startBirthday = ''
+        this.endBirthday = ''
+      } else {
         this.startBirthday = this.formatDateTime(this.searchForm.birthdayRange[0])
         this.endBirthday = this.formatDateTime(this.searchForm.birthdayRange[1])
       }
