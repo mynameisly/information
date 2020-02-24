@@ -2,9 +2,15 @@
   <div id="watch">
     <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="动态管理" name="dynamic">
-        <childWatch v-if="ischildDynamic" />
+        <childDynamic v-if="ischildDynamic" />
+      </el-tab-pane>
+      <el-tab-pane label="动态详情" name="dynamicDetails">
+        <childDynamicDetails v-if="ischildDynamic" />
       </el-tab-pane>
       <el-tab-pane label="评论管理" name="discuss">
+        <childNum v-if="ischildDiscuss" />
+      </el-tab-pane>
+      <el-tab-pane label="评论详情" name="discussDetails">
         <childNum v-if="ischildDiscuss" />
       </el-tab-pane>
       <el-tab-pane label="评论统计" name="statNum">
@@ -17,11 +23,14 @@
 <script>
 import axios from 'axios'
 import dynamicList from './dynamic'
+import dynamicDetails from './dynamicDetails'
 import discussList from './discuss'
 import statNumber from './statNumber'
+import dynamicDetailsVue from './dynamicDetails.vue'
 export default {
   components: {
     childDynamic: dynamicList,
+    childDynamicDetails: dynamicDetails,
     childDiscuss: discussList,
     childStatNumber: statNumber
   },
