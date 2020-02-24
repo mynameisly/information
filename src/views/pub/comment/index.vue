@@ -1,72 +1,92 @@
 <template>
   <div id="comment">
-    <el-tabs type="border-card">
-      <el-tab-pane label="评论管理">
-        <!-- 评论管理模块 -->
-        
+    <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="动态管理" name="dynamic">
+        <childDynamic v-if="ischildDynamic" />
       </el-tab-pane>
-      <el-tab-pane label="评论详情">
-        <!-- 评论详情模块 -->
-        
-        </el-tab-pane>
-      <el-tab-pane label="评论统计">
-        <!-- 评论统计模块 -->
-        
-        </el-tab-pane>
-    </el-tabs>
+      <el-tab-pane label="动态详情" name="dynamicDetails">
+        <childDynamicDetails v-if="ischildDynamicDetails" />
+      </el-tab-pane>
+      <el-tab-pane label="评论管理" name="discuss">
+        <childDiscuss v-if="ischildDiscuss" />
+      </el-tab-pane>
+      <el-tab-pane label="评论详情" name="discussDetails">
+        <childDiscussDetails v-if="ischildDiscussDetails" />
+      </el-tab-pane>
+      <el-tab-pane label="评论统计" name="statNum">
+        <childStatNumber v-if="ischildStatNumber" />
+      </el-tab-pane>
+  </el-tabs>
   </div>
 </template>
 
 <script>
-import AddDialog from './add'
-import UpdateDialog from './add'
-// import detailsDialog from './details'
-// import statNumber from './stat'
 import axios from 'axios'
-import echarts from 'echarts'
-import PageComponent from '@/components/Pagenation/index'
+import dynamicList from './dynamic'
+import dynamicDetails from './dynamicDetails'
+import discussList from './discuss'
+import discussDetails from './discussDetails'
+import statNumber from './statNumber'
 export default {
   components: {
-    PageComponent,
-    AddDialog,
-    UpdateDialog
-    // detailsDialog,
-    // statNumber
+    childDynamic: dynamicList,
+    childDynamicDetails: dynamicDetails,
+    childDiscuss: discussList,
+    childDiscussDetails: discussDetails,
+    childStatNumber: statNumber
   },
   data () {
     return {
-      
-      // 下面的数据为评论详情的
-      
-      // 下面的数据是评论统计的
-      
+      loading: false,
+      activeName: 'dynamic',
+      ischildDynamic: true,
+      ischildDynamicDetails: false,
+      ischildDiscuss: false,
+      ischildDiscussDetails: false,
+      ischildStatNumber: false
     }
   },
   mounted () {
     
-    
   },
   methods: {
-    
-    //  下面的代码为details的
-    
-    // 下面的代码为评论统计的
-    
+    handleClick (tab) {
+      if (tab.name === 'dynamic') {
+        this.ischildDynamic = true
+        this.ischildDynamicDetails = false
+        this.ischildDiscuss = false
+        this.ischildDynamicDetails = false
+        this.ischildStatNumber = false
+      } else if (tab.name === 'dynamicDetails') {
+        this.ischildDynamic = false
+        this.ischildDynamicDetails = true
+        this.ischildDiscuss = false
+        this.ischildDynamicDetails = false
+        this.ischildStatNumber = false
+      } else if (tab.name === 'discuss') {
+        this.ischildDynamic = false
+        this.ischildDynamicDetails = false
+        this.ischildDiscuss = true
+        this.ischildDynamicDetails = false
+        this.ischildStatNumber = false
+      } else if (tab.name === 'discussDetails') {
+        this.ischildDynamic = false
+        this.ischildDynamicDetails = false
+        this.ischildDiscuss = false
+        this.ischildDynamicDetails = true
+        this.ischildStatNumber = false
+      } else if (tab.name === 'statNum') {
+        this.ischildDynamic = false
+        this.ischildDynamicDetails = false
+        this.ischildDiscuss = false
+        this.ischildDynamicDetails = false
+        this.ischildStatNumber = true
+      }
+    }
   }
 }
 </script>
 
-// <style lang="scss" scoped>
-// .byMonth, .byDate, .byHour {
-//   width: 1200px;
-//   height:450px;
-//   // border: 1px solid red;
-//   margin: 0 auto;
-// }
-// </style>
-
 <style lang="scss">
-#comment .el-table__body-wrapper {
-  height: 245px;
-}
+
 </style>

@@ -8,7 +8,7 @@
             <el-input v-model="searchForm.context" placeholder="请输入动态内容" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="10">
           <el-form-item label="发布时间：">
             <el-date-picker
               v-model="searchForm.createTimeRange"
@@ -31,7 +31,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="65%"
+      height="365px"
       :data="commentList"
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -68,9 +68,14 @@
 
 <script>
 import axios from 'axios'
+import AddDialog from './add'
+import UpdateDialog from './add'
 import PageComponent from '@/components/Pagenation/index'
 export default {
+  name: 'childDynamic',
   components: {
+    AddDialog,
+    UpdateDialog,
     PageComponent
   },
   data () {
@@ -120,7 +125,7 @@ export default {
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
-        this.commentList = this.handleType(res.data.data)
+        this.commentList = res.data.data
         // console.log('打印动态管理的查询所有')
         // console.log(this.commentList)
         this.loading = false
@@ -141,7 +146,7 @@ export default {
       this.multipleSelection = val
     },
     addComment (item) { // 新增动态
-      axios.post('/json/comment/add?targetId=' + item.targetId + '&type=' + item.type + '&score=' + item.score + '&context=' + item.context)
+      axios.post('/json/comment/add?targetId=' + item.targetId + '&type=dynamic' + item.type + '&score=' + item.score + '&context=' + item.context)
         .then((res) => {
           // console.log('进入新增动态请求')
           // console.log(res.data)
@@ -223,7 +228,7 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.commentList = this.handleType(res.data.data)
+          this.commentList = res.data.data
         }
       })
     }
@@ -232,5 +237,5 @@ export default {
 </script>
 
 <style lang="scss">
-  
+
 </style>

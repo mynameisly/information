@@ -73,7 +73,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="65%"
+      height="285px"
       :data="commentList"
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -102,19 +102,22 @@
         </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增评论/回复/弹幕/动态"  @confirmData="(item) => addComment(item)"/>
-    <update-dialog ref="updateDialog" title="修改评论/回复/弹幕/动态" @confirmData="(item) => updateComment(item)" />
-    <!-- <details-dialog ref="detailsDialog" title="查看评论详情" /> -->
-    <!-- <details-dialog ref="statNumber" title="查看评论统计" /> -->
+    <add-dialog ref="addDialog" title="新增评论"  @confirmData="(item) => addComment(item)"/>
+    <update-dialog ref="updateDialog" title="修改评论" @confirmData="(item) => updateComment(item)" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChangeIndex(item)" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import AddDialog from './add'
+import UpdateDialog from './add'
 import PageComponent from '@/components/Pagenation/index'
 export default {
+  name: 'childDiscuss',
   components: {
+    AddDialog,
+    UpdateDialog,
     PageComponent
   },
   data () {
@@ -194,7 +197,7 @@ export default {
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
-        this.commentList = this.handleType(res.data.data)
+        this.commentList = res.data.data
         // console.log('打印评论管理的查询所有')
         // console.log(this.commentList)
         this.loading = false
@@ -304,7 +307,7 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.commentList = this.handleType(res.data.data)
+          this.commentList = res.data.data
         }
       })
     }
@@ -313,5 +316,5 @@ export default {
 </script>
 
 <style lang="scss">
-  
+
 </style>

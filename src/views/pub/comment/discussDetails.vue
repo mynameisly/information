@@ -155,11 +155,13 @@
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
+  name: 'childDiscussDetails',
   components: {
     PageComponent
   },
   data () {
     return {
+      loading: false,
       searchFormDetails: {
         commentId: '',
         userId: '',
@@ -173,6 +175,12 @@ export default {
         context: ''
       },
       commentListDetails: [],
+      page: {
+        currentPage: 0, // 当前页，对应接口中的page
+        pageSize: 0, // 每页条数，对应接口中的limit
+        totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
+        totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
+      }
     }
   },
   mounted () {
