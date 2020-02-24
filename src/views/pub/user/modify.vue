@@ -28,6 +28,19 @@
       </el-form-item>
       <el-form-item label="头像图片url" prop="headImg">
           <!-- 图片的url和数据库里面的varchar是一样的 -->
+          <el-upload
+            ref="upload"
+            action="none"
+            drag
+            :limit="1"
+            :on-preview="handlePictureCardPreview"
+            :before-upload="beforeupload"
+            :on-exceed="exceedHandle"
+            :on-change="fileSaveToUrl"
+            >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
           <el-input type="textarea"  v-model="item.headImg" :rows="4" resize="none" maxlength="255" show-word-limit palceholder="请输入头像图片url"></el-input>
         </el-form-item>
       <el-form-item label="手机号码:" prop="telPhone">
@@ -91,7 +104,18 @@ export default {
       type: '',
       uptoken: '',
       userId: '', // 保存从index传过来的userId
-      item: {},
+      item: {
+        headImg: '',
+        nickName: '',
+        qq: '',
+        weiXin: '',
+        birthday: '',
+        introduce: '',
+        telPhone: '',
+        email: '',
+        sex: '',
+        readName: '',
+      },
       rules: {
         // headImg: [{required: true, message: '请上传头像', trigger: 'blur'}],
         // nickName: [{required: true, message: '请输入昵称', trigger: 'blur'}],
@@ -115,6 +139,30 @@ export default {
         this.userId = item.userId
         this.updateById()
       }
+    },
+    handlePictureCardPreview () {
+
+    },
+    beforeupload (file) {
+      this.uptoken.key = file.name
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG && !isPNG) { // 如果不是jpg，也不是png的时候就弹出这条信息
+        this.$message.error('上传头像图片只能是 JPG或PNG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG || isPNG && isLt2M
+    },
+    exceedHandle () {
+
+    },
+    fileSaveToUrl (file) {
+      let URL = window.URL || window.webkitURL
+      this.item.headImg = URL.createObjectURL(file.raw)
     },
     updateById () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
       axios.get('/json/user/getUserById?userId=' + this.userId).then((res) => {

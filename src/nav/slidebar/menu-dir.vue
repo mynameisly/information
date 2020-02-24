@@ -78,7 +78,7 @@ $bg3:rgb(76, 103, 136);
     }
     span{
       span{
-        margin:0 6.2rem 0 .3rem
+        margin:0 0rem 0 .3rem
       }
       i:nth-child(3){
         font-size:.1rem;

@@ -56,7 +56,7 @@
         </el-col>
         <el-col :span="2">
           <el-form-item>
-            <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">精确搜索</el-button>
+            <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">查询用户</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -142,15 +142,13 @@ export default {
       //     searchStr: '' // 账号或昵称
       //   }
       // ],
-      searchForm: [ // 精确搜索
-        {
-          number: '',
-          nickName: '',
-          sex: '',
-          readName: '',
-          birthdayRange: ''
-        }
-      ],
+      searchForm: { // 精确搜索
+        number: '',
+        nickName: '',
+        sex: '',
+        readName: '',
+        birthdayRange: ''
+      },
       startBirthday: '',
       endBirthday: '',
       userData: {}, // 保存鼠标悬停的当前行的数据
@@ -196,17 +194,30 @@ export default {
         if (res.data.msg === '无权限') {
           this.$router.push({path: '/401'})
         }
+        console.log(res.data)
+        console.log(res.data.data)
         this.userList = this.handleHeadImg(res.data.data)
         this.loading = false
       })
+
+      // axios.get('/json/user/list?number=' + this.searchForm.number + '&nickName=' + this.searchForm.nickName + '&sex=' + this.searchForm.sex +
+      // '&readName=' + this.searchForm.readName + '&startBirthday=' + this.startBirthday + '&endBirthday=' + this.endBirthday)
+      //   .then((res) => {
+      //     if (res.data.msg === '无权限') {
+      //       this.$router.push({path: '/401'})
+      //     }
+      //     console.log(res.data.data)
+      //     this.userList = this.handleHeadImg(res.data.data)
+      //     this.loading = false
+      //   })
     },
     formatDateTime (date) {
-      var y = date.getFullYear();
-      var m = date.getMonth() + 1;
-      m = m < 10 ? ('0' + m) : m;
-      var d = date.getDate();
-      d = d < 10 ? ('0' + d) : d;
-      return y + '-' + m + '-' + d;
+      var y = date.getFullYear()
+      var m = date.getMonth() + 1
+      m = m < 10 ? ('0' + m) : m
+      var d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      return y + '-' + m + '-' + d
     },
     handleHeadImg (data) {
       const temp = data

@@ -24,9 +24,7 @@
             ref="upload"
             action="none"
             drag
-            multiple
-            :auto-upload="false"
-            :limit="9"
+            :limit="1"
             :on-preview="handlePictureCardPreview"
             :before-upload="beforeupload"
             :on-exceed="exceedHandle"
@@ -80,11 +78,11 @@ export default {
       },
       rules: {
         courseName: [{ required: true, message: '请输入网课名称', trigger: 'blur' }],
-        // courseIntroduction: [{ required: true, message: '请输入网课简介', trigger: 'blur' }],
         teacherName: [{ required: true, message: '请输入教师名称', trigger: 'blur' }],
+        mainVideoUrl: [{ required: true, message: '请输入课程主视频url', trigger: 'blur' }],
+        // courseIntroduction: [{ required: true, message: '请输入网课简介', trigger: 'blur' }],
         // teacherIntroduction: [{ required: true, message: '请输入教师简介', trigger: 'blur' }],
         // teachingMaterial: [{ required: true, message: '请输入参考教材', trigger: 'blur' }],
-        mainVideoUrl: [{ required: true, message: '请输入课程主视频url', trigger: 'blur' }],
         // teachingMethods: [{ required: true, message: '请输入教学方式简介', trigger: 'blur' }],
         // lectureContent: [{ required: true, message: '请输入主讲内容简介', trigger: 'blur' }],
         // instructionalObjective: [{ required: true, message: '请输入教学目的简介', trigger: 'blur' }]
@@ -108,26 +106,37 @@ export default {
           this.item = res.data.data
         })
     },
-    handlePictureCardPreview() {
+    handlePictureCardPreview () {
 
     },
-    beforeupload () {
-
+    beforeupload (file) { // 上传视频文件之前限制格式和大小
+      // console.log('进入到上传文件之前')
+      // console.log(file)
+      let videoFormat = file.name.substring(file.name.lastIndexOf('.') + 1) // 获取上传的文件的格式
+      // console.log(videoFormat)
+      const extension1 = videoFormat === 'asx'
+      const extension2 = videoFormat === 'asf'
+      const extension3 = videoFormat === 'mpg'
+      const extension4 = videoFormat === 'wmv'
+      const extension5 = videoFormat === '3gp'
+      const extension6 = videoFormat === 'mp4'
+      const extension7 = videoFormat === 'mov'
+      const extension8 = videoFormat === 'avi'
+      const extension9 = videoFormat === 'flv'
+      if (!extension1 && !extension2 && !extension3 && !extension4 && !extension5 && !extension6 && !extension7 && !extension8 && !extension9) {
+        this.$message({
+          type: 'danger',
+          message: '上传视频只能是asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式'
+        })
+      }
+      return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9
     },
     exceedHandle () {
 
     },
     fileSaveToUrl (file) {
-      this.localFile = file.raw
-      let render = new FileReader() // 转换操作，可以不放在这里面，多次触发
-      render.readAsDataURL(this.localFile)
-      render.onload = () => {
-        console.log('进入到file转换为URL')
-        console.log(render.result)
-      }
-      /* 另外一种本地预览方法 */
-      let URL = window.URL || window.webkitURL;
-      console.log(URL.createObjectURL(file.raw)); 
+      let URL = window.URL || window.webkitURL
+      this.item.mainVideoUrl = URL.createObjectURL(file.raw)
     },
     submitForm (videoForm) {
       this.$refs.videoForm.validate(valid => {

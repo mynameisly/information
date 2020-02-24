@@ -121,11 +121,11 @@ export default {
   methods: {
     getVideoList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       if (this.searchForm.createTimeRange == null || this.searchForm.createTimeRange == '') {
-        this.startCreateTime = ''
-        this.endCreateTime = ''
+        this.searchForm.startCreateTime = ''
+        this.searchForm.endCreateTime = ''
       } else {
-        this.startCreateTime = this.formatDateTime(this.searchForm.createTimeRange[0])
-        this.endCreateTime = this.formatDateTime(this.searchForm.createTimeRange[1])
+        this.searchForm.startCreateTime = this.formatDateTime(this.searchForm.createTimeRange[0])
+        this.searchForm.endCreateTime = this.formatDateTime(this.searchForm.createTimeRange[1])
       }
       axios.get(('/json/onlineCourse/list'), {
         params: {
@@ -145,12 +145,12 @@ export default {
       })
     },
     formatDateTime (date) {
-      var y = date.getFullYear();
-      var m = date.getMonth() + 1;
-      m = m < 10 ? ('0' + m) : m;
-      var d = date.getDate();
-      d = d < 10 ? ('0' + d) : d;
-      return y + '-' + m + '-' + d;
+      var y = date.getFullYear()
+      var m = date.getMonth() + 1
+      m = m < 10 ? ('0' + m) : m
+      var d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      return y + '-' + m + '-' + d
     },
     mouseEnter (data) {
       this.videoData = Object.assign({}, data)
