@@ -27,7 +27,6 @@ export default {
   },
   data () {
     return {
-      loading: false,
       activeName: 'allWatch',
       isChildWatch: true,
       isChildNum: false,
@@ -76,7 +75,6 @@ export default {
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
         this.watchList = res.data.data
-        this.loading = false
       })
     },
     mouseEnter (data) {

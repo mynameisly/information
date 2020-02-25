@@ -118,11 +118,11 @@ export default {
       },
       rules: {
         // headImg: [{required: true, message: '请上传头像', trigger: 'blur'}],
-        // nickName: [{required: true, message: '请输入昵称', trigger: 'blur'}],
         // qq: [{required: true, message: '请输入QQ号', trigger: 'blur'}],
         // weiXin: [{required: true, message: '请输入微信号', trigger: 'blur'}],
         // birthday: [{required: true, message: '请输入出生日期', trigger: 'blur'}],
         // introduce: [{required: true, message: '请输入个人简介', trigger: 'blur'}],
+        nickName: [{required: true, message: '请输入昵称', trigger: 'blur'}],
         telPhone: [{required: true, validator: validateTelPhone, trigger: 'blur'}],
         email: [{required: true, validator: validateEmail, trigger: 'blur'}],
         sex: [{required: true, message: '请选择性别', trigger: 'blur'}],

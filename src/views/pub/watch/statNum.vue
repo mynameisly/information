@@ -54,7 +54,6 @@ export default {
   name: 'childNum',
   data () {
     return {
-      loading: false,
       // tabPosition: 'left', // 设置标签的方向
       searchForm: {
         startTime: '',

@@ -117,7 +117,6 @@ export default {
       }
     }
     return {
-      loading: false,
       searchForm: {
         startTime: '',
         endTime: ''

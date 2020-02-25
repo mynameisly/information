@@ -9,7 +9,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="上传者：">
-            <el-select v-model="searchForm.userId" placeholder="请选择用户id" clearable>
+            <el-select v-model="searchForm.userId" placeholder="请选择用户id" @focus='handleNoRepeat' clearable>
               <el-option
                 v-for="item in userIds"
                 :key="item.value"
@@ -131,7 +131,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       searchForm: {
         fileId: '',
         userId: '',
@@ -144,7 +144,8 @@ export default {
         introduce: '',
         state: ''
       },
-      userIds: [],
+      usersInfo: [], // 保存首次加载时返回的数据
+      userIds: [], // 保存首次加载返回数据中的用户ID，显示的是用户昵称，搜索的时候传给后台的值是用户ID
       uploadList: [],
       uploadData: {},
       multipleSelection: [], // 批量删除
@@ -163,7 +164,8 @@ export default {
         pageSize: 0, // 每页条数，对应接口中的limit
         totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
         totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
-      }
+      },
+      flag: false
     }
   },
   mounted () {
@@ -173,6 +175,7 @@ export default {
     getUploadList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       axios.get(('/json/file/list'), {
         params: {
+          limit:10,
           fileId: this.searchForm.fileId,
           userId: this.searchForm.userId,
           fileRealName: this.searchForm.fileRealName,
@@ -185,16 +188,18 @@ export default {
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
+        // this.usersInfo = firstData // 这里就不对，每次调用这个方法的时候，就会重新赋值一次，我只要第一次的数据
         this.uploadList = this.handleState(res.data.data)
-        // this.userIds = this.handleNoRepeat(res.data.data)
+        if (!this.flag) {
+          this.usersInfo = res.data.data
+          this.flag = true
+        }
+        console.log(res.data.data)
         this.loading = false
       })
     },
     handleState (data) { // 处理文件状态 0:未审核，1：通过审核，10：审核不通过 参数data就是res.data.data
       const uploadArr = data
-      // for (let i = 0; i < uploadArr.length; i++) {
-      //   this.userIds.push({label: uploadArr[i].uploadUser.number, value: uploadArr[i].uploadUser.userId})
-      // }
       let upload
       for (var k in uploadArr) {
         upload = uploadArr[k]
@@ -214,24 +219,23 @@ export default {
         //   this.$set(upload, 'type', '网课视频')
         // }
         upload = uploadArr[k]
-        upload.uploadUser = upload.uploadUser.number // 上传者为用户账户，因为昵称不是必填项
+        upload.uploadUser = upload.uploadUser.nickName // 上传者为昵称，所以在用户模块要把昵称设置为必填项
       }
       return uploadArr
     },
-    // handleNoRepeat (data) {
-    //   let object = {}
-    //   let userIds = []
-    //   let objres = data.reduce((item, next) => {
-    //     object[next.userId] ? ' ' : object[next.userId] = true && item.push(next)
-    //     // console.log(1111111)
-    //     // console.log('item is', item)
-    //     return item
-    //   }, [])
-    //   for (let i = 0; i < objres.length; i++) {
-    //     userIds.push({label: objres[i].uploadUser, value: objres[i].userId})
-    //   }
-    //   return userIds
-    // },
+    handleNoRepeat () { // 用戶名數組去重，构建出el-select的label是用戶名，value是用户ID
+      let object = {}
+      let userIds = []
+      let data = this.usersInfo
+      let objres = data.reduce((item, next) => {
+        object[next.userId] ? ' ' : object[next.userId] = true && item.push(next)
+        return item
+      }, [])
+      for (let i = 0; i < objres.length; i++) {
+        userIds.push({label: objres[i].uploadUser, value: objres[i].userId})
+      }
+      this.userIds = userIds
+    },
     mouseEnter (data) {
       this.uploadData = Object.assign({}, data)
       // console.log(this.uploadData)
@@ -256,8 +260,6 @@ export default {
     update (item) { // 修改
       axios.put('/json/file/update?fileId=' + item.fileId + '&type=' + item.type + '&state=' + item.state + '&remark=' + item.remark)
         .then((res) => {
-          // console.log(res)
-          // console.log(res.data)
           if (res.data.code === 0) {
             this.$message({
               type: 'success',

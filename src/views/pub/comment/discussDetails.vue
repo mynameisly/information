@@ -161,7 +161,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       searchFormDetails: {
         createTimeRange: '',
         startCreateTime: '',
@@ -205,6 +205,7 @@ export default {
       }
       axios.get(('/json/comment/listDetails'), {
         params: {
+          limit: 10,
           startCreateTime: this.searchFormDetails.startCreateTime,
           endCreateTime: this.searchFormDetails.endCreateTime,
           context: this.searchFormDetails.context

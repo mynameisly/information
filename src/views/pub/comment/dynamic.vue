@@ -82,7 +82,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       flag: false, // 默认可以编辑
       searchForm: {
         createTimeRange: '',
@@ -115,6 +115,7 @@ export default {
       }
       axios.get(('/json/comment/dynamicList'), {
         params: {
+          limit: 10,
           startCreateTime: this.searchForm.startCreateTime,
           endCreateTime: this.searchForm.endCreateTime,
           context: this.searchForm.context

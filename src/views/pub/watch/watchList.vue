@@ -72,7 +72,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       searchForm: {
         userId: '',
         targetId: '',
@@ -86,8 +86,8 @@ export default {
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
-        totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
-        totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
+        totalSize: 0, // 总条数，对应接口中的totalRows
+        totalPage: 0 // 总页数，对应接口中的totalPages
       }
     }
   },
@@ -103,12 +103,13 @@ export default {
         this.startWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[0])
         this.endWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[1])
       }
-      axios.get('/json/watch/list?userId=' + this.searchForm.userId + '&targetId=' + this.searchForm.targetId + '&startWatchTime=' + this.startWatchTime +'&endWatchTime=' + this.endWatchTime).then((res) => {
+      axios.get('/json/watch/list?limit=' + 10 + '&userId=' + this.searchForm.userId + '&targetId=' + this.searchForm.targetId + '&startWatchTime=' + this.startWatchTime + '&endWatchTime=' + this.endWatchTime).then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
+        this.page.totalPage = res.data.page.totalPages
         this.watchList = res.data.data
+        console.log(res.data.page)
         this.loading = false
       })
     },
@@ -179,8 +180,8 @@ export default {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
-          this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
+          this.page.totalPage = res.data.page.totalPages
           this.watchList = res.data.data
         }
       })

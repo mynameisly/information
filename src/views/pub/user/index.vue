@@ -35,7 +35,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="2"></el-col>
       </el-row>
       <el-row>
         <el-col  :span="7" :offset="1">
@@ -54,6 +53,8 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="2">
           <el-form-item>
             <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">查询用户</el-button>
@@ -135,7 +136,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       headUrl: [], // 保存头像
       // searchUserForm: [ // 模糊搜索
       //   {
@@ -147,7 +148,9 @@ export default {
         nickName: '',
         sex: '',
         readName: '',
-        birthdayRange: ''
+        birthdayRange: '',
+        startBirthday: '',
+        endBirthday: '',
       },
       startBirthday: '',
       endBirthday: '',
@@ -174,25 +177,29 @@ export default {
     //   })
     // },
     getUserList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      if (this.searchForm.birthdayRange == null || this.searchForm.birthdayRange == '') {
-        this.startBirthday = ''
-        this.endBirthday = ''
+      if (this.searchForm.birthdayRange === null || this.searchForm.birthdayRange === '') {
+        this.searchForm.startBirthday = ''
+        this.searchForm.endBirthday = ''
       } else {
-        this.startBirthday = this.formatDateTime(this.searchForm.birthdayRange[0])
-        this.endBirthday = this.formatDateTime(this.searchForm.birthdayRange[1])
+        this.searchForm.startBirthday = this.formatDateTime(this.searchForm.birthdayRange[0])
+        this.searchForm.endBirthday = this.formatDateTime(this.searchForm.birthdayRange[1])
       }
       axios.get(('/json/user/list'), {
         params: {
+          limit: 10,
           number: this.searchForm.number,
           nickName: this.searchForm.nickName,
           sex: this.searchForm.sex,
           readName: this.searchForm.readName,
-          startBirthday: this.startBirthday,
-          endBirthday: this.endBirthday
+          startBirthday: this.searchForm.startBirthday,
+          endBirthday: this.searchForm.endBirthday
         }
       }).then((res) => {
         if (res.data.msg === '无权限') {
           this.$router.push({path: '/401'})
+        }
+        if (res.data.msg === '未登录') {
+          this.$router.push({path: '/login'})
         }
         console.log(res.data)
         console.log(res.data.data)
@@ -200,14 +207,16 @@ export default {
         this.loading = false
       })
 
-      // axios.get('/json/user/list?number=' + this.searchForm.number + '&nickName=' + this.searchForm.nickName + '&sex=' + this.searchForm.sex +
-      // '&readName=' + this.searchForm.readName + '&startBirthday=' + this.startBirthday + '&endBirthday=' + this.endBirthday)
+      // axios.get('/json/user/list?limit=' + 10 + '&number=' + this.searchForm.number + '&nickName=' + this.searchForm.nickName + '&sex=' + this.searchForm.sex +
+      // '&readName=' + this.searchForm.readName + '&startBirthday=' + this.searchForm.startBirthday + '&endBirthday=' + this.searchForm.endBirthday)
       //   .then((res) => {
       //     if (res.data.msg === '无权限') {
       //       this.$router.push({path: '/401'})
       //     }
+      //     // this.userList = this.handleHeadImg(res.data.data)
+      //     console.log(111111)
+      //     console.log(res)
       //     console.log(res.data.data)
-      //     this.userList = this.handleHeadImg(res.data.data)
       //     this.loading = false
       //   })
     },
@@ -222,8 +231,8 @@ export default {
     handleHeadImg (data) {
       const temp = data
       for (let i = 0; i < temp.length; i++) {
-        if (temp[i].headImg === null || temp[i].headImg === "null") {
-          temp[i].headImg = "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+        if (temp[i].headImg === null || temp[i].headImg === 'null') {
+          temp[i].headImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
         }
       }
       return temp

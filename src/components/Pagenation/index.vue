@@ -2,11 +2,11 @@
   <div class="page-component">
     <el-pagination
       background
-      layout="sizes,prev, pager, next,jumper"
+      layout="total, sizes,prev, pager, next,jumper"
       :total="total"
       :current-page.sync="page.currentPage"
       :page-size.sync="page.pageSize"
-      :page-sizes="[10, 30, 50, 100]"
+      :page-sizes="[10, 50, 100]"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />

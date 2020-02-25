@@ -95,7 +95,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       searchForm: {
         createTimeRange: '',
         startCreateTime: '',
@@ -109,8 +109,8 @@ export default {
       multipleSelection: [], // 批量删除
       page: {
         currentPage: 0, // 当前页，对应接口中的page
-        pageSize: 0, // 每页条数，对应接口中的limit
-        totalSize: 0, // 中条数，对应接口中的res.data.page.totalRows
+        pageSize: 10, // 每页条数，对应接口中的limit
+        totalSize: 0, // 总条数，对应接口中的res.data.page.totalRows
         totalPage: 0 // 总页数，对应接口中的res.data.page.totalPages
       }
     }
@@ -129,6 +129,7 @@ export default {
       }
       axios.get(('/json/onlineCourse/list'), {
         params: {
+          limit: 10,
           startCreateTime: this.searchForm.startCreateTime,
           endCreateTime: this.searchForm.endCreateTime,
           courseName: this.searchForm.courseName,
@@ -136,11 +137,18 @@ export default {
           teacherName: this.searchForm.teacherName
         }
       }).then((res) => {
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
+        this.page.currentPage = res.data.page.page // 当前页
+        // this.page.pageSize = res.data.page.limit // 每页显示条数
+        this.page.pageSize = 10 // 每页显示条数
+        this.page.totalPage = res.data.page.totalPages // 页数
+        this.page.totalSize = res.data.page.totalRows // 总行数
+
+        // this.page.currentPage = res.data.currentPage;
+        // this.page.pageSize = res.data.size;
+        // this.page.totalPage = res.data.pages;
+        // this.page.totalSize = res.data.total;
         this.videoList = res.data.data
+        console.log(res.data.page)
         this.loading = false
       })
     },
@@ -228,16 +236,20 @@ export default {
       }
     },
     handlePageChange (item) { // 分页查询
+    console.log('进入到分页');// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
+    console.log(item);// currentPage=1  pageSize=30条
+    // const para = { currentPage: item.currentPage, pageSize: item.pageSize }
+    // this.getVideoList(para)
       // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/onlineCourse/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-        if (res.data.code === 0) {
-          this.page.currentPage = res.data.page.page
-          this.page.pageSize = res.data.page.limit
-          this.page.totalPage = res.data.page.totalPages
-          this.page.totalSize = res.data.page.totalRows
-          this.videoList = res.data.data
-        }
-      })
+      // axios.get('/json/onlineCourse/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+      //   if (res.data.code === 0) {
+      //     this.page.currentPage = res.data.page.page
+      //     this.page.pageSize = res.data.page.limit
+      //     this.page.totalPage = res.data.page.totalPages
+      //     this.page.totalSize = res.data.page.totalRows
+      //     this.videoList = res.data.data
+      //   }
+      // })
     }
   }
 }
