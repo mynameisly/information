@@ -26,22 +26,22 @@
             placeholder="请输入生日"
           />
       </el-form-item>
-      <el-form-item label="头像图片url" prop="headImg">
+      <el-form-item label="头像" prop="headImg">
           <!-- 图片的url和数据库里面的varchar是一样的 -->
           <el-upload
-            ref="upload"
-            action="none"
-            drag
-            :limit="1"
-            :on-preview="handlePictureCardPreview"
-            :before-upload="beforeupload"
-            :on-exceed="exceedHandle"
-            :on-change="fileSaveToUrl"
-            >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            class="avatar-uploader"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :data="uptoken"
+            :show-file-list="false"
+            :on-change="onchange"
+            :before-upload="beforeAvatarUpload"
+          >
+            <!-- <img v-if="item.headImg" :src="item.headImg" class="avatar"> -->
+            <img v-if="item.headImg" :src="item.headImg" class="avatar">
+            <!-- <img src="http://localhost:8089/aa850877-f7ed-4848-8aed-b1bff0bb6388" class="avatar"> -->
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
           </el-upload>
-          <el-input type="textarea"  v-model="item.headImg" :rows="4" resize="none" maxlength="255" show-word-limit palceholder="请输入头像图片url"></el-input>
         </el-form-item>
       <el-form-item label="手机号码:" prop="telPhone">
         <el-input v-model="item.telPhone" placeholder="请输入手机号码" clearable/>
@@ -102,10 +102,14 @@ export default {
     return {
       visible: false,
       type: '',
-      uptoken: '',
+      defaultImgSrc: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+      uptoken: {
+        token: '',
+        key: ''
+      },
       userId: '', // 保存从index传过来的userId
       item: {
-        headImg: '',
+        // headImg: '',
         nickName: '',
         qq: '',
         weiXin: '',
@@ -138,12 +142,25 @@ export default {
       } else {
         this.userId = item.userId
         this.updateById()
+        this.Base64ToSrc(item.headImg)
       }
     },
-    handlePictureCardPreview () {
-
+    // ===================
+    handleAvatarSuccess (file) {
+      // this.$set(this.item, 'headImg', URL.createObjectURL(file.raw))
+      let URL = window.URL || window.webkitURL
+      this.item.headImg = URL.createObjectURL(file.raw)
+      console.log(this.item.headImg)
     },
-    beforeupload (file) {
+    // 当上传图片后，调用onchange方法，获取图片本地路径
+    onchange (file) {
+      console.log(22222222)
+      let URL = window.URL || window.webkitURL
+      this.item.headImg = URL.createObjectURL(file.raw)
+      console.log(this.item.headImg)
+    },
+    // 检测选择的图片是否合适
+    beforeAvatarUpload (file) {
       this.uptoken.key = file.name
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
@@ -157,12 +174,24 @@ export default {
       }
       return isJPG || isPNG && isLt2M
     },
-    exceedHandle () {
-
-    },
-    fileSaveToUrl (file) {
-      let URL = window.URL || window.webkitURL
-      this.item.headImg = URL.createObjectURL(file.raw)
+    // fileSaveToUrl (file) {
+    // let URL = window.URL || window.webkitURL
+    // this.item.headImg = URL.createObjectURL(file.raw)
+    // },
+    Base64ToSrc (base64Url) { // 将base64转换为img的src
+      console.log('base64base64base64')
+      console.log(base64Url)
+      let arr = base64Url.split(',')
+      let mime = arr[0].match(/:(.*?);/)[1]
+      let str = atob(arr[1])
+      let n = str.length
+      let u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = str.charCodeAt(n)
+      }
+      console.log('进入到将base64转换为img的src')
+      console.log(new File([u8arr], { type: mime }))
+    // return new File([u8arr], fileName, { type: mime });
     },
     updateById () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
       axios.get('/json/user/getUserById?userId=' + this.userId).then((res) => {
@@ -172,7 +201,7 @@ export default {
     submitForm (item) {
       // this.$refs.userForm.validate((valid) => {
         // if (valid) {
-          console.log('if')
+          // console.log('if')
           this.$confirm('确认保存吗？', '是否保存', {
             cancelButtonText: '取消',
             confirmButtonText: '确认',
@@ -180,7 +209,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
-            console.log('进入到submit方法')
+            // console.log('进入到submit方法')
             this.resetForm('userForm')
           })
         // }
@@ -197,4 +226,31 @@ export default {
 </script>
 
 <style lang="scss">
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.el-upload__tip {
+  margin-top: 0;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
+}
 </style>

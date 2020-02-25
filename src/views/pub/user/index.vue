@@ -35,6 +35,7 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="2"></el-col>
       </el-row>
       <el-row>
         <el-col  :span="7" :offset="1">
@@ -42,19 +43,28 @@
             <el-input v-model="searchForm.readName" placeholder="请输入真实姓名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col  :span="11">
-          <el-form-item label="生日范围:">
+        <el-col  :span="7">
+          <el-form-item label="起始-生日:">
             <el-date-picker
-              v-model="searchForm.birthdayRange"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
+                clearable
+                v-model="searchForm.startBirthday"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请输入起始-生日"
+              />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
+        <el-col  :span="7">
+          <el-form-item label="结束-生日:">
+            <el-date-picker
+                clearable
+                v-model="searchForm.endBirthday"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="请输入结束-生日"
+              />
+          </el-form-item>
+         </el-col>
         <el-col :span="2">
           <el-form-item>
             <el-button type="success" size="medium" icon="el-icon-search" @click="getUserList(searchForm)">查询用户</el-button>
@@ -63,12 +73,13 @@
       </el-row>
     </el-form>
 
+    <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
       stripe
       :data="userList"
-      height="72%"
+      height="65%"
       v-loading="loading"
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
@@ -116,44 +127,45 @@
           >设置角色</el-button>
       </el-table-column>
     </el-table>
-    <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
+    <add-dialog ref="addDialog" title="新增用户" @confirmData="(item) => add(item)" />
     <update-dialog ref="updateDialog" title="修改用户" @confirmData="(item) => update(item)" />
     <RoleDialog ref="roleDialog" />
+    <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
+import AddDialog from './modify'
 import UpdateDialog from './modify'
 import axios from 'axios'
 import RoleDialog from './role-dialog'
 import PageComponent from '@/components/Pagenation/index'
-// import { getUserList, getSearchUserList, getUserListById,setUserRoleById, updateUser, deleteUser} from '@/api/information'
 export default {
   components: {
     PageComponent,
+    AddDialog,
     UpdateDialog,
     RoleDialog
   },
   data () {
     return {
-      loading: true,
+      loading: false,
       headUrl: [], // 保存头像
       // searchUserForm: [ // 模糊搜索
       //   {
       //     searchStr: '' // 账号或昵称
       //   }
       // ],
-      searchForm: { // 精确搜索
-        number: '',
-        nickName: '',
-        sex: '',
-        readName: '',
-        birthdayRange: '',
-        startBirthday: '',
-        endBirthday: '',
-      },
-      startBirthday: '',
-      endBirthday: '',
+      searchForm: [ // 精确搜索
+        {
+          number: '',
+          nickName: '',
+          sex: '',
+          readName: '',
+          startBirthday: '',
+          endBirthday: '',
+        }
+      ],
       userData: {}, // 保存鼠标悬停的当前行的数据
       userList: [],
       page: {
@@ -177,13 +189,6 @@ export default {
     //   })
     // },
     getUserList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      if (this.searchForm.birthdayRange === null || this.searchForm.birthdayRange === '') {
-        this.searchForm.startBirthday = ''
-        this.searchForm.endBirthday = ''
-      } else {
-        this.searchForm.startBirthday = this.formatDateTime(this.searchForm.birthdayRange[0])
-        this.searchForm.endBirthday = this.formatDateTime(this.searchForm.birthdayRange[1])
-      }
       axios.get(('/json/user/list'), {
         params: {
           limit: 10,
@@ -198,46 +203,51 @@ export default {
         if (res.data.msg === '无权限') {
           this.$router.push({path: '/401'})
         }
-        if (res.data.msg === '未登录') {
-          this.$router.push({path: '/login'})
-        }
-        console.log(res.data)
-        console.log(res.data.data)
+        this.page.currentPage = res.data.page.page
+        this.page.pageSize = res.data.page.limit
+        this.page.totalPage = res.data.page.totalPages
+        this.page.totalSize = res.data.page.totalRows
         this.userList = this.handleHeadImg(res.data.data)
+        // console.log('进入到查询所有数据')
+        // console.log(res.data.data)
         this.loading = false
       })
-
-      // axios.get('/json/user/list?limit=' + 10 + '&number=' + this.searchForm.number + '&nickName=' + this.searchForm.nickName + '&sex=' + this.searchForm.sex +
-      // '&readName=' + this.searchForm.readName + '&startBirthday=' + this.searchForm.startBirthday + '&endBirthday=' + this.searchForm.endBirthday)
-      //   .then((res) => {
-      //     if (res.data.msg === '无权限') {
-      //       this.$router.push({path: '/401'})
-      //     }
-      //     // this.userList = this.handleHeadImg(res.data.data)
-      //     console.log(111111)
-      //     console.log(res)
-      //     console.log(res.data.data)
-      //     this.loading = false
-      //   })
-    },
-    formatDateTime (date) {
-      var y = date.getFullYear()
-      var m = date.getMonth() + 1
-      m = m < 10 ? ('0' + m) : m
-      var d = date.getDate()
-      d = d < 10 ? ('0' + d) : d
-      return y + '-' + m + '-' + d
     },
     handleHeadImg (data) {
       const temp = data
       for (let i = 0; i < temp.length; i++) {
         if (temp[i].headImg === null || temp[i].headImg === 'null') {
           temp[i].headImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+        } else {
+          console.log('进入到图片转换的else里面')
+          console.log(temp[i].headImg)
+          // this.Base64ToSrc(temp[i].headImg)
+          // temp[i].headImg = this.Base64ToSrc(temp[i].headImg)
         }
       }
       return temp
     },
-    update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改/json/user/update?userId=11
+    Base64ToSrc (base64Url) { // 将base64转换为img的src
+      console.log('base64base64base64')
+      console.log(base64Url)
+      
+      let URL = window.URL || window.webkitURL
+      let aa = URL.createObjectURL('blob:http://localhost:8089/a292e63f-dfc7-4f5c-8f59-dc20f4c89c52')
+      console.log(aa)
+      // console.log(base64Url)
+      let arr = base64Url.split(',')
+      let mime = arr[0].match(/:(.*?);/)[1]
+      let str = atob(arr[1])
+      let n = str.length
+      let u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = str.charCodeAt(n)
+      }
+      console.log('进入到将base64转换为img的src')
+      console.log(new File([u8arr], { type: mime }))
+    // return new File([u8arr], fileName, { type: mime });
+    },
+    update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改
       axios.put('/json/user/update?userId=' + item.userId + '&nickName=' + item.nickName + '&telPhone=' + item.telPhone + '&email=' + item.email + '&qq=' + item.qq + '&weiXin=' + item.weiXin + '&sex=' + item.sex + '&readName=' + item.readName + '&headImg=' + item.headImg + '&birthday=' + item.birthday + '&introduce=' + item.introduce).then((res) => {
         if (res.data.code === 0) {
           this.$message({
