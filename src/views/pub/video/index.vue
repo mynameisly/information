@@ -51,12 +51,12 @@
       @selection-change="handleSelectionChange"
         >
       <el-table-column type="selection" align="center" />
-       <!--<el-table-column label="序号" type="index" width="55">
+       <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
-          (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
+          <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
       <el-table-column label="网课名称" prop="courseName"/>
       <el-table-column label="网课简介" prop="courseIntroduction"/>
       <el-table-column label="教师名称" prop="teacherName"/>

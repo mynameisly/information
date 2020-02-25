@@ -43,12 +43,12 @@
       @selection-change="handleSelectionChange"
         >
       <el-table-column type="selection" align="center" />
-      <!--<el-table-column label="序号" type="index" width="55">
+      <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
-          (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
+          <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
       <el-table-column label="用户ID" prop="userId"/>
       <el-table-column label="用户名名称" prop="userName"/>
       <el-table-column label="目标视频ID" prop="targetId"/>

@@ -2,7 +2,7 @@
   <div id="discussDetails">
     <!-- 评论详情 -->
     <el-form v-model="searchFormDetails" :inline="true">
-      <el-row>
+      <!-- <el-row>
         <el-col :span="7" :offset="1">
           <el-form-item label="动态ID：">
             <el-input v-model="searchFormDetails.commentId" placeholder="请输入动态ID" clearable/>
@@ -18,21 +18,15 @@
             <el-input v-model="searchFormDetails.targetId" placeholder="请输入目标ID" clearable/>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
 
       <el-row>
-        <el-col :span="10" :offset="1">
-          <el-form-item label="发布时间：">
-            <el-date-picker
-              v-model="searchFormDetails.createTimeRange"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="起始发布时间"
-              end-placeholder="结束发布时间">
-            </el-date-picker>
+        <el-col :span="6" :offset="1">
+          <el-form-item label="内容：">
+            <el-input v-model="searchFormDetails.context" placeholder="请输入内容" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="类型：">
             <el-select v-model="searchFormDetails.type"  palceholder="请选择类型" clearable>
               <el-option
@@ -44,9 +38,20 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="11">
+          <el-form-item label="发布时间：">
+            <el-date-picker
+              v-model="searchFormDetails.createTimeRange"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="起始发布时间"
+              end-placeholder="结束发布时间">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
       </el-row>
 
-      <el-row>
+      <!-- <el-row>
         <el-col :span="10" :offset="1">
           <el-form-item label="评分：">
             <div style="display:flex">
@@ -55,22 +60,17 @@
             </div>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="内容：">
-            <el-input v-model="searchFormDetails.context" placeholder="请输入内容" clearable/>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-form-item>
-          <el-button type="success" size="medium" icon="el-icon-search" @click="getCommentListDetails(searchForm)">查询评论</el-button>
+          <el-button type="success" size="medium" icon="el-icon-search" @click="getCommentListDetails(searchFormDetails)">查询评论</el-button>
         </el-form-item>
       </el-row>
     </el-form>
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="65%"
+      height="330px"
       stripe
       :data="commentListDetails"
       v-loading="loading"
@@ -89,7 +89,7 @@
             :data="props.row.children"
             :show-header="false"
           >
-            <el-table-column
+            <!-- <el-table-column
               label="类型"
               prop="type"
             >
@@ -114,7 +114,7 @@
               :show-overflow-tooltip="true"
               >
               <template slot-scope="oscope">{{ oscope.row.score}}</template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               label="内容"
               prop="context"
@@ -123,14 +123,14 @@
               <template slot-scope="oscope">{{ oscope.row.context}}</template>
             </el-table-column>
             <el-table-column
-              label="评论人"
+              label="用户名"
               prop="number"
               :show-overflow-tooltip="true"
               >
               <template slot-scope="oscope">{{ oscope.row.user.number}}</template>
             </el-table-column>
             <el-table-column
-              label="评论人昵称"
+              label="昵称"
               prop="nickName"
               :show-overflow-tooltip="true"
               >
@@ -139,13 +139,13 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column label="类型" prop="type"/>
-      <el-table-column label="用户ID" prop="userId"/>
+     <el-table-column label="类型" prop="type"/>
+       <!-- <el-table-column label="用户ID" prop="userId"/>
       <el-table-column label="目标ID" prop="targetId"/>
-      <el-table-column label="评分" prop="score"/>
+      <el-table-column label="评分" prop="score"/> -->
       <el-table-column label="内容" prop="context"/>
-      <el-table-column label="评论人" prop="number"/>
-      <el-table-column label="评论人昵称" prop="nickName"/>
+      <el-table-column label="用户名" prop="user.number"/>
+      <el-table-column label="昵称" prop="user.nickName"/>
     </el-table>
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChangeDetails(item)" />
   </div>
@@ -163,18 +163,26 @@ export default {
     return {
       loading: false,
       searchFormDetails: {
-        commentId: '',
-        userId: '',
-        targetId: '',
         createTimeRange: '',
         startCreateTime: '',
         endCreateTime: '',
-        type: '',
-        startScore: '',
-        endScore: '',
         context: ''
       },
       commentListDetails: [],
+      commentsType: [
+        {
+          label: '动态评论', // 即评论回复
+          value: 'commentReply'
+        },
+        {
+          label: '视频评论',
+          value: 'video'
+        },
+        {
+          label: '弹幕',
+          value: 'barrage'
+        }
+      ],
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
@@ -197,14 +205,8 @@ export default {
       }
       axios.get(('/json/comment/listDetails'), {
         params: {
-          commentId: this.searchFormDetails.commentId,
-          userId: this.searchFormDetails.userId,
-          targetId: this.searchFormDetails.targetId,
           startCreateTime: this.searchFormDetails.startCreateTime,
           endCreateTime: this.searchFormDetails.endCreateTime,
-          type: this.searchFormDetails.type,
-          startScore: this.searchFormDetails.startScore,
-          endScore: this.searchFormDetails.endScore,
           context: this.searchFormDetails.context
         }
       }).then((res) => {
@@ -224,7 +226,8 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.commentListDetails = this.handleType(res.data.data)
+          this.commentListDetails = res.data.data
+          // this.commentListDetails = this.handleType(res.data.data)
         }
       })
     },

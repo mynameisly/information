@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import dynamicList from './dynamic'
 import dynamicDetails from './dynamicDetails'
 import discussList from './discuss'
@@ -37,7 +37,6 @@ export default {
   },
   data () {
     return {
-      loading: false,
       activeName: 'dynamic',
       ischildDynamic: true,
       ischildDynamicDetails: false,
@@ -55,31 +54,31 @@ export default {
         this.ischildDynamic = true
         this.ischildDynamicDetails = false
         this.ischildDiscuss = false
-        this.ischildDynamicDetails = false
+        this.ischildDiscussDetails = false
         this.ischildStatNumber = false
       } else if (tab.name === 'dynamicDetails') {
         this.ischildDynamic = false
         this.ischildDynamicDetails = true
         this.ischildDiscuss = false
-        this.ischildDynamicDetails = false
+        this.ischildDiscussDetails = false
         this.ischildStatNumber = false
       } else if (tab.name === 'discuss') {
         this.ischildDynamic = false
         this.ischildDynamicDetails = false
         this.ischildDiscuss = true
-        this.ischildDynamicDetails = false
+        this.ischildDiscussDetails = false
         this.ischildStatNumber = false
       } else if (tab.name === 'discussDetails') {
         this.ischildDynamic = false
         this.ischildDynamicDetails = false
         this.ischildDiscuss = false
-        this.ischildDynamicDetails = true
+        this.ischildDiscussDetails = true
         this.ischildStatNumber = false
       } else if (tab.name === 'statNum') {
         this.ischildDynamic = false
         this.ischildDynamicDetails = false
         this.ischildDiscuss = false
-        this.ischildDynamicDetails = false
+        this.ischildDiscussDetails = false
         this.ischildStatNumber = true
       }
     }

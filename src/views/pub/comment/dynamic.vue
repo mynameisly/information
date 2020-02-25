@@ -4,7 +4,7 @@
     <el-form v-model="searchForm" :inline="true">
       <el-row>
         <el-col :span="7" :offset="1">
-          <el-form-item label="内容：">
+          <el-form-item label="动态内容：">
             <el-input v-model="searchForm.context" placeholder="请输入动态内容" clearable/>
           </el-form-item>
         </el-col>
@@ -45,12 +45,14 @@
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" prop="type"/>
+      <!-- <el-table-column label="类型" prop="type"/>
       <el-table-column label="用户ID" prop="userId"/>
       <el-table-column label="目标ID" prop="targetId"/>
-      <el-table-column label="评分" prop="score"/>
-      <el-table-column label="内容" prop="context" width="400"/>
-      <el-table-column label="操作" prop="operation" width="100">
+      <el-table-column label="评分" prop="score"/> -->
+      <el-table-column label="内容" prop="context" width="800"/>
+      <el-table-column label="昵称" prop="userNickName"/>
+      <el-table-column label="发布时间" prop="createTime" />
+      <el-table-column label="操作" prop="operation"  width="100">
         <el-button
           type="primary"
           size="mini"
@@ -68,8 +70,8 @@
 
 <script>
 import axios from 'axios'
-import AddDialog from './add'
-import UpdateDialog from './add'
+import AddDialog from './addDynamic'
+import UpdateDialog from './addDynamic'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   name: 'childDynamic',

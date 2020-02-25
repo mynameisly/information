@@ -80,12 +80,12 @@
       @selection-change="handleSelectionChange"
       >
       <el-table-column type="selection" align="center" />
-       <!--<el-table-column label="序号" type="index" width="55">
+       <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
-          (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
+          <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
       <el-table-column label="文件名" prop="fileRealName"/>
       <el-table-column label="文件后缀名" prop="fileSuffix"/>
       <!-- <el-table-column label="文件类型" prop="type"/> -->
@@ -237,7 +237,7 @@ export default {
       // console.log(this.uploadData)
     },
     addBgColorByState ({row, columnIndex}) {
-      if (columnIndex === 5) {
+      if (columnIndex === 6) {
         if (row.state === '审核不通过') {
           return 'color: #e5323e'
         } else if (row.state === '通过审核') {

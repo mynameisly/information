@@ -46,3 +46,15 @@
 .el-table .cell {
   text-align: center;
 }
+// 全局修改textarea位置
+.el-textarea__inner {
+  padding: 15px !important;
+}
+.el-textarea .el-input__count {
+  color: #909399;
+  /* background: #FFF; */
+  position: absolute;
+  font-size: 12px;
+  bottom: 1px;
+  right: 10px;
+}

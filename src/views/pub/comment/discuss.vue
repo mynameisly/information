@@ -2,7 +2,7 @@
   <div id="discuss">
     <!-- 评论管理 -->
     <el-form v-model="searchForm" :inline="true">
-      <el-row>
+      <!-- <el-row>
         <el-col :span="7" :offset="1">
           <el-form-item label="动态ID：">
             <el-input v-model="searchForm.commentId" placeholder="请输入动态ID" clearable/>
@@ -18,20 +18,14 @@
             <el-input v-model="searchForm.targetId" placeholder="请输入目标ID" clearable/>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
-        <el-col :span="10" :offset="1">
-          <el-form-item label="发布时间：">
-            <el-date-picker
-              v-model="searchForm.createTimeRange"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="起始发布时间"
-              end-placeholder="结束发布时间">
-            </el-date-picker>
+        <el-col :span="6" :offset="1">
+          <el-form-item label="评论内容：">
+            <el-input v-model="searchForm.context" placeholder="请输入内容" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="类型：">
             <el-select v-model="searchForm.type"  palceholder="请选择类型" clearable>
               <el-option
@@ -43,9 +37,20 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="11">
+          <el-form-item label="发布时间：">
+            <el-date-picker
+              v-model="searchForm.createTimeRange"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="起始发布时间"
+              end-placeholder="结束发布时间">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
       </el-row>
 
-      <el-row>
+      <!-- <el-row>
         <el-col :span="10" :offset="1">
           <el-form-item label="评分：">
             <div style="display:flex">
@@ -54,19 +59,12 @@
             </div>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="内容：">
-            <el-input v-model="searchForm.context" placeholder="请输入内容" clearable/>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getCommentList(searchForm)">查询评论</el-button>
-          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null, falg)">新增评论</el-button>
+          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null, flag)">新增评论</el-button>
           <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
-          <!-- <el-button type="primary" size="medium" icon="el-icon-view" @click="$refs.detailsDialog.open()">查看评论详情</el-button> -->
-          <!-- <el-button type="info" size="medium" icon="el-icon-view" @click="$refs.statNumber.open()">查看评论统计</el-button> -->
         </el-form-item>
       </el-row>
     </el-form>
@@ -81,17 +79,19 @@
       @selection-change="handleSelectionChange"
         >
       <el-table-column type="selection" align="center" />
-      <!--<el-table-column label="序号" type="index" width="55">
+      <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
-          (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 
+          <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1 -->
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
-      </el-table-column>-->
-      <el-table-column label="类型" prop="type"/>
-      <el-table-column label="用户ID" prop="userId"/>
+      </el-table-column>
+      <!-- <el-table-column label="用户ID" prop="userId"/>
       <el-table-column label="目标ID" prop="targetId"/>
-      <el-table-column label="评分" prop="score"/>
-      <el-table-column label="内容" prop="context" width="400"/>
+      <el-table-column label="评分" prop="score"/> -->
+      <el-table-column label="类型" prop="type"/>
+      <el-table-column label="内容" prop="context" width="700"/>
+      <el-table-column label="昵称" prop="userNickName"/>
+      <el-table-column label="评论时间" prop="createTime"/>
       <el-table-column label="操作" prop="operation" width="100">
         <el-button
           type="primary"
@@ -110,8 +110,8 @@
 
 <script>
 import axios from 'axios'
-import AddDialog from './add'
-import UpdateDialog from './add'
+import AddDialog from './addDiscuss'
+import UpdateDialog from './addDiscuss'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   name: 'childDiscuss',
@@ -125,38 +125,28 @@ export default {
       loading: false,
       flag: false, // 默认可以编辑
       searchForm: {
-        commentId: '',
-        userId: '',
-        targetId: '',
         createTimeRange: '',
         startCreateTime: '',
         endCreateTime: '',
-        type: '',
-        startScore: '',
-        endScore: '',
         context: ''
       },
-      commentsType: [
-        {
-          label: '动态',
-          value: '动态'
-        },
-        {
-          label: '评论回复',
-          value: '评论回复'
-        },
-        {
-          label: '评论视频',
-          value: '评论视频'
-        },
-        {
-          label: '弹幕',
-          value: '弹幕'
-        }
-      ],
       commentList: [],
       commentData: {},
       multipleSelection: [], // 批量删除
+      commentsType: [
+        {
+          label: '动态评论', // 即评论回复
+          value: 'commentReply'
+        },
+        {
+          label: '视频评论',
+          value: 'video'
+        },
+        {
+          label: '弹幕',
+          value: 'barrage'
+        }
+      ],
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
@@ -179,14 +169,8 @@ export default {
       }
       axios.get(('/json/comment/list'), {
         params: {
-          commentId: this.searchForm.commentId,
-          userId: this.searchForm.userId,
-          targetId: this.searchForm.targetId,
           startCreateTime: this.searchForm.startCreateTime,
           endCreateTime: this.searchForm.endCreateTime,
-          type: this.searchForm.type,
-          startScore: this.searchForm.startScore,
-          endScore: this.searchForm.endScore,
           context: this.searchForm.context
         }
       }).then((res) => {
@@ -197,7 +181,7 @@ export default {
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
-        this.commentList = res.data.data
+        this.commentList = this.handleType(res.data.data)
         // console.log('打印评论管理的查询所有')
         // console.log(this.commentList)
         this.loading = false
@@ -211,10 +195,10 @@ export default {
       d = d < 10 ? ('0' + d) : d
       return y + '-' + m + '-' + d
     },
-    proving(e) {
-      var keyNum = window.event ? e.keyCode : e.which; // 获取键盘码
-      var keyChar = String.fromCharCode(keyNum); // 获取键盘码对应的字符
-      if (keyNum==189 || keyNum==190 || keyNum==110 || keyNum==109) {
+    proving (e) {
+      var keyNum = window.event ? e.keyCode : e.which // 获取键盘码
+      // var keyChar = String.fromCharCode(keyNum) // 获取键盘码对应的字符
+      if (keyNum === 189 || keyNum === 190 || keyNum === 110 || keyNum === 109) {
         e.target.value = ''
       }
     },
@@ -299,6 +283,20 @@ export default {
         })
       }
     },
+    handleType (data) { // 处理评论管理和评论详情的类型，dynamic=动态,commentReply=评论回复,video=评论视频，barrage=弹幕
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].type === 'dynamic') {
+          this.$set(data[i], 'type', '动态')
+        } else if (data[i].type === 'commentReply') {
+          this.$set(data[i], 'type', '评论回复')
+        } else if (data[i].type === 'video') {
+          this.$set(data[i], 'type', '评论视频')
+        } else if (data[i].type === 'barrage') {
+          this.$set(data[i], 'type', '弹幕')
+        }
+      }
+      return data
+    },
     handlePageChangeIndex (item) { // 分页查询
       // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
       axios.get('/json/comment/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
@@ -307,7 +305,7 @@ export default {
           this.page.pageSize = res.data.page.limit
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
-          this.commentList = res.data.data
+          this.commentList = this.handleType(res.data.data)
         }
       })
     }

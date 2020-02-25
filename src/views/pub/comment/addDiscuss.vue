@@ -2,11 +2,11 @@
   <div id="videoAdd">
     <el-dialog :title="title" :visible.sync="visible" top="5rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="commentForm" :model="item" :rules="rules" label-width="100px">
-        <el-form-item label="目标ID：" prop="targetId">
+        <!-- <el-form-item label="目标ID：" prop="targetId">
           <el-input v-model="item.targetId"  palceholder="请输入目标ID" clearable disabled="flag"/>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="类型：" prop="type">
-          <el-select v-model="item.type"  palceholder="请选择类型" clearable disabled="flag">
+          <el-select v-model="item.type"  palceholder="请选择类型" clearable :disabled="flag">
             <el-option
               v-for="(item, index) in commentsType"
               :key="index"
@@ -15,9 +15,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分数：" prop="score">
+        <!-- <el-form-item label="分数：" prop="score">
           <el-input v-model="item.score"  palceholder="请输入分数" clearable disabled="flag"/>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="内容：" prop="context">
           <el-input type="textarea" :rows="2" v-model="item.context" resize="none" maxlength="200" show-word-limit palceholder="请输入内容"></el-input>
         </el-form-item>
@@ -40,6 +40,7 @@ export default {
   data () {
     return {
       visible: false,
+      flag: false,
       item: {
         targetId: '',
         score: '',
@@ -48,20 +49,16 @@ export default {
       },
       commentsType: [
         {
-          label: '动态',
-          value: '动态'
+          label: '动态评论', // 即评论回复
+          value: 'commentReply'
         },
         {
-          label: '评论回复',
-          value: '评论回复'
-        },
-        {
-          label: '评论视频',
-          value: '评论视频'
+          label: '视频评论',
+          value: 'video'
         },
         {
           label: '弹幕',
-          value: '弹幕'
+          value: 'barrage'
         }
       ],
       rules: {
@@ -100,6 +97,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.commentForm.clearValidate()
       })
+      this.item.context = ''
       this.visible = false
     }
   }
