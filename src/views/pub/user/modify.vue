@@ -38,7 +38,6 @@
           >
             <!-- <img v-if="item.headImg" :src="item.headImg" class="avatar"> -->
             <img v-if="item.headImg" :src="item.headImg" class="avatar">
-            <!-- <img src="http://localhost:8089/aa850877-f7ed-4848-8aed-b1bff0bb6388" class="avatar"> -->
             <i v-else class="el-icon-plus avatar-uploader-icon" />
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
           </el-upload>
@@ -101,15 +100,15 @@ export default {
     }
     return {
       visible: false,
+      param: '', // 表单要提交的参数
       type: '',
-      defaultImgSrc: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
       uptoken: {
         token: '',
         key: ''
       },
       userId: '', // 保存从index传过来的userId
       item: {
-        // headImg: '',
+        headImg: '',
         nickName: '',
         qq: '',
         weiXin: '',
@@ -120,6 +119,7 @@ export default {
         sex: '',
         readName: '',
       },
+      fileList: [], // 保存图片的数组
       rules: {
         // headImg: [{required: true, message: '请上传头像', trigger: 'blur'}],
         // qq: [{required: true, message: '请输入QQ号', trigger: 'blur'}],
@@ -142,22 +142,14 @@ export default {
       } else {
         this.userId = item.userId
         this.updateById()
-        this.Base64ToSrc(item.headImg)
       }
     },
     // ===================
     handleAvatarSuccess (file) {
       // this.$set(this.item, 'headImg', URL.createObjectURL(file.raw))
-      let URL = window.URL || window.webkitURL
-      this.item.headImg = URL.createObjectURL(file.raw)
-      console.log(this.item.headImg)
-    },
-    // 当上传图片后，调用onchange方法，获取图片本地路径
-    onchange (file) {
-      console.log(22222222)
-      let URL = window.URL || window.webkitURL
-      this.item.headImg = URL.createObjectURL(file.raw)
-      console.log(this.item.headImg)
+      // let URL = window.URL || window.webkitURL
+      // this.item.headImg = URL.createObjectURL(file.raw)
+      // console.log(this.item.headImg)
     },
     // 检测选择的图片是否合适
     beforeAvatarUpload (file) {
@@ -172,26 +164,41 @@ export default {
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
+
+      console.log('上传前事件')
+      // 重新写一个表单上传的方法
+      // this.param = new FormData()
+      this.fileList.push(file) // 把单个文件变成数组
+      let images = [...this.fileList] // 把数组存储为一个参数，便于后期操作
+      // 遍历数组
+      images.forEach((img, index) => {
+        this.param.append('multipartFiles', img) // 把单个图片重命名，存储起来（给后台）
+      })
+
       return isJPG || isPNG && isLt2M
     },
-    // fileSaveToUrl (file) {
-    // let URL = window.URL || window.webkitURL
-    // this.item.headImg = URL.createObjectURL(file.raw)
-    // },
-    Base64ToSrc (base64Url) { // 将base64转换为img的src
-      console.log('base64base64base64')
-      console.log(base64Url)
-      let arr = base64Url.split(',')
-      let mime = arr[0].match(/:(.*?);/)[1]
-      let str = atob(arr[1])
-      let n = str.length
-      let u8arr = new Uint8Array(n)
-      while (n--) {
-        u8arr[n] = str.charCodeAt(n)
+    // 当上传图片后，调用onchange方法，获取图片本地路径
+    onchange (file) {
+      console.log(22222222)
+      console.log(file)
+      this.param = new FormData()
+      this.param.append('type', 'headImg')
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       }
-      console.log('进入到将base64转换为img的src')
-      console.log(new File([u8arr], { type: mime }))
-    // return new File([u8arr], fileName, { type: mime });
+      // 然后通过下面的方式把内容通过axios来传到后台
+      axios({
+        method: 'post',
+        url: '/json/file/add',
+        headers: config,
+        data: this.param
+      }).then((res) => {
+        console.log('通过url接口得到图片url')
+        console.log(res.data.data[0].previewUrl) // 图片上传成功之后返回的图片的url
+        this.item.headImg = res.data.data[0].previewUrl
+      }).catch(() => false)
     },
     updateById () { // 修改GET /json/user/getUserById 根据id查询用户详情信息
       axios.get('/json/user/getUserById?userId=' + this.userId).then((res) => {

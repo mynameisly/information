@@ -218,34 +218,15 @@ export default {
       for (let i = 0; i < temp.length; i++) {
         if (temp[i].headImg === null || temp[i].headImg === 'null') {
           temp[i].headImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
-        } else {
-          console.log('进入到图片转换的else里面')
-          console.log(temp[i].headImg)
+        } 
+        // else {
+        //   console.log('进入到图片转换的else里面')
+        //   console.log(temp[i].headImg)
           // this.Base64ToSrc(temp[i].headImg)
           // temp[i].headImg = this.Base64ToSrc(temp[i].headImg)
-        }
+        // }
       }
       return temp
-    },
-    Base64ToSrc (base64Url) { // 将base64转换为img的src
-      console.log('base64base64base64')
-      console.log(base64Url)
-      
-      let URL = window.URL || window.webkitURL
-      let aa = URL.createObjectURL('blob:http://localhost:8089/a292e63f-dfc7-4f5c-8f59-dc20f4c89c52')
-      console.log(aa)
-      // console.log(base64Url)
-      let arr = base64Url.split(',')
-      let mime = arr[0].match(/:(.*?);/)[1]
-      let str = atob(arr[1])
-      let n = str.length
-      let u8arr = new Uint8Array(n)
-      while (n--) {
-        u8arr[n] = str.charCodeAt(n)
-      }
-      console.log('进入到将base64转换为img的src')
-      console.log(new File([u8arr], { type: mime }))
-    // return new File([u8arr], fileName, { type: mime });
     },
     update (item) { // 修改用户信息,根据ID修改,需管理员或自己才能修改
       axios.put('/json/user/update?userId=' + item.userId + '&nickName=' + item.nickName + '&telPhone=' + item.telPhone + '&email=' + item.email + '&qq=' + item.qq + '&weiXin=' + item.weiXin + '&sex=' + item.sex + '&readName=' + item.readName + '&headImg=' + item.headImg + '&birthday=' + item.birthday + '&introduce=' + item.introduce).then((res) => {
