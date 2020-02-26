@@ -218,13 +218,7 @@ export default {
       for (let i = 0; i < temp.length; i++) {
         if (temp[i].headImg === null || temp[i].headImg === 'null') {
           temp[i].headImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
-        } 
-        // else {
-        //   console.log('进入到图片转换的else里面')
-        //   console.log(temp[i].headImg)
-          // this.Base64ToSrc(temp[i].headImg)
-          // temp[i].headImg = this.Base64ToSrc(temp[i].headImg)
-        // }
+        }
       }
       return temp
     },

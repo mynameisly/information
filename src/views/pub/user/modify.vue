@@ -82,6 +82,8 @@ export default {
           var regTelPhone = /^1[3456789]\d{9}$/
           if (!regTelPhone.test(value)) {
             callback(new Error('请输入有效的手机号码'))
+          } else {
+            callback()
           }
         }
       }
@@ -94,6 +96,8 @@ export default {
           var regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
           if (!regEmail.test(value)) {
             callback(new Error('请输入有效的邮箱'))
+          } else {
+            callback()
           }
         }
       }
@@ -103,7 +107,6 @@ export default {
       param: '', // 表单要提交的参数
       type: '',
       uptoken: {
-        token: '',
         key: ''
       },
       userId: '', // 保存从index传过来的userId
@@ -144,13 +147,6 @@ export default {
         this.updateById()
       }
     },
-    // ===================
-    handleAvatarSuccess (file) {
-      // this.$set(this.item, 'headImg', URL.createObjectURL(file.raw))
-      // let URL = window.URL || window.webkitURL
-      // this.item.headImg = URL.createObjectURL(file.raw)
-      // console.log(this.item.headImg)
-    },
     // 检测选择的图片是否合适
     beforeAvatarUpload (file) {
       this.uptoken.key = file.name
@@ -179,8 +175,8 @@ export default {
     },
     // 当上传图片后，调用onchange方法，获取图片本地路径
     onchange (file) {
-      console.log(22222222)
-      console.log(file)
+      // console.log(22222222)
+      // console.log(file)
       this.param = new FormData()
       this.param.append('type', 'headImg')
       let config = {
@@ -205,10 +201,9 @@ export default {
         this.item = res.data.data
       })
     },
-    submitForm (item) {
-      // this.$refs.userForm.validate((valid) => {
-        // if (valid) {
-          // console.log('if')
+    submitForm (userForm) {
+      this.$refs.userForm.validate(valid => {
+        if (valid) {
           this.$confirm('确认保存吗？', '是否保存', {
             cancelButtonText: '取消',
             confirmButtonText: '确认',
@@ -216,11 +211,10 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
-            // console.log('进入到submit方法')
             this.resetForm('userForm')
           })
-        // }
-      // })
+        }
+      })
     },
     resetForm (userForm) {
       this.$nextTick(() => {

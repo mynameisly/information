@@ -7,8 +7,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-      <el-button type="warning" @click="resetForm('videoForm')">取消</el-button>
-      <el-button type="success" @click="submitForm('videoForm')">提交</el-button>
+      <el-button type="warning" @click="resetForm('watchForm')">取消</el-button>
+      <el-button type="success" @click="submitForm('watchForm')">提交</el-button>
     </span>
     </el-dialog>
   </div>
@@ -40,7 +40,7 @@ export default {
         this.item = item
       }
     },
-    submitForm (videoForm) {
+    submitForm (watchForm) {
       this.$refs.watchForm.validate(valid => {
         if (valid) {
           this.$confirm('确认保存吗？', '是否保存', {
