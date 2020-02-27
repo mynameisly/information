@@ -1,6 +1,6 @@
 <template>
   <div id="particlesId">
-    <h1 class="title">学生信息查看系统</h1>
+    <h1 class="title">科成学生助手系统</h1>
     <div class="register-wrap">
       <el-form ref="regForm" :model="regForm" :rules="rules" label-width="80px">
         <el-row>
