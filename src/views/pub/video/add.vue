@@ -1,6 +1,6 @@
 <template>
   <div id="videoAdd">
-    <el-dialog :title="title" :visible.sync="visible" top="0.5rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="visible" top="0.5rem" width="60%" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="videoForm" :model="item" :rules="rules" label-width="100px">
         <el-form-item label="网课名称:" prop="courseName">
           <el-input v-model="item.courseName"  palceholder="请输入网课名称" clearable/>
@@ -19,8 +19,9 @@
         <el-form-item label="参考教材:" prop="teachingMaterial">
           <el-input v-model="item.teachingMaterial"  palceholder="请输入参考教材" clearable/>
         </el-form-item>
-        <el-form-item label="课程主视频url:" prop="mainVideoUrl">
-          <el-upload
+        <el-form-item label="课程视频:" prop="mainVideoUrl">
+          <!-- 页面上是视频，实际上传给后台的是视频URL -->
+          <!-- <el-upload
             ref="upload"
             action="none"
             drag
@@ -31,7 +32,18 @@
             :on-change="fileSaveToUrl"
             >
             <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__text">将视频文件拖到此处，或<em>点击上传</em></div>
+          </el-upload> -->
+          <el-upload
+            action="none"
+            drag
+            :limit="1"
+            :show-file-list="true"
+            :on-change="onchange"
+            :before-upload="beforeupload"
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将视频文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
           <!-- <el-input v-model="item.mainVideoUrl"  palceholder="请输入课程主视频url" clearable/> -->
         </el-form-item>
@@ -64,7 +76,8 @@ export default {
   data () {
     return {
       visible: false,
-      localFile: {},
+      param: '', // 表单要提交的参数
+      videoList: [],
       item: {
         courseName: '',
         courseIntroduction: '',
@@ -79,7 +92,7 @@ export default {
       rules: {
         courseName: [{ required: true, message: '请输入网课名称', trigger: 'blur' }],
         teacherName: [{ required: true, message: '请输入教师名称', trigger: 'blur' }],
-        mainVideoUrl: [{ required: true, message: '请输入课程主视频url', trigger: 'blur' }],
+        // mainVideoUrl: [{ required: true, message: '请输入课程主视频url', trigger: 'blur' }],
         // courseIntroduction: [{ required: true, message: '请输入网课简介', trigger: 'blur' }],
         // teacherIntroduction: [{ required: true, message: '请输入教师简介', trigger: 'blur' }],
         // teachingMaterial: [{ required: true, message: '请输入参考教材', trigger: 'blur' }],
@@ -106,9 +119,6 @@ export default {
           this.item = res.data.data
         })
     },
-    handlePictureCardPreview () {
-
-    },
     beforeupload (file) { // 上传视频文件之前限制格式和大小
       // console.log('进入到上传文件之前')
       // console.log(file)
@@ -129,14 +139,42 @@ export default {
           message: '上传视频只能是asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式'
         })
       }
+
+      console.log('上传前事件')
+      // 重新写一个表单上传的方法
+      // this.param = new FormData()
+      this.videoList.push(file) // 把单个文件变成数组
+      let videos = [...this.videoList] // 把数组存储为一个参数，便于后期操作
+      // 遍历数组
+      videos.forEach((vid, index) => {
+        this.param.append('multipartFiles', vid) // 把单个图片重命名，存储起来（给后台）
+      })
+
       return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9
     },
-    exceedHandle () {
-
-    },
-    fileSaveToUrl (file) {
-      let URL = window.URL || window.webkitURL
-      this.item.mainVideoUrl = URL.createObjectURL(file.raw)
+    // 当上传视频后，调用onchange方法
+    onchange (file) {
+      console.log(22222222)
+      console.log(file)
+      this.param = new FormData()
+      this.param.append('type', 'onlineCourseVideo')
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      // 然后通过下面的方式把内容通过axios来传到后台
+      axios({
+        method: 'post',
+        url: '/json/file/add',
+        headers: config,
+        data: this.param
+      }).then((res) => {
+        console.log('通过url接口得到视频url')
+        console.log(res.data)
+        console.log(res.data.data[0].previewUrl) // 视频上传成功之后返回的视频的url
+        this.item.mainVideoUrl = res.data.data[0].previewUrl
+      }).catch(() => false)
     },
     submitForm (videoForm) {
       this.$refs.videoForm.validate(valid => {
@@ -157,6 +195,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.videoForm.clearValidate()
       })
+      this.item = {}
       this.visible = false
     }
   }

@@ -183,7 +183,7 @@ export default {
           userId: this.searchForm.userId,
           fileRealName: this.searchForm.fileRealName,
           fileSuffix: this.searchForm.fileSuffix,
-          // type: this.searchForm.type,
+          type: 'learningResource',
           state: this.searchForm.state
         }
       }).then((res) => {
@@ -244,7 +244,7 @@ export default {
       // console.log(this.uploadData)
     },
     addBgColorByState ({row, columnIndex}) {
-      if (columnIndex === 6) {
+      if (columnIndex === 7) {
         if (row.state === '审核不通过') {
           return 'color: #e5323e'
         } else if (row.state === '通过审核') {
@@ -319,7 +319,7 @@ export default {
           userId: this.searchForm.userId,
           fileRealName: this.searchForm.fileRealName,
           fileSuffix: this.searchForm.fileSuffix,
-          // type: this.searchForm.type,
+          type: 'learningResource',
           state: this.searchForm.state
         }
       }).then((res) => {

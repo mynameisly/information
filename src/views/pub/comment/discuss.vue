@@ -21,7 +21,7 @@
       </el-row> -->
       <el-row>
         <el-col :span="6" :offset="1">
-          <el-form-item label="评论内容：">
+          <el-form-item label="内容：">
             <el-input v-model="searchForm.context" placeholder="请输入内容" clearable/>
           </el-form-item>
         </el-col>

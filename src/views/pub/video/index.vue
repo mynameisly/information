@@ -166,7 +166,8 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    addVideo (item) { // 新增视频
+    addVideo (item) {
+      console.log('新增视频参数信息', item)
       axios.post('/json/onlineCourse/add?courseName=' + item.courseName + '&courseIntroduction=' + item.courseIntroduction +
       '&teacherName=' + item.teacherName + '&teacherIntroduction=' + item.teacherIntroduction + '&teachingMethods=' + item.teachingMethods + '&lectureContent=' + item.lectureContent +
       '&instructionalObjective=' + item.instructionalObjective + '&teachingMaterial=' + item.teachingMaterial + '&mainVideoUrl=' + item.mainVideoUrl)
