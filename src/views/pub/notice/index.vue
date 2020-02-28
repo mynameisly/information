@@ -138,7 +138,7 @@ export default {
     },
     handlePageChange (item) { // 分页查询
       console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
-      axios.get('/json/academic/add?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+      axios.get('/json/academic/add?page=' + item.currentPage + '&limit=' + item.pageSize + '&title=' + this.searchForm.title).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit

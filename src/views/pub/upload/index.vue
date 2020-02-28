@@ -311,15 +311,30 @@ export default {
       }
     },
     handlePageChange (item) { // 分页查询
-      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/file/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-        if (res.data.code === 0) {
-          this.page.currentPage = res.data.page.page
-          this.page.pageSize = res.data.page.limit
-          this.page.totalPage = res.data.page.totalPages
-          this.page.totalSize = res.data.page.totalRows
-          this.uploadList = this.handleState(res.data.data)
+      axios.get(('/json/file/list'), {
+        params: {
+          page: item.currentPage,
+          limit: item.pageSize,
+          fileId: this.searchForm.fileId,
+          userId: this.searchForm.userId,
+          fileRealName: this.searchForm.fileRealName,
+          fileSuffix: this.searchForm.fileSuffix,
+          // type: this.searchForm.type,
+          state: this.searchForm.state
         }
+      }).then((res) => {
+        this.page.currentPage = res.data.page.page
+        this.page.pageSize = res.data.page.limit
+        this.page.totalPage = res.data.page.totalPages
+        this.page.totalSize = res.data.page.totalRows
+        // this.usersInfo = firstData // 这里就不对，每次调用这个方法的时候，就会重新赋值一次，我只要第一次的数据
+        this.uploadList = this.handleState(res.data.data)
+        if (!this.flag) {
+          this.usersInfo = res.data.data
+          this.flag = true
+        }
+        console.log(res.data.data)
+        this.loading = false
       })
     }
   }

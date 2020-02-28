@@ -3,13 +3,13 @@
     <el-form v-model="searchForm" :inline="true">
       <el-row>
         <el-col :span="7" :offset="1">
-          <el-form-item label="用户ID：">
-            <el-input v-model="searchForm.userId" placeholder="请输入用户ID" clearable/>
+          <el-form-item label="昵称：">
+            <el-input v-model="searchForm.nickName" placeholder="请输入昵称" clearable/>
           </el-form-item>
         </el-col>
         <el-col :span="7">
-          <el-form-item label="目标视频ID：">
-            <el-input v-model="searchForm.targetId" placeholder="请输入目标视频ID" clearable/>
+          <el-form-item label="网课名：">
+            <el-input v-model="searchForm.courseName" placeholder="请输入网课名" clearable/>
           </el-form-item>
         </el-col>
         <el-col :span="9">
@@ -50,9 +50,9 @@
           <span>{{ (page.currentPage - 1) * page.pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户ID" prop="userId"/>
+      <!-- <el-table-column label="用户ID" prop="userId"/> -->
       <el-table-column label="用户名名称" prop="userName"/>
-      <el-table-column label="目标视频ID" prop="targetId"/>
+      <!-- <el-table-column label="目标视频ID" prop="targetId"/> -->
       <el-table-column label="目标视频名称" prop="targetName"/>
       <el-table-column label="观看时间" prop="watchTime" sortable/>
     </el-table>
@@ -75,8 +75,8 @@ export default {
     return {
       loading: true,
       searchForm: {
-        userId: '',
-        targetId: '',
+        nickName: '',
+        courseName: '',
         watchTimeRange: ''
       },
       startWatchTime: '',
@@ -104,7 +104,7 @@ export default {
         this.startWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[0])
         this.endWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[1])
       }
-      axios.get('/json/watch/list?limit=' + 10 + '&userId=' + this.searchForm.userId + '&targetId=' + this.searchForm.targetId + '&startWatchTime=' + this.startWatchTime + '&endWatchTime=' + this.endWatchTime).then((res) => {
+      axios.get('/json/watch/list?limit=' + 10 + '&nickName=' + this.searchForm.nickName + '&courseName=' + this.searchForm.courseName + '&startWatchTime=' + this.startWatchTime + '&endWatchTime=' + this.endWatchTime).then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalSize = res.data.page.totalRows
@@ -129,7 +129,7 @@ export default {
       this.multipleSelection = val
     },
     // addWatch (item) { // 新增观看记录
-    //   axios.post('/json/watch/add?targetId=' + item.targetId)
+    //   axios.post('/json/watch/add?courseName=' + item.courseName)
     //     .then((res) => {
     //       if (res.data.code === 0) {
     //         this.$message({
@@ -176,8 +176,16 @@ export default {
       }
     },
     handlePageChange (item) { // 分页查询
-      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/watch/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+      if (this.searchForm.watchTimeRange == null || this.searchForm.watchTimeRange == '') {
+        this.startWatchTime = ''
+        this.endWatchTime = ''
+      } else {
+        this.startWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[0])
+        this.endWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[1])
+      }
+      axios.get('/json/watch/list?page=' + item.currentPage + '&limit=' + item.pageSize + '&nickName=' + this.searchForm.nickName + '&courseName=' +
+      this.searchForm.courseName + '&startWatchTime=' + this.startWatchTime + '&endWatchTime=' +
+      this.endWatchTime).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit

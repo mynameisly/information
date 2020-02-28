@@ -236,20 +236,32 @@ export default {
       }
     },
     handlePageChange (item) { // 分页查询
-    console.log('进入到分页');// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
-    console.log(item);// currentPage=1  pageSize=30条
-    // const para = { currentPage: item.currentPage, pageSize: item.pageSize }
-    // this.getVideoList(para)
-      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      // axios.get('/json/onlineCourse/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-      //   if (res.data.code === 0) {
-      //     this.page.currentPage = res.data.page.page
-      //     this.page.pageSize = res.data.page.limit
-      //     this.page.totalPage = res.data.page.totalPages
-      //     this.page.totalSize = res.data.page.totalRows
-      //     this.videoList = res.data.data
-      //   }
-      // })
+      if (this.searchForm.createTimeRange == null || this.searchForm.createTimeRange == '') {
+        this.searchForm.startCreateTime = ''
+        this.searchForm.endCreateTime = ''
+      } else {
+        this.searchForm.startCreateTime = this.formatDateTime(this.searchForm.createTimeRange[0])
+        this.searchForm.endCreateTime = this.formatDateTime(this.searchForm.createTimeRange[1])
+      }
+      axios.get(('/json/onlineCourse/list'), {
+        params: {
+          page: item.currentPage,
+          limit: item.pageSize,
+          startCreateTime: this.searchForm.startCreateTime,
+          endCreateTime: this.searchForm.endCreateTime,
+          courseName: this.searchForm.courseName,
+          courseIntroduction: this.searchForm.courseIntroduction,
+          teacherName: this.searchForm.teacherName
+        }
+      }).then((res) => {
+        if (res.data.code === 0) {
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.userList = res.data.data
+        }
+      })
     }
   }
 }

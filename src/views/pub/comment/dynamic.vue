@@ -224,9 +224,23 @@ export default {
         })
       }
     },
-    handlePageChangeIndex (item) { // 分页查询
-      // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0
-      axios.get('/json/comment/list?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
+    handlePageChangeIndex (item) {
+      if (this.searchForm.createTimeRange == null || this.searchForm.createTimeRange == '') {
+        this.searchForm.startCreateTime = ''
+        this.searchForm.endCreateTime = ''
+      } else {
+        this.searchForm.startCreateTime = this.formatDateTime(this.searchForm.createTimeRange[0])
+        this.searchForm.endCreateTime = this.formatDateTime(this.searchForm.createTimeRange[1])
+      }
+      axios.get(('/json/comment/dynamicList'), {
+        params: {
+          page: item.currentPage,
+          limit: item.pageSize,
+          startCreateTime: this.searchForm.startCreateTime,
+          endCreateTime: this.searchForm.endCreateTime,
+          context: this.searchForm.context
+        }
+      }).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
