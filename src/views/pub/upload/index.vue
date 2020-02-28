@@ -9,7 +9,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="上传者：">
-            <el-select v-model="searchForm.userId" placeholder="请选择用户id" @focus='handleNoRepeat' clearable>
+            <!-- 页面上显示的是上传者，实际上传递给后台的是用户id -->
+            <el-select v-model="searchForm.userId" placeholder="请选择上传者" @focus='handleNoRepeat' clearable>
               <el-option
                 v-for="item in userIds"
                 :key="item.value"
@@ -175,7 +176,7 @@ export default {
     getUploadList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       axios.get(('/json/file/list'), {
         params: {
-          limit:10,
+          limit: 10,
           fileId: this.searchForm.fileId,
           userId: this.searchForm.userId,
           fileRealName: this.searchForm.fileRealName,
