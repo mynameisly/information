@@ -73,6 +73,7 @@
     <el-table
       border
       :data="uploadList"
+      :default-sort = "{prop: 'createTime', order: 'descending'}"
       v-loading="loading"
       element-loading-text="拼命加载中"
       height="65%"
@@ -91,6 +92,7 @@
       <el-table-column label="文件后缀名" prop="fileSuffix"/>
       <!-- <el-table-column label="文件类型" prop="type"/> -->
       <el-table-column label="上传者" prop="uploadUser"/>
+      <el-table-column label="上传时间" prop="createTime" sortable/>
       <el-table-column label="文件简介" prop="introduce"/>
       <el-table-column label="状态" prop="state"/>
       <el-table-column label="操作" prop="operation" width="180">

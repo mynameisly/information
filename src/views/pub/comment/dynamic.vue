@@ -33,6 +33,7 @@
       border
       height="365px"
       :data="commentList"
+      :default-sort = "{prop: 'createTime', order: 'descending'}"
       v-loading="loading"
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
@@ -51,7 +52,7 @@
       <el-table-column label="评分" prop="score"/> -->
       <el-table-column label="内容" prop="context" width="800"/>
       <el-table-column label="昵称" prop="userNickName"/>
-      <el-table-column label="发布时间" prop="createTime" />
+      <el-table-column label="发布时间" prop="createTime" sortable/>
       <el-table-column label="操作" prop="operation"  width="100">
         <el-button
           type="primary"

@@ -37,6 +37,7 @@
       border
       height="75%"
       :data="watchList"
+      :default-sort = "{prop: 'watchTime', order: 'descending'}"
       v-loading="loading"
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
@@ -53,7 +54,7 @@
       <el-table-column label="用户名名称" prop="userName"/>
       <el-table-column label="目标视频ID" prop="targetId"/>
       <el-table-column label="目标视频名称" prop="targetName"/>
-      <el-table-column label="观看时间" prop="watchTime"/>
+      <el-table-column label="观看时间" prop="watchTime" sortable/>
     </el-table>
     <!-- <add-dialog ref="addDialog" title="新增观看记录"  @confirmData="(item) => addWatch(item)"/> -->
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
