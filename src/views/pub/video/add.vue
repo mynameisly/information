@@ -34,11 +34,11 @@
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将视频文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
-          <el-progress :percentage="nowPercent"></el-progress>
+          <!-- <el-progress :percentage="nowPercent"></el-progress> -->
           <!-- <el-input v-model="item.mainVideoUrl"  palceholder="请输入课程主视频url" clearable/> -->
         </el-form-item>
 
-        <el-form-item label="教学方式简介:" prop="teachingMethods">
+        <el-form-item label="教学方式简介:" prop="teachingMethods" style="margin-top: 10px">
           <el-input type="textarea" :rows="2" v-model="item.teachingMethods" resize="none" maxlength="200" show-word-limit palceholder="请输入教学方式简介"></el-input>
         </el-form-item>
         <el-form-item label="主讲内容简介:" prop="lectureContent">
@@ -67,7 +67,7 @@ export default {
     return {
       visible: false,
       param: '', // 表单要提交的参数
-      nowPercent: 0, // 当前文件上传的进度
+      // nowPercent: 0, // 当前文件上传的进度
       videoList: [],
       item: {
         courseName: '',
@@ -130,7 +130,7 @@ export default {
       return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9
     },
     onProgress (file) { // 文件上传过程中
-      this.nowPercent = Math.floor(event.percent) // 显示视频上传时进度
+      // this.nowPercent = Math.floor(event.percent) // 显示视频上传时进度
     },
     onSuccess (file) { // 文件上传成功之后，这里指的是上传到https://jsonplaceholder.typicode.com/posts/成功后拿到mainVideoUrl
       this.param = new FormData()
