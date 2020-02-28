@@ -21,30 +21,20 @@
         </el-form-item>
         <el-form-item label="课程视频:" prop="mainVideoUrl">
           <!-- 页面上是视频，实际上传给后台的是视频URL -->
-          <!-- <el-upload
-            ref="upload"
-            action="none"
-            drag
-            :limit="1"
-            :on-preview="handlePictureCardPreview"
-            :before-upload="beforeupload"
-            :on-exceed="exceedHandle"
-            :on-change="fileSaveToUrl"
-            >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将视频文件拖到此处，或<em>点击上传</em></div>
-          </el-upload> -->
           <el-upload
-            action="none"
+            ref="upload"
+            action="https://jsonplaceholder.typicode.com/posts/"
             drag
             :limit="1"
-            :show-file-list="true"
-            :on-change="onchange"
+            :on-remove="handleRemove"
+            :on-progress="onProgress"
+            :on-success="onSuccess"
             :before-upload="beforeupload"
           >
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将视频文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
+          <el-progress :percentage="nowPercent"></el-progress>
           <!-- <el-input v-model="item.mainVideoUrl"  palceholder="请输入课程主视频url" clearable/> -->
         </el-form-item>
 
@@ -77,6 +67,7 @@ export default {
     return {
       visible: false,
       param: '', // 表单要提交的参数
+      nowPercent: 0, // 当前文件上传的进度
       videoList: [],
       item: {
         courseName: '',
@@ -106,7 +97,7 @@ export default {
     open (item) {
       this.visible = true
       if (item === null || item === undefined) {
-        // this.item = null
+        this.item = {}
       } else {
         this.item = item
         this.courseId = item.courseId
@@ -120,10 +111,7 @@ export default {
         })
     },
     beforeupload (file) { // 上传视频文件之前限制格式和大小
-      // console.log('进入到上传文件之前')
-      // console.log(file)
       let videoFormat = file.name.substring(file.name.lastIndexOf('.') + 1) // 获取上传的文件的格式
-      // console.log(videoFormat)
       const extension1 = videoFormat === 'asx'
       const extension2 = videoFormat === 'asf'
       const extension3 = videoFormat === 'mpg'
@@ -139,31 +127,24 @@ export default {
           message: '上传视频只能是asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式'
         })
       }
-
-      console.log('上传前事件')
-      // 重新写一个表单上传的方法
-      // this.param = new FormData()
-      this.videoList.push(file) // 把单个文件变成数组
-      let videos = [...this.videoList] // 把数组存储为一个参数，便于后期操作
-      // 遍历数组
-      videos.forEach((vid, index) => {
-        this.param.append('multipartFiles', vid) // 把单个图片重命名，存储起来（给后台）
-      })
-
       return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9
     },
-    // 当上传视频后，调用onchange方法
-    onchange (file) {
-      console.log(22222222)
-      console.log(file)
+    onProgress (file) { // 文件上传过程中
+      this.nowPercent = Math.floor(event.percent) // 显示视频上传时进度
+    },
+    onSuccess (file) { // 文件上传成功之后，这里指的是上传到https://jsonplaceholder.typicode.com/posts/成功后拿到mainVideoUrl
       this.param = new FormData()
       this.param.append('type', 'onlineCourseVideo')
+      this.videoList.push(file) // 把单个文件变成数组
+      let videos = [...this.videoList] // 把数组存储为一个参数，便于后期操作
+      videos.forEach((vid, index) => {
+        this.param.append('multipartFiles', vid)
+      })
       let config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }
-      // 然后通过下面的方式把内容通过axios来传到后台
       axios({
         method: 'post',
         url: '/json/file/add',
@@ -171,10 +152,13 @@ export default {
         data: this.param
       }).then((res) => {
         console.log('通过url接口得到视频url')
-        console.log(res.data)
         console.log(res.data.data[0].previewUrl) // 视频上传成功之后返回的视频的url
         this.item.mainVideoUrl = res.data.data[0].previewUrl
       }).catch(() => false)
+    },
+    handleRemove (file) {
+      // this.$refs.upload.abort() // 取消上传
+      // this.$message({message: '成功移除' + file.name, type: 'success'})
     },
     submitForm (videoForm) {
       this.$refs.videoForm.validate(valid => {
@@ -193,9 +177,11 @@ export default {
     },
     resetForm (videoForm) {
       this.$nextTick(() => {
+        this.handleRemove()
         this.$refs.videoForm.clearValidate()
       })
       this.item = {}
+      this.nowPercent = 0
       this.visible = false
     }
   }

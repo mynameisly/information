@@ -27,7 +27,7 @@
       <el-row>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getWatchList(searchForm)">查询观看记录</el-button>
-          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增观看记录</el-button>
+          <!-- <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增观看记录</el-button> -->
           <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
         </el-form-item>
       </el-row>

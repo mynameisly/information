@@ -148,7 +148,7 @@ export default {
         // this.page.totalPage = res.data.pages;
         // this.page.totalSize = res.data.total;
         this.videoList = res.data.data
-        console.log(res.data.page)
+        // console.log(res.data.page)
         this.loading = false
       })
     },
