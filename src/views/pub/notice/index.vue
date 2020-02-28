@@ -45,7 +45,7 @@
         </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增网课视频"  @confirmData="(item) => addnotice(item)"/>
+    <add-dialog ref="addDialog" title="新增教务通知"  @confirmData="(item) => addnotice(item)"/>
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
@@ -82,16 +82,10 @@ export default {
   methods: {
     getnoticeList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       axios.get('/json/academic/find?limit=10&title=' + this.searchForm.title).then((res) => {
-        this.page.currentPage = res.data.page.page // 当前页
-        // this.page.pageSize = res.data.page.limit // 每页显示条数
-        this.page.pageSize = 10 // 每页显示条数
-        this.page.totalPage = res.data.page.totalPages // 页数
-        this.page.totalSize = res.data.page.totalRows // 总行数
-
-        // this.page.currentPage = res.data.currentPage;
-        // this.page.pageSize = res.data.size;
-        // this.page.totalPage = res.data.pages;
-        // this.page.totalSize = res.data.total;
+        this.page.currentPage = res.data.page.page
+        this.page.pageSize = res.data.page.limit
+        this.page.totalPage = res.data.page.totalPages
+        this.page.totalSize = res.data.page.totalRows
         this.noticeList = res.data.data
         console.log(res.data.data)
         this.loading = false
@@ -142,10 +136,8 @@ export default {
       })
     },
     handlePageChange (item) { // 分页查询
-      console.log('进入到分页')// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
-      console.log(item)
+      console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
       axios.get('/json/academic/add?page=' + item.currentPage + '&limit=' + item.pageSize).then((res) => {
-        // console.log(res.data)
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
