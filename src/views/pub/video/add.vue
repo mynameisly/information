@@ -19,25 +19,69 @@
         <el-form-item label="参考教材:" prop="teachingMaterial">
           <el-input v-model="item.teachingMaterial"  palceholder="请输入参考教材" clearable/>
         </el-form-item>
-        <el-form-item label="课程视频:" prop="mainVideoUrl">
-          <!-- 页面上是视频，实际上传给后台的是视频URL -->
+        <!-- <el-form-item label="课程视频:" prop="mainVideoUrl">
           <el-upload
-            ref="upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            class="avatar-uploader"
+            action=""
             drag
-            :limit="1"
-            :on-remove="handleRemove"
-            :on-progress="onProgress"
+            :data="uptoken"
+            :show-file-list="false"
+            :on-change="onchange"
+            :on-progress="uploadVideoProcess"
+            :before-upload="beforeUploadVideo"
             :on-success="onSuccess"
-            :before-upload="beforeupload"
           >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将视频文件拖到此处，或<em>点击上传</em></div>
+            <video
+              v-if="item.mainVideoUrl"
+              width="500px"
+              height="300px"
+              :src="item.mainVideoUrl"
+              controls="controls"
+              class="avatar video-avatar">
+              您的浏览器不支持视频播放
+            </video>
+            <img v-if="item.headImg" :src="item.headImg" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+            <div class="el-upload__tip" slot="tip">支持asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式，且不超过10M</div>
+            <el-progress 
+              v-if="videoFlag == true"
+              type="circle"
+              :percentage="videoUploadPercent"
+              style="margin-top:30px;">
+            </el-progress>
           </el-upload>
-          <!-- <el-progress :percentage="nowPercent"></el-progress> -->
-          <!-- <el-input v-model="item.mainVideoUrl"  palceholder="请输入课程主视频url" clearable/> -->
-        </el-form-item>
+        </el-form-item> -->
 
+        <el-form-item label="课程视频:" prop="mainVideoUrl">
+          <el-upload class="avatar-uploader el-upload--text" 
+            action=""
+            drag
+            :show-file-list="false" 
+            :on-change="onchange"
+            :before-upload="beforeUploadVideo" 
+            :on-progress="uploadVideoProcess">
+            <video
+              id="myVideo"
+              v-if="item.mainVideoUrl !='' && videoFlag == false" 
+              :src="item.mainVideoUrl" 
+              muted
+              class="avatar" 
+              width="500px"
+              height="300px"
+              controls="controls"
+              @mouseenter="playVideo"
+              @mouseleave="pauseVideo">您的浏览器不支持视频播放</video>
+            <i v-else-if="item.mainVideoUrl =='' && videoFlag == false" 
+            class="el-icon-plus avatar-uploader-icon"></i>
+            <el-progress 
+              v-if="videoFlag == true" 
+              type="circle" 
+              :percentage="videoUploadPercent" 
+              style="margin-top:30px;">
+            </el-progress>
+            <div class="el-upload__tip" slot="tip">支持asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式，且不超过10M</div>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="教学方式简介:" prop="teachingMethods" style="margin-top: 10px">
           <el-input type="textarea" :rows="2" v-model="item.teachingMethods" resize="none" maxlength="200" show-word-limit palceholder="请输入教学方式简介"></el-input>
         </el-form-item>
@@ -49,9 +93,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-      <el-button type="warning" @click="resetForm('videoForm')">取消</el-button>
-      <el-button type="success" @click="submitForm('videoForm')">提交</el-button>
-    </span>
+        <el-button type="warning" @click="resetForm('videoForm')">取消</el-button>
+        <el-button type="success" @click="submitForm('videoForm')">提交</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -66,8 +110,13 @@ export default {
   data () {
     return {
       visible: false,
+      uptoken: {
+        key: ''
+      },
+      videoFlag: false,
+      videoUploadPercent: 0,
+      isShowUploadVideo: false, //显示上传按钮
       param: '', // 表单要提交的参数
-      // nowPercent: 0, // 当前文件上传的进度
       videoList: [],
       item: {
         courseName: '',
@@ -110,7 +159,14 @@ export default {
           this.item = res.data.data
         })
     },
-    beforeupload (file) { // 上传视频文件之前限制格式和大小
+    playVideo () {
+      console.log(document.getElementById('#myVideo'))
+      document.getElementById('myVideo').play()
+    },
+    pauseVideo () {
+      document.getElementById('myVideo').pause()
+    },
+    beforeUploadVideo (file) { // 上传视频文件之前限制格式和大小
       let videoFormat = file.name.substring(file.name.lastIndexOf('.') + 1) // 获取上传的文件的格式
       const extension1 = videoFormat === 'asx'
       const extension2 = videoFormat === 'asf'
@@ -127,19 +183,27 @@ export default {
           message: '上传视频只能是asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式'
         })
       }
-      return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9
+      const isLt10M = file.size / 1024 / 1024  < 10;
+      if (!isLt10M) {
+        this.$message.error('上传视频大小不能超过 10MB!')
+        return false
+      }
+      this.videoList.push(file)
+      let videos = [...this.videoList]
+      // 遍历数组
+      videos.forEach((video, index) => {
+        this.param.append('multipartFiles', video)
+      })
+      this.isShowUploadVideo = false;
+      return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9 && isLt10M
     },
-    onProgress (file) { // 文件上传过程中
-      // this.nowPercent = Math.floor(event.percent) // 显示视频上传时进度
+    uploadVideoProcess(event, file, fileList){
+      this.videoFlag = true;
+      this.videoUploadPercent = Math.floor(event.percent)
     },
-    onSuccess (file) { // 文件上传成功之后，这里指的是上传到https://jsonplaceholder.typicode.com/posts/成功后拿到mainVideoUrl
+    onchange (file) { // 当上传图片后，调用onchange方法，获取图片本地路径
       this.param = new FormData()
       this.param.append('type', 'onlineCourseVideo')
-      this.videoList.push(file) // 把单个文件变成数组
-      let videos = [...this.videoList] // 把数组存储为一个参数，便于后期操作
-      videos.forEach((vid, index) => {
-        this.param.append('multipartFiles', vid)
-      })
       let config = {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -152,14 +216,24 @@ export default {
         data: this.param
       }).then((res) => {
         console.log('通过url接口得到视频url')
-        console.log(res.data.data[0].previewUrl) // 视频上传成功之后返回的视频的url
         this.item.mainVideoUrl = res.data.data[0].previewUrl
+        console.log(this.item.mainVideoUrl)
       }).catch(() => false)
     },
-    handleRemove (file) {
-      // this.$refs.upload.abort() // 取消上传
-      // this.$message({message: '成功移除' + file.name, type: 'success'})
+    onRemove (file, fileList) {
+      
     },
+    // onSuccess(res, file) {                               //获取上传图片地址
+    //   this.videoFlag = false;
+    //   this.videoUploadPercent = 0;
+    //   if(res.status == 200){
+    //       // this.videoForm.videoUploadId = res.data.uploadId;
+    //       console.log(11111111)
+    //     this.item.mainVideoUrl = res.data.data[0].previewUrl
+    //   }else{
+    //       this.$message.error('视频上传失败，请重新上传！');
+    //   }
+    // },
     submitForm (videoForm) {
       this.$refs.videoForm.validate(valid => {
         if (valid) {
@@ -177,11 +251,12 @@ export default {
     },
     resetForm (videoForm) {
       this.$nextTick(() => {
-        this.handleRemove()
         this.$refs.videoForm.clearValidate()
       })
       this.item = {}
-      this.nowPercent = 0
+      this.pauseVideo()
+      this.videoFlag = false;
+      this.videoUploadPercent = 0
       this.visible = false
     }
   }

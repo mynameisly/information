@@ -71,7 +71,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="285px"
+      height="365px"
       :data="commentList"
       :default-sort = "{prop: 'createTime', order: 'descending'}"
       v-loading="loading"

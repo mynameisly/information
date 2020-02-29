@@ -35,7 +35,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="75%"
+      height="72%"
       :data="watchList"
       :default-sort = "{prop: 'watchTime', order: 'descending'}"
       v-loading="loading"
@@ -201,6 +201,6 @@ export default {
 
 <style lang="scss">
 #watch .el-table__body-wrapper {
-  height: 330px;
+  height: 320px;
 }
 </style>
