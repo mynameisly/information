@@ -83,7 +83,7 @@ export default {
   methods: {
     getnoticeList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       // axios.get('/json/academic/find?limit=&title=' + this.searchForm.title).then((res) => {
-      axios.get('/json/academic/find').then((res) => {
+      axios.get('/json/academic/find?page=1&limit=10&title=' + this.searchForm.title).then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
@@ -138,8 +138,8 @@ export default {
       })
     },
     handlePageChange (item) { // 分页查询
-      console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
-      axios.get('/json/academic/add?page=' + item.currentPage + '&limit=' + item.pageSize + '&title=' + this.searchForm.title).then((res) => {
+      // console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
+      axios.get('/json/academic/find?page=' + item.currentPage + '&limit=' + item.pageSize + '&title=' + this.searchForm.title).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
