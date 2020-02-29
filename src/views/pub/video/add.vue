@@ -19,39 +19,6 @@
         <el-form-item label="参考教材:" prop="teachingMaterial">
           <el-input v-model="item.teachingMaterial"  palceholder="请输入参考教材" clearable/>
         </el-form-item>
-        <!-- <el-form-item label="课程视频:" prop="mainVideoUrl">
-          <el-upload
-            class="avatar-uploader"
-            action=""
-            drag
-            :data="uptoken"
-            :show-file-list="false"
-            :on-change="onchange"
-            :on-progress="uploadVideoProcess"
-            :before-upload="beforeUploadVideo"
-            :on-success="onSuccess"
-          >
-            <video
-              v-if="item.mainVideoUrl"
-              width="500px"
-              height="300px"
-              :src="item.mainVideoUrl"
-              controls="controls"
-              class="avatar video-avatar">
-              您的浏览器不支持视频播放
-            </video>
-            <img v-if="item.headImg" :src="item.headImg" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-            <div class="el-upload__tip" slot="tip">支持asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式，且不超过10M</div>
-            <el-progress 
-              v-if="videoFlag == true"
-              type="circle"
-              :percentage="videoUploadPercent"
-              style="margin-top:30px;">
-            </el-progress>
-          </el-upload>
-        </el-form-item> -->
-
         <el-form-item label="课程视频:" prop="mainVideoUrl">
           <el-upload class="avatar-uploader el-upload--text" 
             action=""
@@ -160,6 +127,10 @@ export default {
         })
     },
     playVideo () {
+<<<<<<< HEAD
+=======
+      console.log(document.getElementById('#myVideo'))
+>>>>>>> 45bced5d1e955155557510c94cdc3b9dc41c3cf7
       document.getElementById('myVideo').play()
     },
     pauseVideo () {
