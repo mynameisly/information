@@ -84,7 +84,7 @@ export default {
     > div {
       width: 2.5rem;
       height: 2.5rem;
-      margin: 0 1.6rem;
+      // margin: 0 1.6rem;
       font-size: 1.6rem;
       color: rgb(182, 182, 182);
       line-height: 2.5rem;
@@ -96,14 +96,12 @@ export default {
       }
     }
     > div:first-child {
+      margin-right: 2.4rem;
       border-bottom: 4px solid #0dc0e0;
     }
     > div:nth-child(2) {
+      margin-right: 2.2rem;
       border-bottom: 4px solid #e0af0d;
-    }
-    > div:nth-child(3) {
-      margin-right: 2rem;
-      border-bottom: 4px solid #e0620d;
     }
   }
 }

@@ -82,7 +82,6 @@ export default {
       },
       videoFlag: false,
       videoUploadPercent: 0,
-      isShowUploadVideo: false, //显示上传按钮
       param: '', // 表单要提交的参数
       videoList: [],
       item: {
@@ -127,10 +126,6 @@ export default {
         })
     },
     playVideo () {
-<<<<<<< HEAD
-=======
-      console.log(document.getElementById('#myVideo'))
->>>>>>> 45bced5d1e955155557510c94cdc3b9dc41c3cf7
       document.getElementById('myVideo').play()
     },
     pauseVideo () {
@@ -164,7 +159,6 @@ export default {
       videos.forEach((video, index) => {
         this.param.append('multipartFiles', video)
       })
-      this.isShowUploadVideo = false;
       return extension1 || extension2 || extension3 || extension4 || extension5 || extension6 || extension7 || extension8 || extension9 && isLt10M
     },
     uploadVideoProcess(event, file, fileList){
