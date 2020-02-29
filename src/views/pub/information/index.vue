@@ -2,9 +2,13 @@
   <div id="information">
     <!-- el-table中的height用于固定表头 -->
     <el-table border stripe :data="infoList" height="250">
-      <el-table-column label="序号" type="index" width="55"/>
+      <!-- <el-table-column label="序号" type="index" width="55"/> -->
       <el-table-column label="用户名" prop="number"/>
-      <el-table-column label="头像" prop="headImg"/>
+      <el-table-column label="头像" prop="headImg">
+        <template slot-scope="scope">
+          <img :src="scope.row.headImg" alt="用户头像" width="30" height="30">
+        </template>
+      </el-table-column>
       <el-table-column label="昵称" prop="nickName"/>
       <el-table-column label="真实姓名" prop="readName"/>
       <el-table-column label="性别" prop="sex"/>

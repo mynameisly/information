@@ -79,7 +79,7 @@
       border
       stripe
       :data="userList"
-      height="65%"
+      height="72%"
       v-loading="loading"
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"

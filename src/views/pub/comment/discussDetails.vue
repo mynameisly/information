@@ -70,7 +70,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="330px"
+      height="365px"
       stripe
       :data="commentListDetails"
       v-loading="loading"

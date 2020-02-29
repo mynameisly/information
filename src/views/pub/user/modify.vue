@@ -30,13 +30,12 @@
           <!-- 图片的url和数据库里面的varchar是一样的 -->
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action=""
             :data="uptoken"
             :show-file-list="false"
             :on-change="onchange"
             :before-upload="beforeAvatarUpload"
           >
-            <!-- <img v-if="item.headImg" :src="item.headImg" class="avatar"> -->
             <img v-if="item.headImg" :src="item.headImg" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
@@ -59,9 +58,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-      <el-button type="success" plain @click="submitForm('userForm')">提交</el-button>
-      <el-button type="warning" plain @click="resetForm('userForm')">取消</el-button>
-    </span>
+        <el-button type="warning" @click="resetForm('userForm')">取消</el-button>
+        <el-button type="success" @click="submitForm('userForm')">提交</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -173,10 +172,7 @@ export default {
 
       return isJPG || isPNG && isLt2M
     },
-    // 当上传图片后，调用onchange方法，获取图片本地路径
-    onchange (file) {
-      // console.log(22222222)
-      // console.log(file)
+    onchange (file) { // 当上传图片后，调用onchange方法，获取图片本地路径
       this.param = new FormData()
       this.param.append('type', 'headImg')
       let config = {

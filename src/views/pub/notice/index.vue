@@ -18,7 +18,7 @@
     <!-- el-table中的height用于固定表头 -->
     <el-table
       border
-      height="65%"
+      height="72%"
       :data="noticeList"
       :default-sort = "{prop: 'createTime', order: 'descending'}"
       v-loading="loading"
@@ -82,7 +82,8 @@ export default {
   },
   methods: {
     getnoticeList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      axios.get('/json/academic/find?limit=10&title=' + this.searchForm.title).then((res) => {
+      // axios.get('/json/academic/find?limit=&title=' + this.searchForm.title).then((res) => {
+      axios.get('/json/academic/find').then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
