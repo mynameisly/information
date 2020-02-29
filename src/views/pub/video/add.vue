@@ -160,7 +160,6 @@ export default {
         })
     },
     playVideo () {
-      console.log(document.getElementById('#myVideo'))
       document.getElementById('myVideo').play()
     },
     pauseVideo () {
