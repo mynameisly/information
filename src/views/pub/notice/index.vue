@@ -64,8 +64,7 @@ export default {
     return {
       loading: true,
       searchForm: {
-        title: '',
-        noticeId: ''
+        title: ''
       },
       noticeList: [],
       noticeData: {},
