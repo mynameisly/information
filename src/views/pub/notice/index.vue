@@ -89,7 +89,7 @@ export default {
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
         this.noticeList = res.data.data
-        console.log(res.data.data)
+        // console.log(res.data.data)
         this.loading = false
       })
     },
@@ -99,7 +99,7 @@ export default {
     addnotice (item) { // 文件id和人员集合我先写死，回头问问后台
       console.log('新增通知', item)
       axios.get('/json/academic/add?createPerson=' + item.createPerson + '&title=' + item.title + '&content=' + item.content +
-      '&createTime=' + item.createTime + '&fileId=76' + item.fileId + '&userIdList=1' + item.userIdList)
+      '&createTime=' + item.createTime + '&fileId=' + item.fileId + '&userIdList=1' + item.userIdList)
         .then((res) => {
           if (res.data.msg === '无权限') {
             this.$router.push({path: '/401'})

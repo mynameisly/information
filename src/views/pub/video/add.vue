@@ -155,7 +155,6 @@ export default {
       }
       this.videoList.push(file)
       let videos = [...this.videoList]
-      // 遍历数组
       videos.forEach((video, index) => {
         this.param.append('multipartFiles', video)
       })
@@ -165,7 +164,7 @@ export default {
       this.videoFlag = true;
       this.videoUploadPercent = Math.floor(event.percent)
     },
-    onchange (file) { // 当上传图片后，调用onchange方法，获取图片本地路径
+    onchange (file) { //获取视频在服务器上路径
       this.param = new FormData()
       this.param.append('type', 'onlineCourseVideo')
       let config = {
@@ -187,7 +186,7 @@ export default {
     onRemove (file, fileList) {
       
     },
-    // onSuccess(res, file) {                               //获取上传图片地址
+    // onSuccess(res, file) {//获取上传图片地址
     //   this.videoFlag = false;
     //   this.videoUploadPercent = 0;
     //   if(res.status == 200){
