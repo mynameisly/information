@@ -226,7 +226,7 @@ export default {
                 background-color: #eaf2ff;
                 td {
                     color: #677998;
-                    line-height: 2px;
+                    line-height: 0px;
                 }
             }
             th,
