@@ -20,40 +20,40 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: "MenuDir",
+  name: 'MenuDir',
   props: {
     item: {
       type: Object,
       default: null
     }
   },
-  data() {
+  data () {
     return {
       ulshow: false,
       hover: false
-    };
+    }
   },
   computed: {
-    ...mapGetters(["sidebar", "themeColor"])
+    ...mapGetters(['sidebar', 'themeColor'])
   },
 
   methods: {
-    hovershow() {
-      this.hover = true;
+    hovershow () {
+      this.hover = true
     },
-    hoverhide() {
+    hoverhide () {
       this.hover = false
     },
-    dirClick(num) {
-      this.ulshow = !this.ulshow;
+    dirClick (num) {
+      this.ulshow = !this.ulshow
     },
 
-    ...mapActions("app/", ["toggleSideBar", "closeSideBar", "openSideBar"])
+    ...mapActions('app/', ['toggleSideBar', 'closeSideBar', 'openSideBar'])
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -72,7 +72,7 @@ $bg3:rgb(76, 103, 136);
       background: rgb(245, 245, 245);
       color: black!important;
       .hover-left{
-        // background:rgb(219, 68, 13) 
+        // background:rgb(219, 68, 13)
         background: #09C
       }
     }

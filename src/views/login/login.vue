@@ -130,6 +130,8 @@ export default {
               // this.$store.dispatch('setUser', user) // 把用户名放入vuex
               // ...mapActions('user/setUser',res.data.number)
               // setUser(res.data.number)
+              console.log(userData)
+              sessionStorage.setItem('userId', userData.userId)
               sessionStorage.setItem('number', user)
               sessionStorage.setItem('headImg', userData.headImg)
               sessionStorage.setItem('nickName', userData.nickName)

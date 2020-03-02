@@ -13,7 +13,7 @@
 </template>
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     Breadcrumb
@@ -24,45 +24,45 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["sidebar"])
+    ...mapGetters(['sidebar'])
   },
   methods: {
     // 全屏显示
     getFullScreen () {
-      this.n++;
+      this.n++
       this.n % 2 === 0
         ? this.exitFullScreen(document) : this.inFullScreen(document.documentElement)
     },
     // 全屏显示
     inFullScreen (element) {
-      const el = element;
+      const el = element
       const rfs = el.requestFullScreen || el.webkitRequestFullScreen ||
-        el.mozRequestFullScreen || el.msRequestFullScreen;
-      if (typeof rfs !== "undefined" && rfs) {
-        rfs.call(el);
-      } else if (typeof window.ActiveXObject !== "undefined") {
-        const wscript = new ActiveXObject("WScript.Shell");
+        el.mozRequestFullScreen || el.msRequestFullScreen
+      if (typeof rfs !== 'undefined' && rfs) {
+        rfs.call(el)
+      } else if (typeof window.ActiveXObject !== 'undefined') {
+        const wscript = new ActiveXObject('WScript.Shell')
         if (wscript != null) {
-          wscript.SendKeys("{F11}");
+          wscript.SendKeys('{F11}')
         }
       }
     },
     // 取消全屏
     exitFullScreen () {
-      var el = document;
-      var cfs = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullScreen;
+      var el = document
+      var cfs = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullScreen
       // typeof cfs != "undefined" && cfs
       if (cfs) {
-        cfs.call(el);
-      } else if (typeof window.ActiveXObject !== "undefined") {
+        cfs.call(el)
+      } else if (typeof window.ActiveXObject !== 'undefined') {
         // for IE，这里和fullScreen相同，模拟按下F11键退出全屏
-        var wscript = new ActiveXObject("WScript.Shell");
+        var wscript = new ActiveXObject('WScript.Shell')
         if (wscript != null) {
-          wscript.SendKeys("{F11}");
+          wscript.SendKeys('{F11}')
         }
       }
     },
-    ...mapActions("app/", ["toggleSideBar", "closeSideBar", "openSideBar"])
+    ...mapActions('app/', ['toggleSideBar', 'closeSideBar', 'openSideBar'])
   }
 }
 </script>

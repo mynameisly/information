@@ -8,20 +8,20 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex"
-import HeaderItem from "./header-item"
+import { mapGetters, mapActions } from 'vuex'
+import HeaderItem from './header-item'
 export default {
   components: {
     HeaderItem
   },
   computed: {
-    isLogin() {
+    isLogin () {
       if (this.$isEmpty(this.token)) {
-        return false;
+        return false
       }
-      return true;
+      return true
     },
-    ...mapGetters(["token", "themeColor"])
+    ...mapGetters(['token', 'themeColor'])
   },
   methods: {
     // logout() {
@@ -29,7 +29,7 @@ export default {
     //   this.$routeTo("/login");
     //   sessionStorage.setItem("store", null);
     // },
-    ...mapActions("user/", ["setToken"])
+    ...mapActions('user/', ['setToken'])
   }
 }
 </script>
