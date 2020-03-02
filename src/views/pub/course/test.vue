@@ -217,16 +217,16 @@ export default {
             thead {
                 background-color: #67a1ff;
                 th {
-                    color: #fff;
-                    line-height: 17px;
-                    font-weight: normal;
+                  color: #fff;
+                  line-height: 17px;
+                  font-weight: normal;
                 }
             }
             tbody {
                 background-color: #eaf2ff;
                 td {
-                    color: #677998;
-                    line-height: 0px;
+                  color: #677998;
+                  line-height: 0px;
                 }
             }
             th,

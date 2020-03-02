@@ -37,7 +37,7 @@
       <el-table-column label="节次" prop="festivalsList"/>
       <el-table-column label="星期" prop="week"/>
       <el-table-column label="上课周次（周）" prop="remark"/>
-      <el-table-column label="操作" prop="operation" width="100">
+      <!-- <el-table-column label="操作" prop="operation" width="100">
         <el-button
           type="danger"
           size="mini"
@@ -45,7 +45,7 @@
           @click="delcourse">
           删除
         </el-button>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <add-dialog ref="addDialog" title="新增课程"  @confirmData="(item) => addcourse(item)"/>
     <!-- <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" /> -->
@@ -109,8 +109,8 @@ export default {
       //                 }, 500);
       //               }
 
-      // axios.post('/json/course/add', {'jsonStr': item.festivalsList, 'cname': item.cname, 'classRoom': item.classRoom, 'teacher': item.teacher, 'remark': item.remark, 'week': item.week}, {})
-      axios.post('/json/course/add', {'jsonStr': item}, {})
+      axios.post('/json/course/add', {'jsonStr': item.festivalsList, 'cname': item.cname, 'classRoom': item.classRoom, 'teacher': item.teacher, 'remark': item.remark, 'week': item.week}, {})
+      // axios.post('/json/course/add', {'jsonStr': item}, {})
         .then((res) => {
           if (res.data.msg === '无权限') {
             this.$router.push({path: '/401'})
@@ -124,31 +124,31 @@ export default {
           }
         })
     },
-    delcourse () {
-      this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        center: true
-      }).then((res) => {
-        axios.get('/json/academic/delete?noticeId=' + this.courseData.noticeId).then((res) => {
-          if (res.data.msg === '无权限') {
-            this.$router.push({path: '/401'})
-          } else if (res.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: '删除成功'
-            })
-            this.getcourseList()
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
+    // delcourse () {
+    //   this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning',
+    //     center: true
+    //   }).then((res) => {
+    //     axios.get('/json/academic/delete?noticeId=' + this.courseData.noticeId).then((res) => {
+    //       if (res.data.msg === '无权限') {
+    //         this.$router.push({path: '/401'})
+    //       } else if (res.data.code === 0) {
+    //         this.$message({
+    //           type: 'success',
+    //           message: '删除成功'
+    //         })
+    //         this.getcourseList()
+    //       }
+    //     })
+    //   }).catch(() => {
+    //     this.$message({
+    //       type: 'info',
+    //       message: '已取消删除'
+    //     })
+    //   })
+    // },
     // handlePageChange (item) { // 分页查询
     //   // console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
     //   axios.get('/json/course/find?page=' + item.currentPage + '&limit=' + item.pageSize + '&userId=' + this.searchForm.userId).then((res) => {

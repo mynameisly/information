@@ -69,20 +69,22 @@ export default {
     },
     submitForm (courseForm) {
       console.log(1111111)
-      let list = []
-      list.push({
-        cname: this.item.cname,
-        classRoom: this.item.classRoom,
-        teacher: this.item.teacher,
-        festivalsList: (this.item.festivals).split(','),
-        week: this.item.week,
-        remark: this.item.remark
-      })
-      // this.item.festivalsList = JSON.stringify((this.item.festivals).split(','))
+      // let list = []
+      // list.push({
+      //   cname: this.item.cname,
+      //   classRoom: this.item.classRoom,
+      //   teacher: this.item.teacher,
+      //   festivalsList: (this.item.festivals).split(','),
+      //   week: this.item.week,
+      //   remark: this.item.remark
+      // })
+
+
+      this.item.festivalsList = JSON.stringify((this.item.festivals).split(','))
       // this.item.festivalsList = (this.item.festivals).split(',')
       // console.log(this.item.festivalsList)
-      let aa = JSON.stringify(list)
-      console.log(aa)
+      // let aa = JSON.stringify(list)
+      // console.log(aa)
       this.$refs.courseForm.validate(valid => {
         if (valid) {
           this.$confirm('确认保存吗？', '是否保存', {
@@ -91,8 +93,8 @@ export default {
             lockScroll: false,
             type: 'warning'
           }).then(() => {
-            // this.$emit('confirmData', this.item)
-            this.$emit('confirmData', aa)
+            this.$emit('confirmData', this.item)
+            // this.$emit('confirmData', aa)
             this.resetForm('courseForm')
           })
         }
