@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import MenuDir from "./menu-dir.vue";
-import { mapGetters, mapActions } from "vuex";
+import MenuDir from './menu-dir.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -111,15 +111,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["sidebar", "themeColor"])
+    ...mapGetters(['sidebar', 'themeColor'])
   },
   methods: {
     hidebox (url) {
       this.$routeTo(url)
     },
-    ...mapActions("app/", ["toggleSideBar", "openSideBar", "closeSideBar"])
+    ...mapActions('app/', ['toggleSideBar', 'openSideBar', 'closeSideBar'])
   }
-};
+}
 </script>
 
 <style lang="scss">
