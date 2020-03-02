@@ -55,6 +55,7 @@
 <script>
 import axios from 'axios'
 import AddDialog from './add'
+import qs from 'qs'
 // import PageComponent from '@/components/Pagenation/index'
 export default {
   name: 'allCourse',
@@ -97,6 +98,7 @@ export default {
     },
     addcourse (item) {
       console.log('新增课程', item)
+      console.log(typeof(item))
 
       // this.$http.post("/demo/testListParam",{"jsonStr":JSON.stringify(list),"id":parseInt(this.id),"reason":this.reason} , {
       //             }).then(res => {
@@ -108,21 +110,52 @@ export default {
       //                   this.instance("error", "提示",  res.message);
       //                 }, 500);
       //               }
+      // list.push({
+      //   userId: 13,
+      //   cName: this.item.cname,
+      //   classRoom: this.item.classRoom,
+      //   teacher: this.item.teacher,
+      //   // festivalsList: (this.item.festivals).split(','),
+      //   festivals: '1,2',
+      //   week: this.item.week,
+      //   remark: this.item.remark
+      // })
 
-      axios.post('/json/course/add', {'jsonStr': item.festivalsList, 'cname': item.cname, 'classRoom': item.classRoom, 'teacher': item.teacher, 'remark': item.remark, 'week': item.week}, {})
-      // axios.post('/json/course/add', {'jsonStr': item}, {})
-        .then((res) => {
-          if (res.data.msg === '无权限') {
-            this.$router.push({path: '/401'})
-          } else if (res.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: '新增课表成功'
-            })
-            console.log('新增的返回值是', res.data.data)
-            this.getCourseList()
-          }
-        })
+      const data = {
+        userId: 13,
+        cName: item.cname,
+        classRoom: item.classRoom,
+        teacher: item.teacher,
+        // festivalsList: (this.item.festivals).split(','),
+        festivals: '1,2',
+        week: item.week,
+        remark: item.remark
+      };
+      // const s = qs.stringify(item)
+      // console.log(s)
+      const options = {
+          method: "POST",
+          headers: {"content-type": "application/x-www-form-urlencoded"},
+          data: qs.stringify(data),
+          url: '/json/course/add'
+      };
+      this.$http(options).then(() => {
+        console.log('新增的返回值是', res.data.data)
+      })
+      // axios.post('/json/course/add', {'jsonStr': item.festivalsList, 'cname': item.cname, 'classRoom': item.classRoom, 'teacher': item.teacher, 'remark': item.remark, 'week': item.week}, {})
+      // axios.post('/json/course/add', options)
+      //   .then((res) => {
+      //     if (res.data.msg === '无权限') {
+      //       this.$router.push({path: '/401'})
+      //     } else if (res.data.code === 0) {
+      //       this.$message({
+      //         type: 'success',
+      //         message: '新增课表成功'
+      //       })
+      //       console.log('新增的返回值是', res.data.data)
+      //       this.getCourseList()
+      //     }
+      //   })
     },
     // delcourse () {
     //   this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {

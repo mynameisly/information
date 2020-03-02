@@ -49,12 +49,12 @@ export default {
         remark: ''
       },
       rules: {
-        cname: [{ required: true, message: '请输入课程', trigger: 'blur' }],
-        classRoom: [{ required: true, message: '请输入教室', trigger: 'blur' }],
-        teacher: [{ required: true, message: '请输入老师', trigger: 'change' }],
-        festivals: [{ required: true, message: '请输入节次', trigger: 'blur' }],
-        week: [{ required: true, message: '请输入周次', trigger: 'blur' }],
-        remark: [{ required: true, message: '请输入上课周次', trigger: 'blur' }]
+        // cname: [{ required: true, message: '请输入课程', trigger: 'blur' }],
+        // classRoom: [{ required: true, message: '请输入教室', trigger: 'blur' }],
+        // teacher: [{ required: true, message: '请输入老师', trigger: 'change' }],
+        // festivals: [{ required: true, message: '请输入节次', trigger: 'blur' }],
+        // week: [{ required: true, message: '请输入周次', trigger: 'blur' }],
+        // remark: [{ required: true, message: '请输入上课周次', trigger: 'blur' }]
       }
     }
   },
@@ -68,19 +68,22 @@ export default {
       }
     },
     submitForm (courseForm) {
-      console.log(1111111)
+      // console.log(1111111)
       // let list = []
       // list.push({
-      //   cname: this.item.cname,
+      //   userId: 13,
+      //   cName: this.item.cname,
       //   classRoom: this.item.classRoom,
       //   teacher: this.item.teacher,
-      //   festivalsList: (this.item.festivals).split(','),
+      //   // festivalsList: (this.item.festivals).split(','),
+      //   festivals: '1,2',
       //   week: this.item.week,
       //   remark: this.item.remark
       // })
 
+      
 
-      this.item.festivalsList = JSON.stringify((this.item.festivals).split(','))
+      // this.item.festivalsList = JSON.stringify((this.item.festivals).split(','))
       // this.item.festivalsList = (this.item.festivals).split(',')
       // console.log(this.item.festivalsList)
       // let aa = JSON.stringify(list)
