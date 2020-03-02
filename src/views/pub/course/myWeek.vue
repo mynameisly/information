@@ -124,7 +124,7 @@ export default {
           tenN: '线性代数',
           tenT: '王老师',
           tenC: '3C207',
-          tenR: '1-16周',
+          tenR: '1-16周'
         },
         {
           id: '2',
@@ -168,7 +168,7 @@ export default {
           tenN: '',
           tenT: '',
           tenC: '',
-          tenR: '',
+          tenR: ''
         },
         {
           id: '3',
@@ -212,11 +212,11 @@ export default {
           tenN: '线性代数',
           tenT: '王老师',
           tenC: '3C207',
-          tenR: '1-16周',
+          tenR: '1-16周'
         },
         {
           id: '4',
-          label: '周四',
+          label: '周四'
           // oneN: '',
           // oneT: '',
           // oneC: '',
@@ -300,8 +300,17 @@ export default {
           tenN: '线性代数',
           tenT: '王老师',
           tenC: '3C207',
-          tenR: '1-16周',
+          tenR: '1-16周'
         }
+      ],
+      timeData1: [
+        [{cname: '计算机基础', teacher: '张老师', classRoom: '2C203', remark: '1-12周'}, { }, { }, { }, { }, { }, { }, { }, { }, { }],
+        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
+        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
+        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
+        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
+        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
+        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }]
       ],
       titleData: [
         {
@@ -378,7 +387,7 @@ export default {
     }
   },
   mounted () {
-    
+
   },
   methods: {
     getTimeTableFind () {

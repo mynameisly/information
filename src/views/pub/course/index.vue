@@ -13,7 +13,7 @@
 
 <script>
 import AllCourse from './allCourse'
-import MyWeek from './myWeek'
+import MyWeek from './test'
 export default {
   components: {
     childCourse: AllCourse,
