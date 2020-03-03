@@ -98,7 +98,7 @@ export default {
     },
     addcourse (item) {
       console.log('新增课程', item)
-      console.log(typeof(item))
+      // console.log(typeof(item))
 
       // this.$http.post("/demo/testListParam",{"jsonStr":JSON.stringify(list),"id":parseInt(this.id),"reason":this.reason} , {
       //             }).then(res => {
@@ -110,53 +110,72 @@ export default {
       //                   this.instance("error", "提示",  res.message);
       //                 }, 500);
       //               }
-      // list.push({
+      // const data = {
       //   userId: 13,
-      //   cName: this.item.cname,
-      //   classRoom: this.item.classRoom,
-      //   teacher: this.item.teacher,
+      //   cName: item.cname,
+      //   classRoom: item.classRoom,
+      //   teacher: item.teacher,
       //   // festivalsList: (this.item.festivals).split(','),
       //   festivals: '1,2',
-      //   week: this.item.week,
-      //   remark: this.item.remark
+      //   week: item.week,
+      //   remark: item.remark
+      // }
+      // const s = qs.stringify(data)
+      // const options = {
+      //   method: 'POST',
+      //   headers: {'content-type': 'application/x-www-form-urlencoded'},
+      //   data: s,
+      //   url: '/json/course/add'
+      // }
+      // this.$http(options).then((res) => {
+      //   console.log('新增的返回值是', res.data.data)
       // })
 
-      const data = {
+      // let params = {
+      //   "userId": 13,
+      //   "festivals": '1,2',
+      //   "cName": item.cname,
+      //   "classRoom": item.classRoom,
+      //   "teacher": item.teacher,
+      //   "remark": item.remark,
+      //   "week": 1
+      // }
+      // console.log(JSON.stringify(params))
+      // console.log([JSON.stringify(params)])
+
+      let params = {
         userId: 13,
+        festivals: '1,2',
         cName: item.cname,
         classRoom: item.classRoom,
         teacher: item.teacher,
-        // festivalsList: (this.item.festivals).split(','),
-        festivals: '1,2',
-        week: item.week,
-        remark: item.remark
-      };
-      // const s = qs.stringify(item)
-      // console.log(s)
-      const options = {
-          method: "POST",
-          headers: {"content-type": "application/x-www-form-urlencoded"},
-          data: qs.stringify(data),
-          url: '/json/course/add'
-      };
-      this.$http(options).then(() => {
-        console.log('新增的返回值是', res.data.data)
-      })
-      // axios.post('/json/course/add', {'jsonStr': item.festivalsList, 'cname': item.cname, 'classRoom': item.classRoom, 'teacher': item.teacher, 'remark': item.remark, 'week': item.week}, {})
-      // axios.post('/json/course/add', options)
-      //   .then((res) => {
-      //     if (res.data.msg === '无权限') {
-      //       this.$router.push({path: '/401'})
-      //     } else if (res.data.code === 0) {
-      //       this.$message({
-      //         type: 'success',
-      //         message: '新增课表成功'
-      //       })
-      //       console.log('新增的返回值是', res.data.data)
-      //       this.getCourseList()
-      //     }
-      //   })
-    },
+        remark: item.remark,
+        week: 1
+      }
+      // console.log(JSON.stringify(params.classRoom))
+      // console.log(params)
+      // let list = []
+      // list.push(params)
+      // let a = JSON.stringify(params)
+      // let b = JSON.parse(a)
+      // let a = list
+      // let list = []
+      // list.push(params)
+      axios.post('/json/course/add', [ {'userId': params.userId, 'festivals': params.festivals, 'cName': params.cName, 'classRoom': params.classRoom, 'teacher': params.teacher, 'remark': params.remark, 'week': params.week} ])
+      // axios.post('/json/course/add', params)
+        .then((res) => {
+          if (res.data.msg === '无权限') {
+            this.$router.push({path: '/401'})
+          } else if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '新增课表成功'
+            })
+            console.log('新增课表的返回值是', res.data.data)
+            this.getCourseList()
+          }
+        })
+    }
     // delcourse () {
     //   this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
     //     confirmButtonText: '确定',

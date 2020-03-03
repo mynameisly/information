@@ -68,18 +68,18 @@ export default {
       }
     },
     submitForm (courseForm) {
-      // console.log(1111111)
-      // let list = []
-      // list.push({
-      //   userId: 13,
-      //   cName: this.item.cname,
-      //   classRoom: this.item.classRoom,
-      //   teacher: this.item.teacher,
-      //   // festivalsList: (this.item.festivals).split(','),
-      //   festivals: '1,2',
-      //   week: this.item.week,
-      //   remark: this.item.remark
-      // })
+      console.log(1111111)
+      let list = []
+      list.push({
+        userId: 13,
+        cName: this.item.cname,
+        classRoom: this.item.classRoom,
+        teacher: this.item.teacher,
+        // festivalsList: (this.item.festivals).split(','),
+        festivals: '1,2',
+        week: this.item.week,
+        remark: this.item.remark
+      })
 
       
 
@@ -97,7 +97,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
-            // this.$emit('confirmData', aa)
+            // this.$emit('confirmData', list)
             this.resetForm('courseForm')
           })
         }
