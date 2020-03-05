@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     getCourseList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      axios.get('/json/course/find?userId=1' + this.userId).then((res) => {
+      axios.get('/json/course/find?userId=' + this.userId).then((res) => {
         // this.page.currentPage = res.data.page.page
         // this.page.pageSize = res.data.page.limit
         // this.page.totalPage = res.data.page.totalPages
@@ -142,27 +142,51 @@ export default {
       // }
       // console.log(JSON.stringify(params))
       // console.log([JSON.stringify(params)])
+      // [
+      //   {
+      //    "userId": 511,
+      // "cName": "JAVA基础",
+      // "week": 1,
+      // "festivals": "8,2",
+      // "classRoom": "2C203",
+      //  "teacher": "王老师",
+      //    "remark": "1-16"
+      //    }
+      //   ]
 
+      let list = []
+      // let params = {
+      //   '"userId"': Number(this.userId),
+      //   '"cName"': item.cname,
+      //   '"week"': Number(item.week),
+      //   '"festivals"': item.festivals,
+      //   '"classRoom"': item.classRoom,
+      //   '"teacher"': item.teacher,
+      //   '"remark"': item.remark
+      // }
       let params = {
-        userId: 13,
-        festivals: '1,2',
+        // userId: Number(this.userId),
+        userId: 6,
         cName: item.cname,
+        week: Number(item.week),
+        festivals: item.festivals,
         classRoom: item.classRoom,
         teacher: item.teacher,
-        remark: item.remark,
-        week: 1
+        remark: item.remark
       }
-      // console.log(JSON.stringify(params.classRoom))
       // console.log(params)
+      // let para = JSON.stringify(params)
+      // console.log(para)
+      // console.log(typeof (para))
+      // list.push(para)
+      // console.log(list)
       // let list = []
       // list.push(params)
       // let a = JSON.stringify(params)
-      // let b = JSON.parse(a)
-      // let a = list
-      // let list = []
-      // list.push(params)
-      axios.post('/json/course/add', [ {'userId': params.userId, 'festivals': params.festivals, 'cName': params.cName, 'classRoom': params.classRoom, 'teacher': params.teacher, 'remark': params.remark, 'week': params.week} ])
-      // axios.post('/json/course/add', params)
+      list.push(params)
+      let a = JSON.stringify(list)
+      console.log(a)
+      axios.post('/json/course/add?jsonStr=' + a)
         .then((res) => {
           if (res.data.msg === '无权限') {
             this.$router.push({path: '/401'})

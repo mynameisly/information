@@ -1,403 +1,231 @@
 <template>
-  <div>
-    <el-table
-      :data="timeData"
-      stripe
-      style="width: 100%">
-      <el-table-column width="80" label="周" fixed="left" prop="label" align="center"></el-table-column>
+    <div class="class-table">
+        <div class="table-wrapper">
+            <div class="tabel-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th v-for="(weekNum, weekIndex) in weeks" :key="weekIndex"> {{'周' + digital2Chinese(weekNum, 'week')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(courseNum, courseIndex) in coursesLen" :key="courseIndex">
 
-      <el-table-column label="上午" align="center">
-        <el-table-column
-          v-for="(v,i) in titleData" :key="i"
-          v-if="v.label==='上午'" align="center">
-          <template slot="header">
-            <div class="tabletitle-timeline">
-              第{{v.count}}节 <br/>
-              {{v.startTime}}-{{v.endTime}}
+                            <td>
+                                <p>{{'第' + digital2Chinese(courseNum) + "节"}}</p>
+                                <p class="period">{{ classTableData.period[courseIndex] }}</p>
+                            </td>
+
+                            <td v-for="(weekNum, weekIndex) in weeks" :key="weekIndex">
+                                {{ fieldCharacter(weekIndex, courseIndex) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-          </template>
-          <template slot-scope="scope">
-              <div>
-                {{scope.row[cname[i]]}}<br/>
-                {{scope.row[teacher[i]]}}<br/>
-                {{scope.row[classRoom[i]]}}<br/>
-                {{scope.row[remark[i]]}}
-              </div>
-          </template>
-        </el-table-column>
-      </el-table-column>
-
-      <el-table-column label="下午" align="center">
-        <el-table-column
-          v-for="(v,i) in titleData" :key="i"
-          v-if="v.label==='下午'" align="center">
-          <template slot="header">
-            <div class="tabletitle-timeline">
-              第{{v.count}}节 <br/>
-              {{v.startTime}}-{{v.endTime}}
-          </div>
-          </template>
-          <template slot-scope="scope">
-              <div>
-                {{scope.row[cname[i]]}}<br/>
-                {{scope.row[teacher[i]]}}<br/>
-                {{scope.row[classRoom[i]]}}<br/>
-                {{scope.row[remark[i]]}}
-              </div>
-          </template>
-        </el-table-column>
-      </el-table-column>
-
-      <el-table-column label="晚上" align="center">
-        <el-table-column
-          v-for="(v,i) in titleData" :key="i"
-          v-if="v.label==='晚上'"
-          align="center">
-          <template slot="header">
-            <div class="tabletitle-timeline">
-              第{{v.count}}节 <br/>
-              {{v.startTime}}-{{v.endTime}}
-            </div>
-          </template>
-          <template slot-scope="scope">
-              <div>
-                {{scope.row[cname[i]]}}<br/>
-                {{scope.row[teacher[i]]}}<br/>
-                {{scope.row[classRoom[i]]}}<br/>
-                {{scope.row[remark[i]]}}
-              </div>
-          </template>
-        </el-table-column>
-      </el-table-column>
-    </el-table>
-  </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
-      cname: ['oneN', 'twoN', 'threeN', 'fourN', 'fiveN', 'sixN', 'sevenN', 'eightN', 'nineN', 'tenN'], // 课程
-      teacher: ['oneT', 'twoT', 'threeT', 'fourT', 'fiveT', 'sixT', 'sevenT', 'eightT', 'nineT', 'tenT'], // 老师
-      classRoom: ['oneC', 'twoC', 'threeC', 'fourC', 'fiveC', 'sixC', 'sevenC', 'eightC', 'nineC', 'tenC'], // 教室
-      remark: ['oneR', 'twoR', 'threeR', 'fourR', 'fiveR', 'sixR', 'sevenR', 'eightR', 'nineR', 'tenR'], // 上课周次（周）
-      timeData: [
-        {
-          id: '1',
-          label: '周一',
-          oneN: 'java教程',
-          oneT: '郑老师',
-          oneC: '东教305',
-          oneR: '1-12周',
-          twoN: '计算机基础',
-          twoT: '李老师',
-          twoC: '西教201',
-          twoR: '1-16周',
-          threeN: '',
-          threeT: '',
-          threeC: '',
-          threeR: '',
-          fourN: '',
-          fourT: '',
-          fourC: '',
-          fourR: '',
-          fiveN: 'C语言程序设计',
-          fiveT: '王老师',
-          fiveC: '3C207',
-          fiveR: '1-16周',
-          sixN: 'C#程序设计',
-          sixT: '王老师',
-          sixC: '3C207',
-          sixR: '1-16周',
-          sevenN: '',
-          sevenT: '',
-          sevenC: '',
-          sevenR: '',
-          eightN: '',
-          eightT: '',
-          eightC: '',
-          eightR: '',
-          nineN: '算法与结构',
-          nineT: '王老师',
-          nineC: '3C207',
-          nineR: '1-16周',
-          tenN: '线性代数',
-          tenT: '王老师',
-          tenC: '3C207',
-          tenR: '1-16周'
-        },
-        {
-          id: '2',
-          label: '周二',
-          oneN: 'java教程',
-          oneT: '郑老师',
-          oneC: '东教305',
-          oneR: '1-12周',
-          twoN: '计算机基础',
-          twoT: '李老师',
-          twoC: '西教201',
-          twoR: '1-16周',
-          threeN: '',
-          threeT: '',
-          threeC: '',
-          threeR: '',
-          fourN: '',
-          fourT: '',
-          fourC: '',
-          fourR: '',
-          fiveN: '',
-          fiveT: '',
-          fiveC: '',
-          fiveR: '',
-          sixN: '',
-          sixT: '',
-          sixC: '',
-          sixR: '',
-          sevenN: 'Linux操作系统',
-          sevenT: '王老师',
-          sevenC: '3C207',
-          sevenR: '1-16周',
-          eightN: '大学生就业与创业',
-          eightT: '王老师',
-          eightC: '3C207',
-          eightR: '1-16周',
-          nineN: '',
-          nineT: '',
-          nineC: '',
-          nineR: '',
-          tenN: '',
-          tenT: '',
-          tenC: '',
-          tenR: ''
-        },
-        {
-          id: '3',
-          label: '周三',
-          oneN: '',
-          oneT: '',
-          oneC: '',
-          oneR: '',
-          twoN: '',
-          twoT: '',
-          twoC: '',
-          twoR: '',
-          threeN: '计算机基础',
-          threeT: '孙老师',
-          threeC: '西教505',
-          threeR: '1-16周',
-          fourN: '计算机网络',
-          fourT: '张老师',
-          fourC: '2C203',
-          fourR: '1-16周',
-          fiveN: '',
-          fiveT: '',
-          fiveC: '',
-          fiveR: '',
-          sixN: 'C#程序设计',
-          sixT: '王老师',
-          sixC: '3C207',
-          sixR: '1-16周',
-          sevenN: 'Linux操作系统',
-          sevenT: '王老师',
-          sevenC: '3C207',
-          sevenR: '1-16周',
-          eightN: '',
-          eightT: '',
-          eightC: '',
-          eightR: '',
-          nineN: '算法与结构',
-          nineT: '王老师',
-          nineC: '3C207',
-          nineR: '1-16周',
-          tenN: '线性代数',
-          tenT: '王老师',
-          tenC: '3C207',
-          tenR: '1-16周'
-        },
-        {
-          id: '4',
-          label: '周四'
-          // oneN: '',
-          // oneT: '',
-          // oneC: '',
-          // oneR: '',
-          // twoN: '计算机基础',
-          // twoT: '李老师',
-          // twoC: '西教201',
-          // twoR: '1-16周',
-          // threeN: '',
-          // threeT: '',
-          // threeC: '',
-          // threeR: '',
-          // fourN: '',
-          // fourT: '',
-          // fourC: '',
-          // fourR: '',
-          // fiveN: 'C语言程序设计',
-          // fiveT: '王老师',
-          // fiveC: '3C207',
-          // fiveR: '1-16周',
-          // sixN: 'C#程序设计',
-          // sixT: '王老师',
-          // sixC: '3C207',
-          // sixR: '1-16周',
-          // sevenN: '',
-          // sevenT: '',
-          // sevenC: '',
-          // sevenR: '',
-          // eightN: '大学生就业与创业',
-          // eightT: '王老师',
-          // eightC: '3C207',
-          // eightR: '1-16周',
-          // nineN: '',
-          // nineT: '',
-          // nineC: '',
-          // nineR: '',
-          // tenN: '线性代数',
-          // tenT: '王老师',
-          // tenC: '3C207',
-          // tenR: '1-16周',
-        },
-        {
-          id: '5',
-          label: '周五',
-          oneN: '',
-          oneT: '',
-          oneC: '',
-          oneR: '',
-          twoN: '计算机基础',
-          twoT: '李老师',
-          twoC: '西教201',
-          twoR: '1-16周',
-          threeN: '',
-          threeT: '',
-          threeC: '',
-          threeR: '',
-          fourN: '计算机网络',
-          fourT: '张老师',
-          fourC: '2C203',
-          fourR: '1-16周',
-          fiveN: '',
-          fiveT: '',
-          fiveC: '',
-          fiveR: '',
-          sixN: 'C#程序设计',
-          sixT: '王老师',
-          sixC: '3C207',
-          sixR: '1-16周',
-          sevenN: '',
-          sevenT: '',
-          sevenC: '',
-          sevenR: '',
-          eightN: '大学生就业与创业',
-          eightT: '王老师',
-          eightC: '3C207',
-          eightR: '1-16周',
-          nineN: '',
-          nineT: '',
-          nineC: '',
-          nineR: '',
-          tenN: '线性代数',
-          tenT: '王老师',
-          tenC: '3C207',
-          tenR: '1-16周'
-        }
-      ],
-      timeData1: [
-        [{cname: '计算机基础', teacher: '张老师', classRoom: '2C203', remark: '1-12周'}, { }, { }, { }, { }, { }, { }, { }, { }, { }],
-        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
-        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
-        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
-        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
-        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }],
-        [{ }, { }, { }, { }, { }, { }, { }, { }, { }, { }]
-      ],
-      titleData: [
-        {
-          id: '1',
-          count: 1,
-          label: '上午',
-          startTime: '08:30',
-          endTime: '09:15'
-        },
-        {
-          id: '2',
-          count: 2,
-          label: '上午',
-          startTime: '09:25',
-          endTime: '10:10'
-        },
-        {
-          id: '3',
-          count: 3,
-          label: '上午',
-          startTime: '10:30',
-          endTime: '11:15'
-        },
-        {
-          id: '4',
-          count: 4,
-          label: '上午',
-          startTime: '11:25',
-          endTime: '12:10'
-        },
-        {
-          id: '5',
-          count: 5,
-          label: '下午',
-          startTime: '14:00',
-          endTime: '14:45'
-        },
-        {
-          id: '6',
-          count: 6,
-          label: '下午',
-          startTime: '14:55',
-          endTime: '15:40'
-        },
-        {
-          id: '7',
-          count: 7,
-          label: '下午',
-          startTime: '16:00',
-          endTime: '16:45'
-        },
-        {
-          id: '8',
-          count: 8,
-          label: '下午',
-          startTime: '16:55',
-          endTime: '17:40'
-        },
-        {
-          id: '9',
-          count: 9,
-          label: '晚上',
-          startTime: '19:00',
-          endTime: '19:50'
-        },
-        {
-          id: '10',
-          count: 10,
-          label: '晚上',
-          startTime: '20:00',
-          endTime: '20:50'
-        }
-      ]
+      courseList: [],
+      userId: 0,
+      weeks: [], // 周集合
+      coursesLen: 0, // 最大课节数
+      classTableData: { // mock模拟的数据
+        period: ['08:30-09:15', '09:25-10:10', '10:30-11:15', '11:25-12:10', '14:30-15:15', '15:25-16:10', '16:30-17:15', '17:25-18:10', '19:00-19:50', '20"00-20:50'], // 一共有10节课
+        weekCourse: []
+      }
     }
   },
+  created () {
+    this.userId = sessionStorage.getItem('userId')
+    console.log('userId', this.userId)
+  },
   mounted () {
-
+    this.getCourseList()
   },
   methods: {
-    getTimeTableFind () {
+    getCourseList () {
+      axios.get('/json/course/find?userId=' + this.userId).then((res) => {
+        // console.log(res.data.data)
+        if (res.data.data !== [] && res.data.data !== 0) {
+          this.classTableData.weekCourse = this.handleReturnData(res.data.data)
+          this.updateData()
+          this.initWeekCourses()
+        } else {
+          this.$message({
+            type: 'info',
+            message: '暂无课程！'
+          })
+        }
+      })
+    },
+    handleReturnData (data) {
+      let cList = data
+      cList.forEach(ele => {
+        ele.week = ele.week
+        // ele.courses = this.handleFestivalList(data)
 
+        let context = ele.cname + '\n' + ele.classRoom + '\n' + ele.teacher + '\n' + ele.remark
+        console.log(context)
+        console.log(typeof (context))
+        let arr = []
+        ele.festivalsList.forEach((f) => {
+          let param = {
+            'index': f,
+            'context': context
+          }
+          arr.push(param)
+        })
+        // console.log(111, arr)
+        ele.courses = arr
+
+        delete ele.cid
+        delete ele.classRoom
+        delete ele.cname
+        delete ele.teacher
+        delete ele.remark
+        delete ele.festivals
+      })
+      // console.log('cList是', cList)
+      return cList
+    },
+
+    /**
+     * 更新mock模拟的数据，对数据进行排序
+     */
+    updateData () {
+      /* 将数据按从周日到周六排序 */
+      this.classTableData.weekCourse.sort((a, b) => {
+        return a.week - b.week
+      })
+
+      /* 将数据按从第一节到第n节排序 */
+      for (let v of this.classTableData.weekCourse) {
+        for (let k in v) {
+          if (k === 'courses') {
+            v[k].sort((a, b) => {
+              return a.index - b.index
+            })
+          }
+        }
+      }
+    },
+    /**
+         * 计算周数据及课节数
+         */
+    initWeekCourses () {
+      // console.log(444,this.classTableData.weekCourse)
+      const that = this
+      this.weeks = [] // 周集合
+      this.coursesLen = 0 // 最大的课节数
+
+      this.weeks = this.classTableData.weekCourse.map((item, index) => {
+        for (let k in item) {
+          if (k === 'courses') {
+            let maxCoursesLen = 0
+            /* 取出一周中最大的课节数及当天的最大课节数 */
+            for (let j of item[k]) {
+              j.index > that.coursesLen && (that.coursesLen = j.index) // 取所有一周里最大课节值
+              j.index > maxCoursesLen && (maxCoursesLen = j.index) // 取当天最大课节值
+            }
+
+            /* 如果当天的课节总数小于当天的最大课节值 */
+            if (item[k].length < maxCoursesLen) {
+              for (let i = 0; i < maxCoursesLen; i++) { // 以最大课节值为终点遍历当天课节
+                if (!item[k][i] || item[k][i].index != (i + 1)) { // 如果下标课节不存在或着与循环的下标不匹配
+                  item[k].splice(i, 0, '') // 填充空课节
+                }
+              }
+            }
+          }
+        }
+        return item.week
+      })
+
+      // console.log(JSON.stringify(this.classTableData.weekCourse))
+    },
+    /**
+         * 处理格子数据，无数据转换为字符串'-'
+         * @param {Number} weekIndex 周几对应的下标
+         * @param {Number} courseNum 第几节课对应的下标
+         * @returns {String} 返回对应的字符
+         */
+    fieldCharacter (weekIndex, courseIndex) {
+      if (
+        this.classTableData.weekCourse[weekIndex] &&
+        this.classTableData.weekCourse[weekIndex].courses[courseIndex] &&
+        this.classTableData.weekCourse[weekIndex].courses[courseIndex].index === courseIndex + 1
+      ) {
+        return this.classTableData.weekCourse[weekIndex].courses[courseIndex].context
+      }
+      return '-'
+    },
+
+    /**
+        * 数字转中文
+        * @param {Number} num 需要转换的数字
+        * @param {Boolean} identifier 标识符
+        * @returns {String} 转换后的中文
+        */
+    digital2Chinese (num, identifier) {
+      const character = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
+      return identifier === 'week' && (num === 0 || num === 7) ? '日' : character[num]
     }
   }
 }
 </script>
-<style>
-  .tabletitle-timeline{
-    line-height: 18px!important;
-  }
+
+<style lang="scss" scoped>
+.class-table {
+    .table-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+    .tabel-container {
+        margin: 7px;
+
+        table {
+            table-layout: fixed;
+            width: 100%;
+
+            thead {
+                background-color: #67a1ff;
+                th {
+                  color: #fff;
+                  line-height: 17px;
+                  font-weight: normal;
+                }
+            }
+            tbody {
+                background-color: #eaf2ff;
+                td {
+                  color: #677998;
+                  line-height: 0px;
+                }
+            }
+            th,
+            td {
+                width: 60px;
+                padding: 12px 2px;
+                font-size: 12px;
+                text-align: center;
+            }
+
+            tr td:first-child {
+                color: #333;
+                .period {
+                    font-size: 8px;
+                }
+            }
+        }
+    }
+}
 </style>
