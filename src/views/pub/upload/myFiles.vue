@@ -2,17 +2,17 @@
   <el-dialog id="myFiles" :title="title" :visible.sync="visible" :lock-scroll="false" width="80%" append-to-body top="1rem" :close-on-click-modal="false" :show-close="false">
     <el-form v-model="searchForm" :inline="true">
       <el-row>
-        <el-col :span="7" :offset="1">
+        <el-col :span="7">
           <el-form-item label="文件名：">
             <el-input v-model="searchForm.fileRealName" placeholder="请输入文件名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="文件后缀名：">
+        <el-col :span="7">
+          <el-form-item label="后缀名：">
             <el-input v-model="searchForm.fileSuffix" placeholder="请输入文件后缀名" clearable/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="7">
           <el-form-item label="文件状态：">
             <el-select v-model="searchForm.state"  palceholder="请选择文件状态" clearable>
               <el-option
@@ -24,12 +24,11 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <el-row>
-        <el-form-item>
-          <el-button type="success" size="medium" icon="el-icon-search" @click="getMyFiles(searchForm)">查询文件</el-button>
-        </el-form-item>
+        <el-col :span="3">
+          <el-form-item>
+            <el-button type="success" size="medium" icon="el-icon-search" @click="getMyFiles(searchForm)">查询文件</el-button>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <el-table
@@ -38,7 +37,7 @@
       v-loading="loading"
       element-loading-text="拼命加载中"
       :cell-style="addBgColorByState"
-      height="65%">
+      height="340">
       <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
           <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
@@ -46,10 +45,10 @@
         </template>
       </el-table-column>
       <el-table-column label="文件名" prop="fileRealName"/>
-      <el-table-column label="文件后缀名" prop="fileSuffix"/>
+      <el-table-column label="文件后缀名" prop="fileSuffix" width="100"/>
       <!-- <el-table-column label="文件类型" prop="type"/> -->
       <el-table-column label="文件简介" prop="introduce"/>
-      <el-table-column label="状态" prop="state"/>
+      <el-table-column label="状态" prop="state" width="100"/>
     </el-table>
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
     <span slot="footer">
@@ -131,7 +130,7 @@ export default {
       return uploadArr
     },
     addBgColorByState ({row, columnIndex}) {
-      if (columnIndex === 5) {
+      if (columnIndex === 4) {
         if (row.state === '审核不通过') {
           return 'color: #e5323e'
         } else if (row.state === '通过审核') {

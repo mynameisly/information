@@ -149,7 +149,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       headUrl: [], // 保存头像
       // searchUserForm: [ // 模糊搜索
       //   {

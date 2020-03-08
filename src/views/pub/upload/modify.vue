@@ -3,32 +3,33 @@
     <el-dialog :title="title" :visible.sync="visible" top="10rem" :lock-scroll="false" :close-on-click-modal="false">
       <el-form ref="fileForm" :model="item" :rules="rules" label-width="120px">
          <el-form-item label="文件类型" prop="type">
-          <el-select v-model="item.type"  palceholder="请选择文件类型" clearable>
+           <el-input v-model="item.type"  disabled/>
+          <!-- <el-select v-model="item.type"  palceholder="请选择文件类型" clearable>
             <el-option
               v-for="item in filesType"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
-      <el-form-item label="文件状态:" prop="state">
-        <el-select v-model="item.state"  palceholder="请选择文件状态" clearable>
-            <el-option
-              v-for="item in states"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-      </el-form-item>
+        <el-form-item label="文件状态:" prop="state">
+          <el-select v-model="item.state"  palceholder="请选择文件状态" clearable>
+              <el-option
+                v-for="item in states"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea"  v-model="item.remark" :rows="4" resize="none" maxlength="200" show-word-limit palceholder="请输入备注"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
-      <el-button type="warning" plain @click="resetForm('fileForm')">取消</el-button>
-      <el-button type="success" plain @click="submitForm('fileForm')">提交</el-button>
+      <el-button type="warning" @click="resetForm('fileForm')">取消</el-button>
+      <el-button type="success" @click="submitForm('fileForm')">提交</el-button>
     </span>
     </el-dialog>
   </div>
@@ -48,20 +49,20 @@ export default {
         state: '',
         remark: ''
       },
-      filesType: [
-        {
-          label: '头像图片',
-          value: 'headImg'
-        },
-        {
-          label: '学习资料文件',
-          value: 'learningResource'
-        },
-        {
-          label: '网课视频',
-          value: 'onlineCourseVideo'
-        }
-      ],
+      // filesType: [
+      //   {
+      //     label: '头像图片',
+      //     value: 'headImg'
+      //   },
+      //   {
+      //     label: '学习资料文件',
+      //     value: 'learningResource'
+      //   },
+      //   {
+      //     label: '网课视频',
+      //     value: 'onlineCourseVideo'
+      //   }
+      // ],
       states: [
         {
           label: '未审核',
@@ -90,6 +91,7 @@ export default {
         this.item = {}
       } else {
         this.item = item
+        this.item.type = '学习资料文件'
       }
     },
     submitForm (item) {

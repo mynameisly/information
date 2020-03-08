@@ -261,7 +261,7 @@ export default {
       this.getUploadList()
     },
     update (item) { // 修改
-      axios.put('/json/file/update?fileId=' + item.fileId + '&type=' + item.type + '&state=' + item.state + '&remark=' + item.remark)
+      axios.put('/json/file/update?fileId=' + item.fileId + '&type=learningResource&state=' + item.state + '&remark=' + item.remark)
         .then((res) => {
           if (res.data.code === 0) {
             this.$message({
