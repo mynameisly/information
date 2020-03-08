@@ -40,7 +40,7 @@
           </el-select> -->
         </el-form-item>
         <el-form-item label="文件描述" prop="fileDescribe">
-          <el-input type="textarea" :rows="4" v-model="item.fileDescribe" resize="none" maxlength="200" show-word-limit palceholder="请输入文件描述"></el-input>
+          <el-input type="textarea" :rows="4" v-model="item.fileDescribe" resize="none" maxlength="200" show-word-limit placeholder="请输入文件描述"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">

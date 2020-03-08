@@ -3,7 +3,7 @@
     <el-dialog :title="title" :visible.sync="visible" top="0.5rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="noticeForm" :model="item" :rules="rules" label-width="100px">
         <el-form-item label="发布人:" prop="createPerson">
-          <el-input v-model="item.createPerson"  palceholder="请输入发布人" clearable/>
+          <el-input v-model="item.createPerson"  placeholder="请输入发布人" clearable/>
         </el-form-item>
         <el-form-item label="发布时间:" prop="createTime">
           <el-date-picker
@@ -13,14 +13,14 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="标题:" prop="title">
-          <el-input v-model="item.title"  palceholder="请输入标题" clearable/>
+          <el-input v-model="item.title"  placeholder="请输入标题" clearable/>
         </el-form-item>
         <el-form-item label="通知内容:" prop="content">
-          <el-input type="textarea" :rows="2" v-model="item.content" resize="none" maxlength="200" show-word-limit palceholder="请输入通知内容"></el-input>
+          <el-input type="textarea" :rows="2" v-model="item.content" resize="none" maxlength="200" show-word-limit placeholder="请输入通知内容"></el-input>
         </el-form-item>
          <el-form-item label="附件:" prop="fileId">
            <!-- 调用上传文件接口拿到文件id，在发送新增请求 -->
-          <!-- <el-input v-model="item.fileId"  palceholder="请输入文件ID" clearable/> -->
+          <!-- <el-input v-model="item.fileId"  placeholder="请输入文件ID" clearable/> -->
           <el-upload
             action=""
             drag
@@ -44,7 +44,7 @@
           </el-upload>
         </el-form-item>
         <!--<el-form-item label="人员集合:" prop="userIdList">
-          <el-input v-model="item.userIdList"  palceholder="请输入人员集合" clearable/>
+          <el-input v-model="item.userIdList"  placeholder="请输入人员集合" clearable/>
         </el-form-item> -->
       </el-form>
       <span slot="footer">

@@ -3,7 +3,7 @@
     <el-dialog :title="title" :visible.sync="visible" top="10rem" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="watchForm" :model="item" :rules="rules" label-width="100px">
         <el-form-item label="视频目标ID：" prop="targetId">
-          <el-input v-model="item.targetId"  palceholder="请输入视频目标ID" clearable/>
+          <el-input v-model="item.targetId"  placeholder="请输入视频目标ID" clearable/>
         </el-form-item>
       </el-form>
       <span slot="footer">

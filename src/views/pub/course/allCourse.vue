@@ -1,21 +1,12 @@
 <template>
   <div id="course">
       <el-form :inline="true">
-      <!--<el-row>
-       <el-col :span="7" :offset="1">
-          <el-form-item label="用户ID：">
-            <el-input v-model="searchForm.userId" placeholder="请输入通知用户ID" clearable/>
-          </el-form-item>
-        </el-col>
-      </el-row> -->
       <el-row>
         <el-form-item>
-          <!-- <el-button type="success" size="medium" icon="el-icon-search" @click="getCourseList(searchForm)">查询课表</el-button> -->
           <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增课表</el-button>
         </el-form-item>
       </el-row>
     </el-form>
-    <!-- el-table中的height用于固定表头 -->
     <el-table
       border
       height="400px"
@@ -24,7 +15,6 @@
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
       >
-      <el-table-column type="selection" align="center" />
        <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
           <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
@@ -37,7 +27,7 @@
       <el-table-column label="节次" prop="festivalsList"/>
       <el-table-column label="星期" prop="week"/>
       <el-table-column label="上课周次（周）" prop="remark"/>
-      <!-- <el-table-column label="操作" prop="operation" width="100">
+      <el-table-column label="操作" prop="operation" width="100">
         <el-button
           type="danger"
           size="mini"
@@ -45,7 +35,7 @@
           @click="delcourse">
           删除
         </el-button>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <add-dialog ref="addDialog" title="新增课程"  @confirmData="(item) => addcourse(item)"/>
     <!-- <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" /> -->
@@ -78,11 +68,12 @@ export default {
     }
   },
   mounted () {
-    this.getCourseList()
     this.userId = sessionStorage.getItem('userId')
+    console.log(this.userId)
+    this.getCourseList()
   },
   methods: {
-    getCourseList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+    getCourseList () {
       axios.get('/json/course/find?userId=' + this.userId).then((res) => {
         // this.page.currentPage = res.data.page.page
         // this.page.pageSize = res.data.page.limit
@@ -97,76 +88,9 @@ export default {
       this.courseData = Object.assign({}, data)
     },
     addcourse (item) {
-      console.log('新增课程', item)
-      // console.log(typeof(item))
-
-      // this.$http.post("/demo/testListParam",{"jsonStr":JSON.stringify(list),"id":parseInt(this.id),"reason":this.reason} , {
-      //             }).then(res => {
-      //               if (res.resultCode == 200 ) {
-      //                 console.log("data:"+res.data);
-
-      //               } else {
-      //                 setTimeout(() => {
-      //                   this.instance("error", "提示",  res.message);
-      //                 }, 500);
-      //               }
-      // const data = {
-      //   userId: 13,
-      //   cName: item.cname,
-      //   classRoom: item.classRoom,
-      //   teacher: item.teacher,
-      //   // festivalsList: (this.item.festivals).split(','),
-      //   festivals: '1,2',
-      //   week: item.week,
-      //   remark: item.remark
-      // }
-      // const s = qs.stringify(data)
-      // const options = {
-      //   method: 'POST',
-      //   headers: {'content-type': 'application/x-www-form-urlencoded'},
-      //   data: s,
-      //   url: '/json/course/add'
-      // }
-      // this.$http(options).then((res) => {
-      //   console.log('新增的返回值是', res.data.data)
-      // })
-
-      // let params = {
-      //   "userId": 13,
-      //   "festivals": '1,2',
-      //   "cName": item.cname,
-      //   "classRoom": item.classRoom,
-      //   "teacher": item.teacher,
-      //   "remark": item.remark,
-      //   "week": 1
-      // }
-      // console.log(JSON.stringify(params))
-      // console.log([JSON.stringify(params)])
-      // [
-      //   {
-      //    "userId": 511,
-      // "cName": "JAVA基础",
-      // "week": 1,
-      // "festivals": "8,2",
-      // "classRoom": "2C203",
-      //  "teacher": "王老师",
-      //    "remark": "1-16"
-      //    }
-      //   ]
-
       let list = []
-      // let params = {
-      //   '"userId"': Number(this.userId),
-      //   '"cName"': item.cname,
-      //   '"week"': Number(item.week),
-      //   '"festivals"': item.festivals,
-      //   '"classRoom"': item.classRoom,
-      //   '"teacher"': item.teacher,
-      //   '"remark"': item.remark
-      // }
       let params = {
-        // userId: Number(this.userId),
-        userId: 6,
+        userId: Number(this.userId),
         cName: item.cname,
         week: Number(item.week),
         festivals: item.festivals,
@@ -174,57 +98,52 @@ export default {
         teacher: item.teacher,
         remark: item.remark
       }
-      // console.log(params)
-      // let para = JSON.stringify(params)
-      // console.log(para)
-      // console.log(typeof (para))
-      // list.push(para)
-      // console.log(list)
-      // let list = []
-      // list.push(params)
-      // let a = JSON.stringify(params)
       list.push(params)
-      let a = JSON.stringify(list)
-      console.log(a)
-      axios.post('/json/course/add?jsonStr=' + a)
-        .then((res) => {
+      this.$http({
+        url: '/json/course/add',
+        method: 'post',
+        headers: {"content-type": "application/json;charset=utf-8"},
+        data: JSON.stringify(list),
+      }).then((res) => {
+        console.log(2222222)
+        console.log(res)
+        // console.log(res.data)
+        // console.log('返回结果是',res.data.code)
+        if(res === undefined) {
+          this.$message({
+            type: 'success',
+            message: '新增课程成功'
+          })
+        }
+        this.getCourseList()
+      })
+    },
+    delcourse () {
+      this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then((res) => {
+        axios.get('/json/course/delete?userId=' + this.userId + '&cId=' + this.courseData.cid).then((res) => {
           if (res.data.msg === '无权限') {
             this.$router.push({path: '/401'})
           } else if (res.data.code === 0) {
+            console.log('删除数据返回',res.data)
             this.$message({
               type: 'success',
-              message: '新增课表成功'
+              message: '删除成功'
             })
-            console.log('新增课表的返回值是', res.data.data)
             this.getCourseList()
           }
         })
-    }
-    // delcourse () {
-    //   this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning',
-    //     center: true
-    //   }).then((res) => {
-    //     axios.get('/json/academic/delete?noticeId=' + this.courseData.noticeId).then((res) => {
-    //       if (res.data.msg === '无权限') {
-    //         this.$router.push({path: '/401'})
-    //       } else if (res.data.code === 0) {
-    //         this.$message({
-    //           type: 'success',
-    //           message: '删除成功'
-    //         })
-    //         this.getcourseList()
-    //       }
-    //     })
-    //   }).catch(() => {
-    //     this.$message({
-    //       type: 'info',
-    //       message: '已取消删除'
-    //     })
-    //   })
-    // },
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     // handlePageChange (item) { // 分页查询
     //   // console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
     //   axios.get('/json/course/find?page=' + item.currentPage + '&limit=' + item.pageSize + '&userId=' + this.searchForm.userId).then((res) => {

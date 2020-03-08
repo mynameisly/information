@@ -3,21 +3,21 @@
     <el-dialog :title="title" :visible.sync="visible" top="0.5rem" width="60%" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
       <el-form ref="videoForm" :model="item" :rules="rules" label-width="100px">
         <el-form-item label="网课名称:" prop="courseName">
-          <el-input v-model="item.courseName"  palceholder="请输入网课名称" clearable/>
+          <el-input v-model="item.courseName"  placeholder="请输入网课名称" clearable/>
         </el-form-item>
         <el-form-item label="网课简介:" prop="courseIntroduction">
-          <el-input type="textarea" :rows="2" v-model="item.courseIntroduction" resize="none" maxlength="200" show-word-limit palceholder="请输入网课简介"></el-input>
+          <el-input type="textarea" :rows="2" v-model="item.courseIntroduction" resize="none" maxlength="200" show-word-limit placeholder="请输入网课简介"></el-input>
         </el-form-item>
 
         <el-form-item label="教师名称:" prop="teacherName">
-          <el-input v-model="item.teacherName"  palceholder="请输入教师名称" clearable/>
+          <el-input v-model="item.teacherName"  placeholder="请输入教师名称" clearable/>
         </el-form-item>
         <el-form-item label="教师简介:" prop="teacherIntroduction">
-          <el-input type="textarea" :rows="2" v-model="item.teacherIntroduction" resize="none" maxlength="200" show-word-limit palceholder="请输入教师简介"></el-input>
+          <el-input type="textarea" :rows="2" v-model="item.teacherIntroduction" resize="none" maxlength="200" show-word-limit placeholder="请输入教师简介"></el-input>
         </el-form-item>
 
         <el-form-item label="参考教材:" prop="teachingMaterial">
-          <el-input v-model="item.teachingMaterial"  palceholder="请输入参考教材" clearable/>
+          <el-input v-model="item.teachingMaterial" placeholder="请输入参考教材" clearable/>
         </el-form-item>
         <el-form-item label="课程视频:" prop="mainVideoUrl">
           <el-upload class="avatar-uploader el-upload--text" 
@@ -25,7 +25,7 @@
             drag
             :show-file-list="false" 
             :on-change="onchange"
-            :before-upload="beforeUploadVideo" 
+            :before-upload="beforeUploadVideo"
             :on-progress="uploadVideoProcess">
             <video
               id="myVideo"
@@ -50,13 +50,13 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="教学方式简介:" prop="teachingMethods" style="margin-top: 10px">
-          <el-input type="textarea" :rows="2" v-model="item.teachingMethods" resize="none" maxlength="200" show-word-limit palceholder="请输入教学方式简介"></el-input>
+          <el-input type="textarea" :rows="2" v-model="item.teachingMethods" resize="none" maxlength="200" show-word-limit placeholder="请输入教学方式简介"></el-input>
         </el-form-item>
         <el-form-item label="主讲内容简介:" prop="lectureContent">
-          <el-input type="textarea" :rows="2" v-model="item.lectureContent" resize="none" maxlength="200" show-word-limit palceholder="请输入主讲内容简介"></el-input>
+          <el-input type="textarea" :rows="2" v-model="item.lectureContent" resize="none" maxlength="200" show-word-limit placeholder="请输入主讲内容简介"></el-input>
         </el-form-item>
         <el-form-item label="教学目的简介:" prop="instructionalObjective">
-          <el-input type="textarea" :rows="2" v-model="item.instructionalObjective" resize="none" maxlength="200" show-word-limit palceholder="请输入教学目的简介"></el-input>
+          <el-input type="textarea" :rows="2" v-model="item.instructionalObjective" resize="none" maxlength="200" show-word-limit placeholder="请输入教学目的简介"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -183,9 +183,10 @@ export default {
         console.log(this.item.mainVideoUrl)
       }).catch(() => false)
     },
-    onRemove (file, fileList) {
-      
-    },
+    // onRemove (file, fileList) {
+    //   console.log(file)
+    //   console.log(fileList)
+    // },
     // onSuccess(res, file) {//获取上传图片地址
     //   this.videoFlag = false;
     //   this.videoUploadPercent = 0;
@@ -207,7 +208,6 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
-            this.resetForm('videoForm')
           })
         }
       })

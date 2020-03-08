@@ -37,13 +37,13 @@
           <div ref="echartOverview" class="overview"></div>
         </el-tab-pane>
         <el-tab-pane label="按月统计">
-          <div ref="echartMonth" class="byMonth"></div>
+          <div ref="echartMonth" class="byMonth" style="overflow: scroll;"></div>
         </el-tab-pane>
         <el-tab-pane label="按天统计">
-          <div ref="echartDate" class="byDate"></div>
+          <div ref="echartDate" class="byDate" style="overflow: scroll;"></div>
         </el-tab-pane>
         <el-tab-pane label="按时统计">
-          <div ref="echartHour" class="byHour"></div>
+          <div ref="echartHour" class="byHour" style="overflow: scroll;"></div>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -362,6 +362,5 @@ export default {
 .overview, .byMonth, .byDate, .byHour {
   width: 1200px;
   height:540px;
-  // margin: 0 auto;
 }
 </style>

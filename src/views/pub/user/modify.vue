@@ -54,7 +54,7 @@
         <el-input v-model="item.email" placeholder="请输入email" clearable/>
       </el-form-item>
         <el-form-item label="个人简介" prop="introduce">
-          <el-input type="textarea"  v-model="item.introduce" :rows="4" resize="none" maxlength="200" show-word-limit palceholder="请输入个人简介"></el-input>
+          <el-input type="textarea"  v-model="item.introduce" :rows="4" resize="none" maxlength="200" show-word-limit placeholder="请输入个人简介"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">

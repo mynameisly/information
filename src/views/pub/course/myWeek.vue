@@ -38,7 +38,7 @@ export default {
       weeks: [], // 周集合
       coursesLen: 0, // 最大课节数
       classTableData: { // mock模拟的数据
-        period: ['08:30-09:15', '09:25-10:10', '10:30-11:15', '11:25-12:10', '14:30-15:15', '15:25-16:10', '16:30-17:15', '17:25-18:10', '19:00-19:50', '20"00-20:50'], // 一共有10节课
+        period: ['08:30-09:15', '09:25-10:10', '10:30-11:15', '11:25-12:10', '14:30-15:15', '15:25-16:10', '16:30-17:15', '17:25-18:10', '19:00-19:50', '20:00-20:50'], // 一共有10节课
         weekCourse: []
       }
     }
@@ -73,8 +73,8 @@ export default {
         // ele.courses = this.handleFestivalList(data)
 
         let context = ele.cname + '\n' + ele.classRoom + '\n' + ele.teacher + '\n' + ele.remark
-        console.log(context)
-        console.log(typeof (context))
+        // console.log(context)
+        // console.log(typeof (context))
         let arr = []
         ele.festivalsList.forEach((f) => {
           let param = {
@@ -207,14 +207,14 @@ export default {
             tbody {
                 background-color: #eaf2ff;
                 td {
-                  color: #677998;
-                  line-height: 0px;
+                  color: #606266;
+                  line-height: 14px;
                 }
             }
             th,
             td {
-                width: 60px;
-                padding: 12px 2px;
+                width: 100px;
+                // padding: 12px 2px;
                 font-size: 12px;
                 text-align: center;
             }
@@ -228,4 +228,10 @@ export default {
         }
     }
 }
+</style>
+
+<style lang="scss">
+  .el-tabs__header {
+    margin-bottom: 0px;
+  }
 </style>
