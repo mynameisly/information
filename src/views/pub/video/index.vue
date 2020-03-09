@@ -76,22 +76,20 @@
         </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增网课视频"  @confirmData="(item) => addVideo(item)"/>
-    <update-dialog ref="updateDialog" title="修改网课视频" @confirmData="(item) => updateVideo(item)" />
+    <edit-dialog ref="addDialog" title="新增网课视频"  @confirmData="(item) => addVideo(item)"/>
+    <edit-dialog ref="updateDialog" title="修改网课视频" @confirmData="(item) => updateVideo(item)" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
-import AddDialog from './add'
-import UpdateDialog from './add'
+import EditDialog from './add'
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     PageComponent,
-    AddDialog,
-    UpdateDialog
+    EditDialog
   },
   data () {
     return {

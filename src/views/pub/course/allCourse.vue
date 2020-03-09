@@ -45,7 +45,6 @@
 <script>
 import axios from 'axios'
 import AddDialog from './add'
-import qs from 'qs'
 // import PageComponent from '@/components/Pagenation/index'
 export default {
   name: 'allCourse',
@@ -102,14 +101,14 @@ export default {
       this.$http({
         url: '/json/course/add',
         method: 'post',
-        headers: {"content-type": "application/json;charset=utf-8"},
-        data: JSON.stringify(list),
+        headers: { 'content-type': 'application/json;charset=utf-8' },
+        data: JSON.stringify(list)
       }).then((res) => {
         console.log(2222222)
         console.log(res)
         // console.log(res.data)
         // console.log('返回结果是',res.data.code)
-        if(res === undefined) {
+        if (res === undefined) {
           this.$message({
             type: 'success',
             message: '新增课程成功'
@@ -129,7 +128,7 @@ export default {
           if (res.data.msg === '无权限') {
             this.$router.push({path: '/401'})
           } else if (res.data.code === 0) {
-            console.log('删除数据返回',res.data)
+            console.log('删除数据返回', res.data)
             this.$message({
               type: 'success',
               message: '删除成功'
@@ -143,7 +142,7 @@ export default {
           message: '已取消删除'
         })
       })
-    },
+    }
     // handlePageChange (item) { // 分页查询
     //   // console.log('进入到分页', item)// currentPage=1  pageSize=每页30条 totalPage=1页 totalSize=5条
     //   axios.get('/json/course/find?page=' + item.currentPage + '&limit=' + item.pageSize + '&userId=' + this.searchForm.userId).then((res) => {

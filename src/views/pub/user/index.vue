@@ -72,9 +72,6 @@
         </el-col>
       </el-row>
     </el-form>
-
-    <!-- <el-button type="warning" size="mini" @click="$refs.addDialog.open(null)">新增</el-button> -->
-    <!-- el-table中的height用于固定表头 -->
     <el-table
       border
       stripe
@@ -105,7 +102,7 @@
       <el-table-column label="微信" prop="weiXin"/>
       <el-table-column label="QQ" prop="qq"/>
       <el-table-column label="简介" prop="introduce"/>
-      <el-table-column label="操作" prop="operation" width="240">
+      <el-table-column label="操作" prop="operation" width="520">
         <el-button
           type="primary"
           size="mini"
@@ -121,30 +118,44 @@
           删除
         </el-button>
         <el-button
-            type="warning"
-            icon="el-icon-setting"
-            @click="$refs.roleDialog.open(userData)"
-          >设置角色</el-button>
+          type="warning"
+          size="mini"
+          icon="el-icon-setting"
+          @click="$refs.roleDialog.open(userData)"
+        >设置角色
+        </el-button>
+        <el-button
+          type="info"
+          size="mini"
+          icon="el-icon-s-tools"
+          @click="restPwd">
+          重置密码
+        </el-button>
+        <el-button
+          type="info"
+          size="mini"
+          icon="el-icon-edit-outline"
+          @click="updatePwd">
+          修改密码
+        </el-button>
       </el-table-column>
     </el-table>
-    <add-dialog ref="addDialog" title="新增用户" @confirmData="(item) => add(item)" />
-    <update-dialog ref="updateDialog" title="修改用户" @confirmData="(item) => update(item)" />
+    <edit-dialog ref="addDialog" title="新增用户" @confirmData="(item) => add(item)" />
+    <edit-dialog ref="updateDialog" title="修改用户" @confirmData="(item) => update(item)" />
     <RoleDialog ref="roleDialog" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
 </template>
 
 <script>
-import AddDialog from './modify'
-import UpdateDialog from './modify'
+import EditDialog from './modify'
 import axios from 'axios'
 import RoleDialog from './role-dialog'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     PageComponent,
-    AddDialog,
-    UpdateDialog,
+    EditDialog,
     RoleDialog
   },
   data () {
@@ -256,6 +267,12 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    restPwd () { // 重置密码
+      this.$router.push({name: 'restPwd'})
+    },
+    updatePwd () { // 修改密码
+      this.$router.push({name: 'updatePwd'})
     },
     handlePageChange (item) { // 分页查询
       // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0

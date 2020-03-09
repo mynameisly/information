@@ -20,6 +20,16 @@ export const constantRoutes = [
     component: () => import('@/views/login/login'),
     name: 'login'
   },
+  { // 重置密码
+    path: '/resetPwd',
+    component: () => import('@/components/resetPwd'),
+    name: 'resetPwd'
+  },
+  { // 修改密码
+    path: '/updatePwd',
+    component: () => import('@/components/updatePwd'),
+    name: 'updatePwd'
+  },
   {
     path: '/register',
     component: () => import('@/views/register/index'),

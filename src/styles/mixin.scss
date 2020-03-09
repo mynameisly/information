@@ -12,13 +12,18 @@
   }
 
   &::-webkit-scrollbar {
-    width: $width;
+    width: $width!important;
   }
 
   &::-webkit-scrollbar-thumb {
     background: rgb(211, 211, 211);
     border-radius: 0;
   }
+
+  // IE内核滚动条样式(只能修改颜色，不能修改尺寸；火狐浏览器不支持自定义滚动条样式)
+  // scrollbar-track-color: rgb(255, 255, 255);
+  // scrollbar-arrow-color: rgb(255, 255, 255);
+  // scrollbar-face-color: rgb(255, 255, 255);
 }
 
 @mixin relative {

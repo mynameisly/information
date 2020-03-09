@@ -28,7 +28,6 @@
         </el-row>
 
         <el-row>
-          <el-col :span="12">
             <el-form-item>
               <el-button
                 style="width:100%;"
@@ -36,15 +35,22 @@
                 @click="login('loginForm')"
               >登 录</el-button>
             </el-form-item>
+        </el-row>
+
+        <el-row>
+          <el-col :span="16" :offset="4">
+              <router-link
+                tag="a"
+                :to="{ name: 'resetPwd' }"
+               >忘 记 密 码
+              </router-link>
           </el-col>
-          <el-col :span="12">
-            <el-form-item>
-              <el-button
-              style="width:100%;"
-              type="success"
-              @click="register"
-              >注 册</el-button>
-            </el-form-item>
+          <el-col :span="4">
+            <router-link
+              tag="a"
+              :to="{ name: 'updatePwd' }"
+              >立 即 注 册
+              </router-link>
           </el-col>
         </el-row>
       </el-form>
@@ -103,9 +109,6 @@ export default {
   methods: {
     init () {
       particlesJS('particlesId', particlesConfig)
-    },
-    register () {
-      this.$router.push({path: '/register'})
     },
     login (loginForm) {
       this.$store.dispatch('app/changeLogin')

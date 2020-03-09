@@ -12,7 +12,6 @@
           </transition>
         </keep-alive>
       </div>
-      
     </div>
   </div>
 </template>
@@ -27,7 +26,7 @@ export default {
     CusSubHeader,
     CusSidebar
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -51,4 +50,3 @@ export default {
   background:white;
   }
 </style>
-
