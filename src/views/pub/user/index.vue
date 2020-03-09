@@ -269,7 +269,21 @@ export default {
       })
     },
     restPwd () { // 重置密码
-      this.$router.push({name: 'restPwd'})
+      this.$confirm('是否重置密码为123abc？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: 'true'
+      }).then((res) => {
+        axios.put('/json/user/resetPassword').then((res) => {
+          if (res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '重置密码成功'
+            })
+          }
+        })
+      })
     },
     updatePwd () { // 修改密码
       this.$router.push({name: 'updatePwd'})
