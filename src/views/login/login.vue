@@ -37,7 +37,7 @@
             </el-form-item>
         </el-row>
 
-        <el-row>
+        <el-row style="margin-top:20px">
           <el-col :span="16" :offset="4">
               <router-link
                 tag="a"
@@ -48,7 +48,7 @@
           <el-col :span="4">
             <router-link
               tag="a"
-              :to="{ name: 'updatePwd' }"
+              :to="{ name: 'register' }"
               >立 即 注 册
               </router-link>
           </el-col>

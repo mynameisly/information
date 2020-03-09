@@ -1,6 +1,6 @@
 <template>
   <div id="updatePwd">
-    <el-form :model="searchFrom">
+    <el-form :model="searchFrom" :rules="rules" label-width="80px">
       <el-form-item label="原密码">
         <el-input
           v-model="searchForm.oldPassword"
@@ -16,12 +16,10 @@
       </el-form-item>
       <el-form-item>
         <el-button
-          type="info"
-          size="mini"
-          icon="el-icon-edit-outline"
-          @click="updatePwd">
-          修改密码
-        </el-button>
+          style="width:100%;padding:11px;"
+          type="success"
+          @click="updatePwd"
+        >修 改 密 码</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -66,11 +64,28 @@ export default {
           })
         }
       })
+      this.$router.push({name:'user'})
     }
   }
 }
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
+#updatePwd{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 50px 0;
+  padding-right: 30px;
+  width: 500px;
+  background-color: rgba(49,143,254,.4);
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px lavenderblush;
+  .el-form
+    .el-form-item:nth-child(1),
+    .el-form-item:nth-child(2) {
+    margin-bottom: 20px;
+  }
+}
 </style>

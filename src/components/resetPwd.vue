@@ -29,27 +29,16 @@ export default {
             this.$message({
               type: 'success',
               message: '重置密码成功'
-            }).then(() => { // 不知道这里可以加 .then()方法不
-              this.$confirm('是否修改密码？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'info',
-                center: 'true'
-              }).then(() => {
-                this.$router.push({ name: 'updatePwd' })
-              }).catch(() => {
-                this.$router.push({ name: 'login' })
-              })
             })
           }
+          this.$router.push({ name: 'login' })
         })
       }).catch((res) => {
         this.$message({
           type: 'info',
           message: '取消重置'
-        }).then((res) => {
-          this.$router.push({ name: 'login' })
         })
+        this.$router.push({ name: 'login' })
       })
     }
   }
