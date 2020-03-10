@@ -40,6 +40,7 @@
         <el-row style="margin-top:20px">
           <el-col :span="16" :offset="4">
               <router-link
+                style="visibility: hidden;"
                 tag="a"
                 :to="{ name: 'resetPwd' }"
                >忘 记 密 码

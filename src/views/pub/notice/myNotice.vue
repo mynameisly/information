@@ -8,7 +8,6 @@
       v-loading="loading"
       element-loading-text="拼命加载中"
         >
-      <!-- <el-table-column type="selection" align="center" /> -->
        <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
           <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
@@ -50,19 +49,24 @@ export default {
   },
   methods: {
     getMyNoticeList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
-      // axios.get('/json/academic/find?limit=&title=' + this.searchForm.title).then((res) => {
-      axios.get('/json/academic/find?page=1&limit=10&userId=' + this.userId).then((res) => {
+      axios.get('/json/academic/findByUserId?page=1&limit=10&userId=' + this.userId).then((res) => {
         this.page.currentPage = res.data.page.page
         this.page.pageSize = res.data.page.limit
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
         this.myNoticeList = res.data.data
         console.log('我的教务通知是，',res.data.data)
+        if(res.data.data.length == 0) {
+          this.$message({
+            type: 'warning',
+            message: '暂无通知'
+          })
+        }
         this.loading = false
       })
     },
     handlePageChange (item) { // 分页查询
-      axios.get('/json/academic/find?page=' + item.currentPage + '&limit=' + item.pageSize + '&userId=' + this.userId).then((res) => {
+      axios.get('/json/academic/findByUserId?page=' + item.currentPage + '&limit=' + item.pageSize + '&userId=' + this.userId).then((res) => {
         if (res.data.code === 0) {
           this.page.currentPage = res.data.page.page
           this.page.pageSize = res.data.page.limit
