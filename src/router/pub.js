@@ -64,6 +64,14 @@ const pub = [
     }
   },
   {
+    path: '/pub/myNotice',
+    component: () => import('@/views/pub/notice/myNotice'),
+    name: 'myNotice',
+    meta: {
+      title: '教务通知'
+    }
+  },
+  {
     path: '/pub/comment',
     component: () => import('@/views/pub/comment/index'),
     name: 'comment',

@@ -52,6 +52,8 @@ export default {
     return {
       search: false,
       hoverhome: false,
+      roleId: '', // 用户角色
+      noticeUrl: '',// 教务通知的url，根据用户角色来判断
       menuDirs: [
         {
           id: 0,
@@ -87,7 +89,7 @@ export default {
           id: 5,
           icon: 'el-icon-menu',
           name: '教务通知',
-          url: '/pub/notice'
+          url: '/pub/myNotice'
         },
         {
           id: 6,
@@ -110,12 +112,27 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.roleId = sessionStorage.getItem('roleId')
+    this.isMyNotice()
+  },
   computed: {
     ...mapGetters(['sidebar', 'themeColor'])
   },
   methods: {
     hidebox (url) {
+      console.log(url)
       this.$routeTo(url)
+    },
+    isMyNotice () { // 根据用户角色来判断路由，如果roleId=2就是管理员，显示pub/notice
+    // 如果roleId是1就显示pub/myNotice
+      if (this.roleId == 1) {
+        console.log(111111111111)
+        this.menuDirs[5].url = '/pub/myNotice'
+      } else if (this.roleId == 2) {
+        console.log(2222222222)
+        this.menuDirs[5].url = '/pub/notice'
+      }
     },
     ...mapActions('app/', ['toggleSideBar', 'openSideBar', 'closeSideBar'])
   }

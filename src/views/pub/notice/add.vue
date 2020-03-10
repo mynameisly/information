@@ -9,7 +9,7 @@
           <el-date-picker
             v-model="item.createTime"
             type="datetime"
-            placeholder="请输入发布时间">
+            disabled>
           </el-date-picker>
         </el-form-item>
         <el-form-item label="标题:" prop="title">
@@ -43,9 +43,17 @@
             <div class="el-upload__tip" slot="tip">支持doc,docx,txt,xlsx,ppt格式，且不超过10M</div>
           </el-upload>
         </el-form-item>
-        <!--<el-form-item label="人员集合:" prop="userIdList">
-          <el-input v-model="item.userIdList"  placeholder="请输入人员集合" clearable/>
-        </el-form-item> -->
+        <el-form-item label="通知人员:" prop="userIdList">
+          <!-- <el-input v-model="item.userIdList"  placeholder="请输入人员集合" clearable/> -->
+          <el-select v-model="item.userIdList" multiple placeholder="请选择通知人员" @focus='handleNoRepeat' clearable style="width:100%">
+              <el-option
+                v-for="item in userIds"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+        </el-form-item>
       </el-form>
       <span slot="footer">
       <el-button type="warning" @click="resetForm('noticeForm')">取消</el-button>
@@ -69,9 +77,11 @@ export default {
       fileFlag: false,
       fileUploadPercent: 0,
       fileList: [],
+      usersInfo: [], // 保存首次加载时返回的数据
+      userIds: [], // 保存首次加载返回数据中的用户ID，显示的是用户昵称，搜索的时候传给后台的值是用户ID
       item: {
         createPerson: '',
-        createTime: '',
+        createTime: this.formateDate(new Date()),
         title: '',
         content: '',
         fileId: '',
@@ -79,7 +89,7 @@ export default {
       },
       rules: {
         createPerson: [{ required: true, message: '请输入发布人', trigger: 'blur' }],
-        createTime: [{ required: true, message: '请输入发布时间', trigger: 'change' }],
+        // createTime: [{ required: true, message: '请输入发布时间', trigger: 'change' }],
         title: [{ required: true, message: '请输入通知标题', trigger: 'blur' }],
         content: [{ required: true, message: '请输入通知内容', trigger: 'blur' }],
         // fileId: [{ required: true, message: '请输入文件ID', trigger: 'blur' }],
@@ -87,14 +97,23 @@ export default {
       }
     }
   },
+  mounted () {
+    this.getUserList()
+  },
   methods: {
     open (item) {
       this.visible = true
+      console.log(new Date())
       if (item === null || item === undefined) {
         // this.item = null
       } else {
         this.item = item
       }
+    },
+    getUserList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
+      axios.get('/json/user/list').then((res) => {
+        this.usersInfo = res.data.data
+      })
     },
     formateDate (date) {
       let theDate = new Date(date)
@@ -105,6 +124,20 @@ export default {
       let minute = theDate.getMinutes()
       let second = theDate.getSeconds()
       return year + '-' + this.formatTen(month) + '-' + this.formatTen(day) + ' ' + this.formatTen(hour) + ':' + this.formatTen(minute) + ':' + this.formatTen(second)
+    },
+    handleNoRepeat () { // 用户名数组去重，构建出el-select的label是用戶名，value是用户ID
+    // console.log('进入到用户名数组去重')
+      let object = {}
+      let userIds = []
+      let data = this.usersInfo
+      let objres = data.reduce((item, next) => {
+        object[next.userId] ? ' ' : object[next.userId] = true && item.push(next)
+        return item
+      }, [])
+      for (let i = 0; i < objres.length; i++) {
+        userIds.push({label: objres[i].nickName, value: objres[i].userId})
+      }
+      this.userIds = userIds
     },
     formatTen (num) {
       return num > 9 ? (num + '') : ('0' + num)
@@ -153,13 +186,13 @@ export default {
         headers: config,
         data: this.param
       }).then((res) => {
-        console.log('通过url接口得到视频url')
+        // console.log('通过url接口得到视频url')
         this.item.fileId = res.data.data[0].fileId
         console.log(this.item.fileId)
       }).catch(() => false)
     },
     submitForm (noticeForm) {
-      this.item.createTime = this.formateDate(this.item.createTime)
+      this.item.userIdList = (this.item.userIdList).join(',')
       this.$refs.noticeForm.validate(valid => {
         if (valid) {
           this.$confirm('确认保存吗？', '是否保存', {
@@ -169,6 +202,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
+            console.log('this.item是', this.item)
             this.resetForm('noticeForm')
           })
         }

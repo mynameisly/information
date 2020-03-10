@@ -135,6 +135,7 @@ export default {
               // setUser(res.data.number)
               console.log(userData)
               sessionStorage.setItem('userId', userData.userId)
+              sessionStorage.setItem('roleId', userData.role.roleId)
               sessionStorage.setItem('number', user)
               sessionStorage.setItem('headImg', userData.headImg)
               sessionStorage.setItem('nickName', userData.nickName)
