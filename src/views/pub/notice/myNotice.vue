@@ -44,8 +44,8 @@ export default {
     }
   },
   mounted () {
-    this.getMyNoticeList()
     this.userId = sessionStorage.getItem('userId')
+    this.getMyNoticeList()
   },
   methods: {
     getMyNoticeList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
