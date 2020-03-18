@@ -36,14 +36,24 @@
       <el-table-column label="内容" prop="content"/>
       <el-table-column label="发布人" prop="createPerson"/>
       <el-table-column label="发布时间" prop="createTime" sortable/>
-      <el-table-column label="操作" prop="operation" width="100">
-        <el-button
-          type="danger"
-          size="mini"
-          icon="el-icon-delete"
-          @click="delNotice">
-          删除
-        </el-button>
+      <el-table-column label="操作" prop="operation" width="200">
+        <template slot-scope="scope">
+          <el-button
+            type="success"
+            size="mini"
+            icon="el-icon-download"
+            :disabled="scope.row.fileId == null"
+            @click="download">
+            下载附件
+          </el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+            @click="delNotice">
+            删除
+          </el-button>
+        </template>
       </el-table-column>
     </el-table>
     <add-dialog ref="addDialog" title="新增教务通知"  @confirmData="(item) => addnotice(item)"/>
@@ -94,6 +104,7 @@ export default {
     },
     mouseEnter (data) {
       this.noticeData = Object.assign({}, data)
+      console.log('this.noticeData',this.noticeData)
     },
     addnotice (item) { // 文件id和人员集合我先写死，回头问问后台
       console.log('新增通知', item)
@@ -110,6 +121,10 @@ export default {
             this.getnoticeList()
           }
         })
+    },
+    download () {
+      console.log('noticeData',this.noticeData)
+      window.location.href = 'http://49.235.55.224:12346/json/file/download?fileId=' + this.noticeData.fileId
     },
     delNotice () {
       this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {
@@ -155,3 +170,4 @@ export default {
 <style lang="scss">
 
 </style>
+

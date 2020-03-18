@@ -6,6 +6,7 @@
       :data="myNoticeList"
       :default-sort = "{prop: 'createTime', order: 'descending'}"
       v-loading="loading"
+      @cell-mouse-enter="mouseEnter"
       element-loading-text="拼命加载中"
         >
        <el-table-column label="序号" type="index" width="55">
@@ -18,6 +19,18 @@
       <el-table-column label="内容" prop="content"/>
       <el-table-column label="发布人" prop="createPerson"/>
       <el-table-column label="发布时间" prop="createTime" sortable/>
+      <el-table-column label="操作" prop="operation" width="100">
+        <template slot-scope="scope">
+          <el-button
+            type="success"
+            size="mini"
+            icon="el-icon-download"
+            :disabled="scope.row.fileId == null"
+            @click="download">
+            下载附件
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
   </div>
@@ -35,6 +48,7 @@ export default {
       loading: true,
       userId: '',
       myNoticeList: [],
+      noticeData: {},
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 0, // 每页条数，对应接口中的limit
@@ -55,7 +69,7 @@ export default {
         this.page.totalPage = res.data.page.totalPages
         this.page.totalSize = res.data.page.totalRows
         this.myNoticeList = res.data.data
-        console.log('我的教务通知是，',res.data.data)
+        // console.log('我的教务通知是，',res.data.data)
         if(res.data.data.length == 0) {
           this.$message({
             type: 'warning',
@@ -64,6 +78,9 @@ export default {
         }
         this.loading = false
       })
+    },
+    mouseEnter (data) {
+      this.noticeData = Object.assign({}, data)
     },
     handlePageChange (item) { // 分页查询
       axios.get('/json/academic/findByUserId?page=' + item.currentPage + '&limit=' + item.pageSize + '&userId=' + this.userId).then((res) => {
@@ -75,7 +92,10 @@ export default {
           this.myNoticeList = res.data.data
         }
       })
-    }
+    },
+    download () {
+      window.location.href = 'http://49.235.55.224:12346/json/file/download?fileId=' + this.noticeData.fileId
+    },
   }
 }
 </script>
