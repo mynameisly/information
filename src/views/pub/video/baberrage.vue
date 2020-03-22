@@ -110,11 +110,12 @@ video{
 }
 .stage{
   position: absolute;
-  top: 4px;
-  left: 11.5%;
+  top: 60px;
+  left: 0;
   z-index: 999;
-  width: 88%;
-  height: 56%;
+  width: 100%;
+  height: 62%;
+  border:2px solid red;
 }
 
 .baberrage-stage .baberrage-item.normal{
