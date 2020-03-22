@@ -148,9 +148,9 @@ export default {
           message: '上传视频只能是asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv格式'
         })
       }
-      const isLt10M = file.size / 1024 / 1024  < 10;
-      if (!isLt10M) {
-        this.$message.error('上传视频大小不能超过 10MB!')
+      const isLt50M = file.size / 1024 / 1024  < 50;
+      if (!isLt50M) {
+        this.$message.error('上传视频大小不能超过 50MB!')
         return false
       }
       this.videoList.push(file)
@@ -180,6 +180,7 @@ export default {
       }).then((res) => {
         console.log('通过url接口得到视频url')
         this.item.mainVideoUrl = res.data.data[0].previewUrl
+        console.log(res.data.data)
         console.log(this.item.mainVideoUrl)
       }).catch(() => false)
     },

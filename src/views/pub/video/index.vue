@@ -66,7 +66,7 @@
       <el-table-column label="教学方式简介" prop="teachingMethods"/>
       <el-table-column label="主讲内容简介" prop="lectureContent"/>
       <el-table-column label="教学目的简介" prop="instructionalObjective"/>
-      <el-table-column label="操作" prop="operation" width="100">
+      <el-table-column label="操作" prop="operation" width="200">
         <el-button
           type="primary"
           size="mini"
@@ -74,8 +74,16 @@
           @click="$refs.updateDialog.open(videoData)">
           修改
         </el-button>
+        <el-button
+          type="warning"
+          size="mini"
+          icon="el-icon-view"
+          @click="$refs.showBaber.open(videoData)">
+          查看视频
+        </el-button>
       </el-table-column>
     </el-table>
+    <show-baber ref="showBaber" />
     <edit-dialog ref="addDialog" title="新增网课视频"  @confirmData="(item) => addVideo(item)"/>
     <edit-dialog ref="updateDialog" title="修改网课视频" @confirmData="(item) => updateVideo(item)" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
@@ -84,12 +92,14 @@
 
 <script>
 import EditDialog from './add'
+import ShowBaber from './baberrage'
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     PageComponent,
-    EditDialog
+    EditDialog,
+    ShowBaber
   },
   data () {
     return {
@@ -140,11 +150,6 @@ export default {
         this.page.pageSize = 10 // 每页显示条数
         this.page.totalPage = res.data.page.totalPages // 页数
         this.page.totalSize = res.data.page.totalRows // 总行数
-
-        // this.page.currentPage = res.data.currentPage;
-        // this.page.pageSize = res.data.size;
-        // this.page.totalPage = res.data.pages;
-        // this.page.totalSize = res.data.total;
         this.videoList = res.data.data
         // console.log(res.data.page)
         this.loading = false

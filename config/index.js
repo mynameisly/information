@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: { // 下面这里是自己加的
       '/json': { // 匹配所有以'api'开头的请求路径
-        // target: 'http://120.24.186.190:12346', // 袁聪代理目标的基础路径
-        target: 'http://49.235.55.224:12346', // 邓轲代理目标的基础路径
+        target: 'http://120.24.186.190:12346', // 袁聪代理目标的基础路径
+        // target: 'http://49.235.55.224:12346', // 邓轲代理目标的基础路径
         changeOrigin: true, // 支持跨域
         pathRewrite: {
           '^/json':'/json'

@@ -183,7 +183,7 @@ export default {
           userId: this.searchForm.userId,
           fileRealName: this.searchForm.fileRealName,
           fileSuffix: this.searchForm.fileSuffix,
-          type: 'learningResource',
+          // type: 'learningResource',
           state: this.searchForm.state
         }
       }).then((res) => {
