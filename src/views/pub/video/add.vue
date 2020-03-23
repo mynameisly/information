@@ -209,6 +209,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.$emit('confirmData', this.item)
+            this.resetForm(videoForm)
           })
         }
       })

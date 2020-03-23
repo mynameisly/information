@@ -25,6 +25,11 @@ export const constantRoutes = [
     component: () => import('@/components/resetPwd'),
     name: 'resetPwd'
   },
+  { // 查看视频
+    path: '/baberrage',
+    component: () => import('@/views/pub/video/baberrage'),
+    name: 'baberrage'
+  },
   { // 修改密码
     path: '/updatePwd',
     component: () => import('@/components/updatePwd'),

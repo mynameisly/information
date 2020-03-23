@@ -78,12 +78,11 @@
           type="warning"
           size="mini"
           icon="el-icon-view"
-          @click="$refs.showBaber.open(videoData)">
+          @click="watchBaber">
           查看视频
         </el-button>
       </el-table-column>
     </el-table>
-    <show-baber ref="showBaber" />
     <edit-dialog ref="addDialog" title="新增网课视频"  @confirmData="(item) => addVideo(item)"/>
     <edit-dialog ref="updateDialog" title="修改网课视频" @confirmData="(item) => updateVideo(item)" />
     <page-component :total="page.totalSize" :page="page" @pageChange="(item)=>handlePageChange(item)" />
@@ -92,14 +91,12 @@
 
 <script>
 import EditDialog from './add'
-import ShowBaber from './baberrage'
 import axios from 'axios'
 import PageComponent from '@/components/Pagenation/index'
 export default {
   components: {
     PageComponent,
-    EditDialog,
-    ShowBaber
+    EditDialog
   },
   data () {
     return {
@@ -180,7 +177,7 @@ export default {
           } else if (res.data.code === 0) {
             this.$message({
               type: 'success',
-              message: '新增文件成功'
+              message: '新增网课成功'
             })
             this.getVideoList()
           }
@@ -238,6 +235,9 @@ export default {
           message: '至少选择一项'
         })
       }
+    },
+    watchBaber() {
+      this.$router.push({name: 'baberrage', params: {videoData: this.videoData}})
     },
     handlePageChange (item) { // 分页查询
       if (this.searchForm.createTimeRange == null || this.searchForm.createTimeRange == '') {

@@ -11,6 +11,8 @@ import store from './store'
 // import echarts from 'echarts'
 import particlesJS from 'particles.js'
 import '@/utils/prototype'
+import { vueBaberrage } from './lib/index'
+Vue.use(vueBaberrage)
 // import locale from 'element-ui/lib/locale/lang/zh-CN';
 // import i18n from './i18n';
 
