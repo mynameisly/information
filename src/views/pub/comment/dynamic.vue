@@ -209,6 +209,11 @@ export default {
                 message: '删除成功'
               })
               this.getDynamicList()
+            } else if(res.data.code === 6) {
+              this.$message({
+                type: 'info',
+                message: '不能删除别人的评论'
+              })
             }
           })
         }).catch(() => {
@@ -247,6 +252,12 @@ export default {
           this.page.totalPage = res.data.page.totalPages
           this.page.totalSize = res.data.page.totalRows
           this.commentList = res.data.data
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
         }
       })
     }

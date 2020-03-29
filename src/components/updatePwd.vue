@@ -21,6 +21,9 @@
           @click="updatePwd"
         >修 改 密 码</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" style="width:100%;padding:11px;" @click="goBack">返 回</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -65,6 +68,9 @@ export default {
         }
       })
       this.$router.push({name:'user'})
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   }
 }

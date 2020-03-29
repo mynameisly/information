@@ -59,6 +59,9 @@ export default {
     max-width: 100%;
     margin: 0 auto;
     .pan-back-btn {
+      width: 200px;
+      height: 35px;
+      font-size: 16px;
       background: #008489;
       color: #fff;
       border: none!important;

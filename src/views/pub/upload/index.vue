@@ -183,7 +183,7 @@ export default {
           userId: this.searchForm.userId,
           fileRealName: this.searchForm.fileRealName,
           fileSuffix: this.searchForm.fileSuffix,
-          // type: 'learningResource',
+          type: 'learningResource',
           state: this.searchForm.state
         }
       }).then((res) => {
@@ -268,6 +268,8 @@ export default {
               type: 'success',
               message: '修改成功'
             })
+          } else if(res.data.code === 4) {
+            this.$router.push({path: '/401'})
           }
           this.getUploadList()
         })
@@ -295,6 +297,17 @@ export default {
                 message: '删除成功'
               })
               this.getUploadList()
+            } else if (res.data.code === 3) {
+              this.$message({
+                type: 'info',
+                message: '登录已过期，请重新登录'
+              })
+              this.$router.push({name: 'login'})
+            } else if (res.data.code === 6) {
+              this.$message({
+                type: 'info',
+                message: '无权限删除此文件'
+              })
             }
           })
         }).catch(() => {

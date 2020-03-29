@@ -106,12 +106,20 @@ export default {
           state: this.searchForm.state
         }
       }).then((res) => {
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
-        this.myFilesList = this.handleState(res.data.data)
-        this.loading = false
+        if (res.data.code === 0){
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.myFilesList = this.handleState(res.data.data)
+          this.loading = false
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
+        }
       })
     },
     handleState (data) { // 处理文件状态 0:未审核，1：通过审核，10：审核不通过 参数data就是res.data.data

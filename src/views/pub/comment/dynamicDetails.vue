@@ -156,13 +156,20 @@ export default {
           context: this.searchFormDetails.context
         }
       }).then((res) => {
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
-        this.dynamicListDetails = this.handleType(res.data.data)
-        console.log(this.dynamicListDetails)
-        this.loading = false
+        if (res.data.code === 0) {
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.dynamicListDetails = this.handleType(res.data.data)
+          this.loading = false
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
+        }
       })
     },
     handleType (data) { // 处理评论管理和评论详情的类型，dynamic=动态,commentReply=评论回复,video=评论视频，barrage=弹幕

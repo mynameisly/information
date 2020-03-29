@@ -78,9 +78,16 @@ export default {
         // this.page.pageSize = res.data.page.limit
         // this.page.totalPage = res.data.page.totalPages
         // this.page.totalSize = res.data.page.totalRows
-        this.courseList = res.data.data
-        console.log(res.data.data)
-        this.loading = false
+        if(res.data.code === 0) {
+          this.courseList = res.data.data
+          this.loading = false
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
+        }
       })
     },
     mouseEnter (data) {

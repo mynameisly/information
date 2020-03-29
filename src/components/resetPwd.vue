@@ -13,10 +13,10 @@ export default {
     }
   },
   mounted () {
-    this.restPwd()
+    this.restPwd(userId)
   },
   methods: {
-    restPwd () { // 重置密码
+    restPwd (userId) { // 重置密码
       this.$confirm('是否重置密码为123abc?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -24,7 +24,7 @@ export default {
         center: 'true'
       }).then((res) => {
         // 点击确定后发送请求
-        axios.put('/json/user/resetPassword').then((res) => {
+        axios.put('/json/user/resetPassword?userId=' + userId).then((res) => {
           if (res.data.code === 0) {
             this.$message({
               type: 'success',

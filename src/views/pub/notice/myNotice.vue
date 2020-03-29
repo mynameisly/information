@@ -70,13 +70,19 @@ export default {
         this.page.totalSize = res.data.page.totalRows
         this.myNoticeList = res.data.data
         // console.log('我的教务通知是，',res.data.data)
+        this.loading = false
         if(res.data.data.length == 0) {
           this.$message({
             type: 'warning',
             message: '暂无通知'
           })
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
         }
-        this.loading = false
       })
     },
     mouseEnter (data) {

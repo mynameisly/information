@@ -179,14 +179,20 @@ export default {
         // console.log('进入评论管理的查询所有')
         // console.log(res)
         // console.log(res.data)
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
-        this.commentList = this.handleType(res.data.data)
-        // console.log('打印评论管理的查询所有')
-        // console.log(this.commentList)
-        this.loading = false
+        if (res.data.code === 0) {
+          this.loading = false
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.commentList = this.handleType(res.data.data)
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
+        }
       })
     },
     formatDateTime (date) { // 把标准格式转换为年月日
@@ -270,6 +276,11 @@ export default {
                 message: '删除成功'
               })
               this.getCommentList()
+            } else if(res.data.code === 6) {
+              this.$message({
+                type: 'info',
+                message: '不能删除别人的评论'
+              })
             }
           })
         }).catch(() => {

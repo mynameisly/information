@@ -102,7 +102,7 @@
       <el-table-column label="微信" prop="weiXin"/>
       <el-table-column label="QQ" prop="qq"/>
       <el-table-column label="简介" prop="introduce"/>
-      <el-table-column label="操作" prop="operation" width="520">
+      <el-table-column label="操作" prop="operation" width="380">
         <el-button
           type="primary"
           size="mini"
@@ -130,13 +130,6 @@
           icon="el-icon-s-tools"
           @click="restPwd">
           重置密码
-        </el-button>
-        <el-button
-          type="info"
-          size="mini"
-          icon="el-icon-edit-outline"
-          @click="updatePwd">
-          修改密码
         </el-button>
       </el-table-column>
     </el-table>
@@ -213,15 +206,22 @@ export default {
       }).then((res) => {
         if (res.data.msg === '无权限') {
           this.$router.push({path: '/401'})
+        } else if(res.data.code === 0){
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.userList = this.handleHeadImg(res.data.data)
+          // console.log('进入到查询所有数据')
+          // console.log(res.data.data)
+          this.loading = false
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
         }
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
-        this.userList = this.handleHeadImg(res.data.data)
-        // console.log('进入到查询所有数据')
-        // console.log(res.data.data)
-        this.loading = false
       })
     },
     handleHeadImg (data) {
@@ -275,18 +275,20 @@ export default {
         type: 'warning',
         center: 'true'
       }).then((res) => {
-        axios.put('/json/user/resetPassword').then((res) => {
+        axios.put('/json/user/resetPassword?userId=' + this.userData.userId).then((res) => {
           if (res.data.code === 0) {
             this.$message({
               type: 'success',
               message: '重置密码成功'
             })
+          } else if(res.data.code === 4) {
+            this.$message({
+              type: 'info',
+              message: res.data.msg
+            })
           }
         })
       })
-    },
-    updatePwd () { // 修改密码
-      this.$router.push({name: 'updatePwd'})
     },
     handlePageChange (item) { // 分页查询
       // console.log(item) // currentPage=1=item.currentPage  pageSize: 0=item.pageSize totalPage: 0  totalSize: 0

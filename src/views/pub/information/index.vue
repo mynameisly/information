@@ -19,7 +19,15 @@
       <el-table-column label="QQ" prop="qq"/>
       <el-table-column label="简介" prop="introduce"/>
       <el-table-column label="隶属角色" prop="depict"/>
-      <!-- 是否需要重新写一个dialog -->
+      <el-table-column label="操作" prop="operation" width="100">
+        <el-button
+          type="info"
+          size="mini"
+          icon="el-icon-edit-outline"
+          @click="updatePwd">
+          修改密码
+        </el-button>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -47,6 +55,9 @@ export default {
     this.infoList[0].depict = sessionStorage.getItem('depict')
   },
   methods: {
+    updatePwd () { // 修改密码
+      this.$router.push({name: 'updatePwd'})
+    }
   }
 }
 </script>

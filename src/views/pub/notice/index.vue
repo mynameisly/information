@@ -25,7 +25,6 @@
       element-loading-text="拼命加载中"
       @cell-mouse-enter="mouseEnter"
         >
-      <el-table-column type="selection" align="center" />
        <el-table-column label="序号" type="index" width="55">
         <template slot-scope="scope">
           <!-- (当前页 - 1) * 当前显示数据条数 + 当前行数据的索引 + 1  -->
@@ -93,23 +92,31 @@ export default {
     getnoticeList () { // 根据多个筛选条件查询,需管理员权限; 筛选条件为空时，默认查询所有数据
       // axios.get('/json/academic/find?limit=&title=' + this.searchForm.title).then((res) => {
       axios.get('/json/academic/find?page=1&limit=10&title=' + this.searchForm.title).then((res) => {
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalPage = res.data.page.totalPages
-        this.page.totalSize = res.data.page.totalRows
-        this.noticeList = res.data.data
-        // console.log(res.data.data)
-        this.loading = false
+        if(res.data.code === 0) {
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalPage = res.data.page.totalPages
+          this.page.totalSize = res.data.page.totalRows
+          this.noticeList = res.data.data
+          // console.log(res.data.data)
+          this.loading = false
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
+        }
       })
     },
     mouseEnter (data) {
       this.noticeData = Object.assign({}, data)
-      console.log('this.noticeData',this.noticeData)
+      // console.log('this.noticeData',this.noticeData)
     },
     addnotice (item) { // 文件id和人员集合我先写死，回头问问后台
       console.log('新增通知', item)
       axios.get('/json/academic/add?createPerson=' + item.createPerson + '&title=' + item.title + '&content=' + item.content +
-      '&createTime=' + item.createTime + '&fileId=' + item.fileId + '&userIdList=1' + item.userIdList)
+      '&createTime=' + item.createTime + '&fileId=' + item.fileId + '&userIdList=' + item.userIdList)
         .then((res) => {
           if (res.data.msg === '无权限') {
             this.$router.push({path: '/401'})
@@ -123,7 +130,7 @@ export default {
         })
     },
     download () {
-      console.log('noticeData',this.noticeData)
+      // console.log('noticeData',this.noticeData)
       window.location.href = 'http://49.235.55.224:12346/json/file/download?fileId=' + this.noticeData.fileId
     },
     delNotice () {

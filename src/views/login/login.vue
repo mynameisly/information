@@ -66,7 +66,7 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     const validateNumber = (rule, value, callback) => {
-      var reg = /^[0-9a-zA-Z]{6,16}$/; // 账号长度必须在6-16之间，且不能包含非法字符*#@
+      var reg = /^[0-9a-zA-Z]{6,16}$/; // 账号长度必须在5-16之间，且不能包含非法字符*#@
       if (value === '' || value === undefined) {
         callback(new Error('请输入用户名'))
       } else if (value.length < 6 || value.length > 18) {

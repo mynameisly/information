@@ -105,13 +105,21 @@ export default {
         this.endWatchTime = this.formatDateTime(this.searchForm.watchTimeRange[1])
       }
       axios.get('/json/watch/list?limit=' + 10 + '&nickName=' + this.searchForm.nickName + '&courseName=' + this.searchForm.courseName + '&startWatchTime=' + this.startWatchTime + '&endWatchTime=' + this.endWatchTime).then((res) => {
-        this.page.currentPage = res.data.page.page
-        this.page.pageSize = res.data.page.limit
-        this.page.totalSize = res.data.page.totalRows
-        this.page.totalPage = res.data.page.totalPages
-        this.watchList = res.data.data
-        console.log(res.data.page)
-        this.loading = false
+        if(res.data.code === 0){
+          this.page.currentPage = res.data.page.page
+          this.page.pageSize = res.data.page.limit
+          this.page.totalSize = res.data.page.totalRows
+          this.page.totalPage = res.data.page.totalPages
+          this.watchList = res.data.data
+          // console.log(res.data.page)
+          this.loading = false
+        } else if (res.data.code === 3) {
+          this.$message({
+            type: 'info',
+            message: '登录已过期，请重新登录'
+          })
+          this.$router.push({name: 'login'})
+        }
       })
     },
     formatDateTime (date) {
@@ -153,13 +161,15 @@ export default {
           center: true
         }).then((res) => {
         // 点击确定后发送请求
-          axios.delete('/json/onlineCourse/delete?ids=' + watchIds).then((res) => {
+          axios.delete('/json/watch/delete?ids=' + watchIds).then((res) => {
             if (res.data.code === 0) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
               })
               this.getWatchList()
+            } else if(res.data.code === 4) {
+              this.$router.push({path: '/401'})
             }
           })
         }).catch(() => {

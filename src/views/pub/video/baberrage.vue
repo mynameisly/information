@@ -68,13 +68,13 @@ export default {
     addWatch (courseId) { // 新增观看记录
       axios.post('/json/watch/add?targetId=' + courseId)
         .then((res) => {
-      // console.log('新增观看记录',res.data)
-          if (res.data.code === 0) {
-            this.$message({
-              type: 'success',
-              message: '新增观看记录成功'
-            })
-          }
+          // console.log('新增观看记录',res.data)
+          // if (res.data.code === 0) {
+          //   this.$message({
+          //     type: 'success',
+          //     message: '新增观看记录成功'
+          //   })
+          // }
         })
     },
     removeList () {
