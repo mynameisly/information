@@ -95,13 +95,13 @@
       <el-table-column label="上传时间" prop="createTime" sortable/>
       <el-table-column label="文件简介" prop="introduce"/>
       <el-table-column label="状态" prop="state"/>
-      <el-table-column label="操作" prop="operation" width="180">
+      <el-table-column label="操作" prop="operation" width="200">
         <el-button
           type="success"
           size="mini"
           icon="el-icon-download"
           @click="download">
-          下载
+          下载文件
         </el-button>
         <el-button
           type="primary"
@@ -241,7 +241,7 @@ export default {
     },
     mouseEnter (data) {
       this.uploadData = Object.assign({}, data)
-      // console.log(this.uploadData)
+      console.log(this.uploadData)
     },
     addBgColorByState ({row, columnIndex}) {
       if (columnIndex === 7) {
@@ -275,7 +275,21 @@ export default {
         })
     },
     download () {
-      window.location.href = 'http://120.24.186.190:12346/json/file/download?fileId=' + this.uploadData.fileId
+      axios.get('/json/file/download?fileId=' + this.uploadData.fileId).then((res) => {
+        if(res.data.code === 0) {
+          this.$message({
+            type: 'info',
+            message: '文件不存在'
+          })
+        } else if (res.data.code === 9) {
+          this.$message({
+            type: 'info',
+            message: '文件已失效'
+          })
+        } else {
+          window.location.href = 'http://49.235.55.224:12346/json/file/download?fileId=' + this.uploadData.fileId
+        }
+      })
     },
     delSelect () {
       if (this.multipleSelection.length) {

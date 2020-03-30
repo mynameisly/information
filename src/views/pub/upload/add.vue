@@ -1,7 +1,22 @@
 <template>
   <div id="uploadAdd">
     <el-dialog :title="title" :visible.sync="visible" :lock-scroll="false" :show-close="false" :close-on-click-modal="false">
-      <el-form ref="uploadForm" :model="item" :rules="rules" label-width="100px">
+      <el-form ref="uploadForm" :model="item" label-width="100px">
+        <el-form-item label="文件类型" prop="type">
+          <el-input v-model="item.type"  disabled/>
+           <!--<el-select v-model="item.type"  disabled>
+            <el-option label="学习资料文件" value="learningResource" />
+            <el-option
+              v-for="item in filesType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select> -->
+        </el-form-item>
+        <el-form-item label="文件描述" prop="fileDescribe">
+          <el-input type="textarea" :rows="4" v-model="item.fileDescribe" resize="none" maxlength="200" show-word-limit placeholder="请输入文件描述"></el-input>
+        </el-form-item>
         <el-form-item label="文件" prop="multipartFiles">
           <el-upload
             ref="upload"
@@ -26,21 +41,6 @@
               alt=""
               >
           </el-dialog> -->
-        </el-form-item>
-        <el-form-item label="文件类型" prop="type">
-          <el-input v-model="item.type"  disabled/>
-           <!--<el-select v-model="item.type"  disabled>
-            <el-option label="学习资料文件" value="learningResource" />
-            <el-option
-              v-for="item in filesType"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select> -->
-        </el-form-item>
-        <el-form-item label="文件描述" prop="fileDescribe">
-          <el-input type="textarea" :rows="4" v-model="item.fileDescribe" resize="none" maxlength="200" show-word-limit placeholder="请输入文件描述"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -85,12 +85,7 @@ export default {
       //     label: '网课视频',
       //     value: 'onlineCourseVideo'
       //   }
-      // ],
-      rules: {
-        // type: [{ required: true, message: '请选择文件类型', trigger: 'change' }],
-        fileDescribe: [{ required: true, message: '请描述文件', trigger: 'blur' }]
-        // multipartFiles: [{ required: true, message: '请上传文件', trigger: 'change' }], // 用blur或change都不行，都要拦截掉
-      }
+      // ]
     }
   },
   methods: {

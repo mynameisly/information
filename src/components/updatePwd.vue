@@ -63,13 +63,15 @@ export default {
         if (res.data.code === 0) {
           this.$message({
             type: 'success',
-            message: '修改密码成功'
+            message: '修改密码成功，请重新登录'
           })
         }
+        setTimeout(() => {
+          this.$router.push({name: 'login'})
+        }, 1000)
       })
-      this.$router.push({name:'user'})
     },
-    goBack() {
+    goBack () {
       this.$router.go(-1)
     }
   }

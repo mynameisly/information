@@ -36,12 +36,12 @@
       <el-table-column label="发布人" prop="createPerson"/>
       <el-table-column label="发布时间" prop="createTime" sortable/>
       <el-table-column label="操作" prop="operation" width="200">
+        <!--  :disabled="scope.row.fileId == null"-->
         <template slot-scope="scope">
           <el-button
             type="success"
             size="mini"
             icon="el-icon-download"
-            :disabled="scope.row.fileId == null"
             @click="download">
             下载附件
           </el-button>
@@ -111,7 +111,7 @@ export default {
     },
     mouseEnter (data) {
       this.noticeData = Object.assign({}, data)
-      // console.log('this.noticeData',this.noticeData)
+      console.log('this.noticeData',this.noticeData)
     },
     addnotice (item) { // 文件id和人员集合我先写死，回头问问后台
       console.log('新增通知', item)
@@ -131,7 +131,28 @@ export default {
     },
     download () {
       // console.log('noticeData',this.noticeData)
-      window.location.href = 'http://49.235.55.224:12346/json/file/download?fileId=' + this.noticeData.fileId
+      if (this.noticeData.fileId != null) { // 当fileId不为空的时候，才能发送请求，否则提示文件不存在
+        axios.get('/json/file/download?fileId=' + this.noticeData.fileId).then((res) => {
+          if(res.data.code === 0) {
+            this.$message({
+              type: 'info',
+              message: '文件不存在'
+            })
+          } else if (res.data.code === 9) {
+            this.$message({
+              type: 'info',
+              message: '文件已失效'
+            })
+          } else {
+            window.location.href = 'http://49.235.55.224:12346/json/file/download?fileId=' + this.noticeData.fileId
+          }
+        })
+      } else {
+        this.$message({
+          type: 'info',
+          message: '文件不存在'
+        })
+      }
     },
     delNotice () {
       this.$confirm('此操作将永久删除该数据，是否继续？', '提示', {

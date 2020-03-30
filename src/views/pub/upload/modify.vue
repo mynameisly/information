@@ -1,7 +1,7 @@
 <template>
   <div id="modify">
     <el-dialog :title="title" :visible.sync="visible" top="10rem" :lock-scroll="false" :close-on-click-modal="false">
-      <el-form ref="fileForm" :model="item" :rules="rules" label-width="120px">
+      <el-form ref="fileForm" :model="item" label-width="120px">
          <el-form-item label="文件类型" prop="type">
            <el-input v-model="item.type"  disabled/>
           <!-- <el-select v-model="item.type"  palceholder="请选择文件类型" clearable>
@@ -76,12 +76,7 @@ export default {
           label: '审核不通过',
           value: 10
         }
-      ],
-      rules: {
-        type: [{ required: true, message: '请选择文件类型', trigger: 'change' }],
-        state: [{ required: true, message: '请上传文件', trigger: 'blur' }],
-        remark: [{ required: true, message: '请描述文件', trigger: 'blur' }]
-      }
+      ]
     }
   },
   methods: {
