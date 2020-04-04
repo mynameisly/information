@@ -185,6 +185,11 @@ export default {
               type: 'success',
               message: '修改动态成功'
             })
+          } else if (res.data.code === 7) {
+            this.$message({
+              type: 'info',
+              message: '不能修改别人的评论'
+            })
           }
           this.getDynamicList()
         })
