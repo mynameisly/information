@@ -114,6 +114,7 @@ export default {
   },
   mounted() {
     this.roleId = sessionStorage.getItem('roleId')
+    console.log('this.roleId',this.roleId)
     this.isMyNotice()
   },
   computed: {
@@ -126,11 +127,10 @@ export default {
     },
     isMyNotice () { // 根据用户角色来判断路由，如果roleId=2就是管理员，显示pub/notice
     // 如果roleId是1就显示pub/myNotice
-      if (this.roleId == 1) {
-        console.log(111111111111)
+      if (this.roleId == 1) {// 学生
+        this.menuDirs.shift()
         this.menuDirs[5].url = '/pub/myNotice'
-      } else if (this.roleId == 2) {
-        console.log(2222222222)
+      } else if (this.roleId == 2) { // 管理员
         this.menuDirs[5].url = '/pub/notice'
       }
     },
