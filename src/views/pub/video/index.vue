@@ -35,8 +35,8 @@
       <el-row>
         <el-form-item>
           <el-button type="success" size="medium" icon="el-icon-search" @click="getVideoList(searchForm)">查询网课</el-button>
-          <el-button type="warning" size="medium" icon="el-icon-plus" @click="$refs.addDialog.open(null)">新增网课</el-button>
-          <el-button type="danger" size="medium" icon="el-icon-delete" @click="delSelect">删除已选</el-button>
+          <el-button type="warning" size="medium" icon="el-icon-plus" :disabled="roleId == 1 ? true : false" @click="$refs.addDialog.open(null)">新增网课</el-button>
+          <el-button type="danger" size="medium" icon="el-icon-delete" :disabled="roleId == 1 ? true : false" @click="delSelect">删除已选</el-button>
         </el-form-item>
       </el-row>
     </el-form>
@@ -112,6 +112,8 @@ export default {
       videoList: [],
       videoData: {},
       multipleSelection: [], // 批量删除
+      roleId: 2,//用户角色为学生1，新增和删除禁用
+      isDisabled: false, //默认是不禁用的
       page: {
         currentPage: 0, // 当前页，对应接口中的page
         pageSize: 10, // 每页条数，对应接口中的limit
@@ -121,6 +123,8 @@ export default {
     }
   },
   mounted () {
+    this.roleId = sessionStorage.getItem('roleId')
+    // console.log('roleID',this.roleId)
     this.getVideoList()
   },
   methods: {

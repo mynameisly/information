@@ -55,66 +55,65 @@ export default {
       roleId: '', // 用户角色
       noticeUrl: '',// 教务通知的url，根据用户角色来判断
       menuDirs: [
-        {
-          id: 0,
-          icon: 'el-icon-menu',
-          name: '用户信息',
-          url: '/pub/user'
-        },
-        {
-          id: 1,
-          icon: 'el-icon-menu',
-          name: '学籍信息',
-          url: '/pub/information'
-        },
-        {
-          id: 2,
-          icon: 'el-icon-menu',
-          name: '课表查询',
-          url: '/pub/course'
-        },
-        {
-          id: 3,
-          icon: 'el-icon-menu',
-          name: '成绩查询',
-          url: '/pub/achievement'
-        },
-        {
-          id: 4,
-          icon: 'el-icon-menu',
-          name: '资料上传',
-          url: '/pub/upload'
-        },
-        {
-          id: 5,
-          icon: 'el-icon-menu',
-          name: '教务通知',
-          url: '/pub/myNotice'
-        },
-        {
-          id: 6,
-          icon: 'el-icon-menu',
-          name: '视频教程',
-          url: '/pub/video'
-        },
-        {
-          id: 7,
-          icon: 'el-icon-menu',
-          name: '评论回复',
-          url: '/pub/comment'
-        },
-        {
-          id: 8,
-          icon: 'el-icon-menu',
-          name: '观看统计',
-          url: '/pub/watch'
-        }
+        // {
+        //   id: 0,
+        //   icon: 'el-icon-menu',
+        //   name: '用户信息',
+        //   url: '/pub/user'
+        // },
+        // {
+        //   id: 1,
+        //   icon: 'el-icon-menu',
+        //   name: '学籍信息',
+        //   url: '/pub/information'
+        // },
+        // {
+        //   id: 2,
+        //   icon: 'el-icon-menu',
+        //   name: '课表查询',
+        //   url: '/pub/course'
+        // },
+        // {
+        //   id: 3,
+        //   icon: 'el-icon-menu',
+        //   name: '成绩查询',
+        //   url: '/pub/achievement'
+        // },
+        // {
+        //   id: 4,
+        //   icon: 'el-icon-menu',
+        //   name: '资料上传',
+        //   url: '/pub/upload'
+        // },
+        // {
+        //   id: 5,
+        //   icon: 'el-icon-menu',
+        //   name: '教务通知',
+        //   url: '/pub/myNotice'
+        // },
+        // {
+        //   id: 6,
+        //   icon: 'el-icon-menu',
+        //   name: '视频教程',
+        //   url: '/pub/video'
+        // },
+        // {
+        //   id: 7,
+        //   icon: 'el-icon-menu',
+        //   name: '评论回复',
+        //   url: '/pub/comment'
+        // },
+        // {
+        //   id: 8,
+        //   icon: 'el-icon-menu',
+        //   name: '观看统计',
+        //   url: '/pub/watch'
+        // }
       ]
     }
   },
   mounted() {
     this.roleId = sessionStorage.getItem('roleId')
-    console.log('this.roleId',this.roleId)
     this.isMyNotice()
   },
   computed: {
@@ -128,10 +127,116 @@ export default {
     isMyNotice () { // 根据用户角色来判断路由，如果roleId=2就是管理员，显示pub/notice
     // 如果roleId是1就显示pub/myNotice
       if (this.roleId == 1) {// 学生
-        this.menuDirs.shift()
-        this.menuDirs[5].url = '/pub/myNotice'
+        // this.menuDirs.shift()
+          this.menuDirs = [
+          {
+            id: 0,
+            icon: 'el-icon-menu',
+            name: '学籍信息',
+            url: '/pub/information'
+          },
+          {
+            id: 1,
+            icon: 'el-icon-menu',
+            name: '课表查询',
+            url: '/pub/course'
+          },
+          {
+            id: 2,
+            icon: 'el-icon-menu',
+            name: '成绩查询',
+            url: '/pub/achievement'
+          },
+          {
+            id: 3,
+            icon: 'el-icon-menu',
+            name: '资料上传',
+            url: '/pub/upload'
+          },
+          {
+            id: 4,
+            icon: 'el-icon-menu',
+            name: '教务通知',
+            url: '/pub/myNotice'
+          },
+          {
+            id: 5,
+            icon: 'el-icon-menu',
+            name: '视频教程',
+            url: '/pub/video'
+          },
+          {
+            id: 6,
+            icon: 'el-icon-menu',
+            name: '评论回复',
+            url: '/pub/comment'
+          },
+          {
+            id: 7,
+            icon: 'el-icon-menu',
+            name: '观看统计',
+            url: '/pub/watch'
+          }
+        ]
+        // this.menuDirs[5].url = '/pub/myNotice'
       } else if (this.roleId == 2) { // 管理员
-        this.menuDirs[5].url = '/pub/notice'
+        // this.menuDirs[5].url = '/pub/notice'
+          this.menuDirs = [
+          {
+            id: 0,
+            icon: 'el-icon-menu',
+            name: '用户信息',
+            url: '/pub/user'
+          },
+          {
+            id: 1,
+            icon: 'el-icon-menu',
+            name: '学籍信息',
+            url: '/pub/information'
+          },
+          {
+            id: 2,
+            icon: 'el-icon-menu',
+            name: '课表查询',
+            url: '/pub/course'
+          },
+          {
+            id: 3,
+            icon: 'el-icon-menu',
+            name: '成绩查询',
+            url: '/pub/achievement'
+          },
+          {
+            id: 4,
+            icon: 'el-icon-menu',
+            name: '资料上传',
+            url: '/pub/upload'
+          },
+          {
+            id: 5,
+            icon: 'el-icon-menu',
+            name: '教务通知',
+            url: '/pub/notice'
+          },
+          {
+            id: 6,
+            icon: 'el-icon-menu',
+            name: '视频教程',
+            url: '/pub/video'
+          },
+          {
+            id: 7,
+            icon: 'el-icon-menu',
+            name: '评论回复',
+            url: '/pub/comment'
+          },
+          {
+            id: 8,
+            icon: 'el-icon-menu',
+            name: '观看统计',
+            url: '/pub/watch'
+          }
+        ]
       }
     },
     ...mapActions('app/', ['toggleSideBar', 'openSideBar', 'closeSideBar'])
