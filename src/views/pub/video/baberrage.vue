@@ -7,7 +7,6 @@
         :barrageList = "barrageList"
         :loop = "barrageLoop"
         :maxWordCount = "60"
-        style="height:466px"
         >
       </vue-baberrage>
     </div>
@@ -112,7 +111,7 @@ video{
   left: 0;
   z-index: 999;
   width: 100%;
-  height: 80%;
+  height: 50%;
   // border:2px solid red;
 }
 
@@ -126,7 +125,7 @@ video{
     width: 88%;
     bottom: 300px;
     top: 80%;
-    height: 69px;
+    height: 60px;
     box-sizing: border-box;
     text-align: center;
     display: flex;
