@@ -1,6 +1,6 @@
 <template>
   <div id="particlesId">
-    <h1 class="title">科成学生助手系统</h1>
+    <h1 class="title">百叶助手系统</h1>
     <div class="login-warp">
       <el-form ref="loginForm" :model="loginForm" :rules="rules" label-width="80px">
         <el-row>

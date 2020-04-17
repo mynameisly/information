@@ -2,7 +2,7 @@
   <div id="header" :style="{'background-color':`${themeColor}`,'box-shadow':`0 1px 2px ${themeColor}`}">
     <a>
       <img src="@/assets/logo.png" height="100%">
-      <span>科成学生助手系统</span>
+      <span>百叶助手系统</span>
     </a>
     <header-item />
   </div>
